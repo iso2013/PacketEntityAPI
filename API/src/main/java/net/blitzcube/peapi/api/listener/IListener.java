@@ -1,6 +1,6 @@
 package net.blitzcube.peapi.api.listener;
 
-import net.blitzcube.peapi.api.event.PacketEntityEvent;
+import net.blitzcube.peapi.api.event.IPacketEntityEvent;
 import org.bukkit.entity.EntityType;
 
 import java.util.Comparator;
@@ -11,11 +11,7 @@ import java.util.Comparator;
 public interface IListener {
     ListenerPriority getPriority();
 
-    void onEvent(PacketEntityEvent e);
-
-    default boolean shouldPreload() {
-        return false;
-    }
+    void onEvent(IPacketEntityEvent e);
 
     default boolean shouldFireForFake() {
         return false;
@@ -31,7 +27,7 @@ public interface IListener {
         LOW(-1),
         LOWEST(-2);
 
-        private int priority;
+        private final int priority;
 
         ListenerPriority(int priority) {
             this.priority = priority;

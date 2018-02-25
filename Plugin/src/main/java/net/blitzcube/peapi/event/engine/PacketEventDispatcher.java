@@ -1,7 +1,8 @@
 package net.blitzcube.peapi.event.engine;
 
 import net.blitzcube.peapi.PacketEntityAPI;
-import net.blitzcube.peapi.api.event.PacketEntityEvent;
+import net.blitzcube.peapi.api.event.IPacketEntityEvent;
+import net.blitzcube.peapi.api.event.IPacketEntitySpawnEvent;
 import net.blitzcube.peapi.api.listener.IListener;
 import org.bukkit.entity.EntityType;
 
@@ -15,60 +16,64 @@ public class PacketEventDispatcher {
             IListener.ListenerPriority.getComparator().compare(o1.getPriority(), o2.getPriority());
 
     private final SortedSet<IListener> allListeners;
+    private final Set<IListener> objectListeners;
+    private final Set<IListener> entityListeners;
     private final Map<EntityType, SortedSet<IListener>> listenerLookup;
     private final PacketEventEngine engine;
     private int sendingForFake = 0, targetingObjects = 0, targetingEntities = 0;
 
     public PacketEventDispatcher(PacketEntityAPI parent) {
         this.allListeners = new TreeSet<>(LISTENER_COMPARATOR);
+        this.objectListeners = new HashSet<>();
+        this.entityListeners = new HashSet<>();
         this.listenerLookup = new HashMap<>();
         this.engine = new PacketEventEngine(parent, this);
     }
 
     public void add(IListener l) {
         this.allListeners.add(l);
-        if (l.shouldPreload()) {
-            engine.addPreloadTargets(l.getTargets());
-        }
         if (l.shouldFireForFake()) {
             if (sendingForFake == 0) engine.setSendForFake(true);
             sendingForFake++;
         }
         boolean e = false, o = false;
         for (EntityType en : l.getTargets()) {
+            listenerLookup.putIfAbsent(en, new TreeSet<>(LISTENER_COMPARATOR));
+            listenerLookup.get(en).add(l);
+            if (o && e) continue;
             if (PacketEntityAPI.OBJECTS.containsKey(en)) {
                 o = true;
             } else {
                 e = true;
             }
-            if (o && e) break;
-            listenerLookup.putIfAbsent(en, new TreeSet<>(LISTENER_COMPARATOR));
-            listenerLookup.get(en).add(l);
         }
         if (o) {
             if (targetingObjects == 0) engine.enableObjects();
             targetingObjects++;
+            objectListeners.add(l);
         }
         if (e) {
             if (targetingEntities == 0) engine.enableEntities();
             targetingEntities++;
+            entityListeners.add(l);
         }
     }
 
-    public void dispatch(PacketEntityEvent e) {
-        EntityType t;
-        if ((t = e.getIdentifier().getEntityType()) != null) {
-            this.listenerLookup.get(t).forEach(iListener -> iListener.onEvent(e));
+    public void dispatch(IPacketEntityEvent e, Boolean object) {
+        if (e == null) return;
+        if (e instanceof IPacketEntitySpawnEvent) {
+            EntityType t = ((IPacketEntitySpawnEvent) e).getEntityType();
+            if (this.listenerLookup.get(t) != null)
+                this.listenerLookup.get(t).forEach(i -> i.onEvent(e));
         } else {
-            this.allListeners.forEach(iListener -> iListener.onEvent(e));
+            this.allListeners.stream().filter(iListener -> object == null
+                    || (object && objectListeners.contains(iListener))
+                    || (!object && entityListeners.contains(iListener))).forEach(i -> i.onEvent(e));
         }
     }
 
     public void remove(IListener l) {
         this.allListeners.remove(l);
-        if (l.shouldPreload()) {
-            engine.removePreloadTargets(l.getTargets());
-        }
         if (l.shouldFireForFake()) {
             sendingForFake--;
             if (sendingForFake == 0) engine.setSendForFake(false);
@@ -87,10 +92,12 @@ public class PacketEventDispatcher {
         if (o) {
             targetingObjects--;
             if (targetingObjects == 0) engine.disableObjects();
+            objectListeners.remove(l);
         }
         if (e) {
             targetingEntities--;
-            if (targetingEntities == 0) engine.disableEntites();
+            if (targetingEntities == 0) engine.disableEntities();
+            entityListeners.remove(l);
         }
     }
 

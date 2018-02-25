@@ -55,8 +55,8 @@ public class PacketEntityAPI implements IPacketEntityAPI {
         OBJECTS.put(EntityType.LIGHTNING, -1);
     }
 
-    private static boolean compareVersions(String fullVersion, String replaceVersion) {
-        String[][] input = new String[][]{fullVersion.split("\\."), replaceVersion.split("\\.")};
+    private static boolean compareVersions(String fullVersion) {
+        String[][] input = new String[][]{fullVersion.split("\\."), ProviderStub.FULL_VERSION.split("\\.")};
         int size = Math.max(input[0].length, input[1].length);
         for (int s = 0; s < size; s++) {
             if (input[0].length - 1 < s) return true;
@@ -85,7 +85,7 @@ public class PacketEntityAPI implements IPacketEntityAPI {
         Optional<RegisteredServiceProvider<IPacketEntityAPI.ProviderStub>> top = r.stream()
                 .filter(p -> ProviderStub.MAJOR_VERSION.equals(p.getProvider().getMajorVersion())).findFirst();
         if (top.isPresent()) {
-            if (compareVersions(top.get().getProvider().getFullVersion(), ProviderStub.FULL_VERSION)) {
+            if (compareVersions(top.get().getProvider().getFullVersion())) {
                 m.unregister(IPacketEntityAPI.ProviderStub.class, top.get());
             } else return;
         }
@@ -131,6 +131,14 @@ public class PacketEntityAPI implements IPacketEntityAPI {
     @Override
     public boolean isFakeID(int entityID) {
         return false;
+    }
+
+    public static EntityType lookupObject(Byte read) {
+        for (Map.Entry<EntityType, Integer> e : OBJECTS.entrySet()) {
+            if (e.getValue() == null) continue;
+            if (e.getValue().byteValue() == read) return e.getKey();
+        }
+        return null;
     }
 
     private static class ProviderStub implements IPacketEntityAPI.ProviderStub {

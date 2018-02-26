@@ -1,6 +1,7 @@
 package net.blitzcube.peapi.api.event;
 
 import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
 
@@ -24,15 +25,15 @@ public interface IPacketObjectSpawnEvent extends IPacketEntityEvent {
 
     void setVelocity(Vector velocity);
 
-    short getOrbCount();
+    Integer getOrbCount();
 
-    void setOrbCount(short count);
+    void setOrbCount(Integer count);
 
     String getTitle();
 
     void setTitle(String title);
 
-    byte getDirection();
+    BlockFace getDirection();
 
-    void setDirection(byte direction);
+    void setDirection(BlockFace direction);
 }

@@ -23,7 +23,7 @@ Source code is available [here](https://github.com/iso2013/PacketEntityAPI)!
 ## Support Me :D
 My development activity (if this gets low poke me on Spigot IRC or shoot me a PM):
 
-<figure><embed src="https://wakatime.com/share/@f07b25b2-0703-4bae-8b4e-fda2b6b212c4/1222e946-7351-44ca-acbd-933ce6c0ca21.svg"></embed></figure>
+<figure><embed src="https://wakatime.com/share/@f07b25b2-0703-4bae-8b4e-fda2b6b212c4/25350fd7-f98b-4b59-be9a-4d552d8847a9.svg"></figure>
 
 Want to donate to continue MultiLineAPI's development? I accept donations here:
 

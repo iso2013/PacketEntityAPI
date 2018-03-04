@@ -1,8 +1,11 @@
 package net.blitzcube.peapi.api.event;
 
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
+
+import java.util.List;
 
 /**
  * Created by iso2013 on 2/23/2018.
@@ -23,4 +26,6 @@ public interface IPacketEntitySpawnEvent extends IPacketEntityEvent {
     Vector getVelocity();
 
     void setVelocity(Vector velocity);
+
+    List<WrappedWatchableObject> getDataWatcher();
 }

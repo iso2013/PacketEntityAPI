@@ -2,6 +2,7 @@ package net.blitzcube.peapi.event;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.google.common.base.Preconditions;
 import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import net.blitzcube.peapi.api.event.IPacketEntitySpawnEvent;
@@ -11,6 +12,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -110,5 +112,10 @@ public class PacketEntitySpawnEvent extends PacketEntityEvent implements IPacket
         packet.getBytes().write(0, (byte) velocity.getX());
         packet.getBytes().write(1, (byte) velocity.getY());
         packet.getBytes().write(2, (byte) velocity.getZ());
+    }
+
+    @Override
+    public List<WrappedWatchableObject> getDataWatcher() {
+        return super.packet.getWatchableCollectionModifier().read(0);
     }
 }

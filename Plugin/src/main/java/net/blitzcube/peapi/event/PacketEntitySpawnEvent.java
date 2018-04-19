@@ -115,7 +115,12 @@ public class PacketEntitySpawnEvent extends PacketEntityEvent implements IPacket
     }
 
     @Override
-    public List<WrappedWatchableObject> getDataWatcher() {
+    public List<WrappedWatchableObject> getMetadata() {
         return super.packet.getWatchableCollectionModifier().read(0);
+    }
+
+    @Override
+    public void setMetadata(List<WrappedWatchableObject> data) {
+        super.packet.getWatchableCollectionModifier().write(0, data);
     }
 }

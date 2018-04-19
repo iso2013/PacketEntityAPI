@@ -27,5 +27,7 @@ public interface IPacketEntitySpawnEvent extends IPacketEntityEvent {
 
     void setVelocity(Vector velocity);
 
-    List<WrappedWatchableObject> getDataWatcher();
+    List<WrappedWatchableObject> getMetadata();
+
+    void setMetadata(List<WrappedWatchableObject> data);
 }

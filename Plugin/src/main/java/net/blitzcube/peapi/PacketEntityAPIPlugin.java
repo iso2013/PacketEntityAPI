@@ -6,6 +6,7 @@ import net.blitzcube.peapi.api.event.IPacketEntityDataEvent;
 import net.blitzcube.peapi.api.event.IPacketEntityEvent;
 import net.blitzcube.peapi.api.event.IPacketEntitySpawnEvent;
 import net.blitzcube.peapi.api.listener.IListener;
+import net.blitzcube.peapi.entity.loader.EntityModifierLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -27,6 +28,9 @@ public final class PacketEntityAPIPlugin extends JavaPlugin implements Listener 
     @Override
     public void onEnable() {
         ids = new HashMap<>();
+
+        EntityModifierLoader.getModifiers(this.getResource("EntityDataJSON.json"));
+
         PacketEntityAPI.initialize(this, iPacketEntityAPI -> iPacketEntityAPI.addListener(new IListener() {
             @Override
             public ListenerPriority getPriority() {

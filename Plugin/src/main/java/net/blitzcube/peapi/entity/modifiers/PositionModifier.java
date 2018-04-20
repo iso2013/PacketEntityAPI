@@ -8,10 +8,10 @@ import org.bukkit.util.Vector;
 /**
  * Created by iso2013 on 4/18/2018.
  */
-public class BlockPositionModifier extends GenericModifier<Vector> {
+public class PositionModifier extends GenericModifier<Vector> {
     private final WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.get(BlockPosition.class);
 
-    public BlockPositionModifier(int index, String label, Vector def) {
+    public PositionModifier(int index, String label, Vector def) {
         super(Vector.class, index, label, def);
     }
 

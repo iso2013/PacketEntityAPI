@@ -17,7 +17,7 @@ public class GenericModifier<T> implements IEntityModifier<T> {
 
     public GenericModifier(Class<T> clazz, int index, String label, @NotNull T def) {
         this.clazz = clazz;
-        this.serializer = WrappedDataWatcher.Registry.get(clazz);
+        this.serializer = clazz != null ? WrappedDataWatcher.Registry.get(clazz) : null;
         this.index = index;
         this.label = label;
         this.def = def;

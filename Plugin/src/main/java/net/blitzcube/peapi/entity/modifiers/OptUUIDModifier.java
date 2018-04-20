@@ -9,11 +9,15 @@ import java.util.UUID;
 /**
  * Created by iso2013 on 4/20/2018.
  */
-public class OptUUIDModifier extends GenericModifier<Optional<UUID>> {
+public class OptUUIDModifier extends OptModifier<UUID> {
     private final WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.get(UUID.class, true);
 
     public OptUUIDModifier(int index, String label, Optional<UUID> def) {
-        super(null, index, label, def);
+        super(UUID.class, index, label, def);
+    }
+
+    public Class getOptionalType() {
+        return UUID.class;
     }
 
     @Override

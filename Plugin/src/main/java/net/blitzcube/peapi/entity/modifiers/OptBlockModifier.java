@@ -9,12 +9,12 @@ import org.bukkit.material.MaterialData;
 /**
  * Created by iso2013 on 4/20/2018.
  */
-public class OptBlockModifier extends GenericModifier<Optional<MaterialData>> {
+public class OptBlockModifier extends OptModifier<MaterialData> {
     private final WrappedDataWatcher.Serializer serializer =
-            WrappedDataWatcher.Registry.get(WrappedBlockData.class, true);
+            WrappedDataWatcher.Registry.getBlockDataSerializer(true);
 
     public OptBlockModifier(int index, String label, Optional<MaterialData> def) {
-        super(null, index, label, def);
+        super(MaterialData.class, index, label, def);
     }
 
     @Override
@@ -34,9 +34,11 @@ public class OptBlockModifier extends GenericModifier<Optional<MaterialData>> {
         if (newValue != null) {
             if (newValue.isPresent()) {
                 MaterialData v = newValue.get();
+                WrappedBlockData wbd = WrappedBlockData.createData(v.getItemType(), 0);
+
                 target.write(
-                        super.index,
-                        Optional.of(WrappedBlockData.createData(v.getItemType(), v.getData())),
+                        index,
+                        Optional.of(wbd.getHandle()),
                         serializer
                 );
             } else {

@@ -2,6 +2,8 @@ package net.blitzcube.peapi.entity.loader;
 
 import com.google.common.base.Enums;
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -22,7 +24,7 @@ import java.util.Map;
  * Created by iso2013 on 4/20/2018.
  */
 public class EntityModifierLoader {
-    public static Map<EntityType, List<GenericModifier>> getModifiers(InputStream dataStream) {
+    public static ImmutableMap<EntityType, ImmutableList<GenericModifier>> getModifiers(InputStream dataStream) {
         Gson loader = new GsonBuilder()
                 .registerTypeAdapter(
                         new TypeToken<Node>() {}.getType(),
@@ -40,7 +42,7 @@ public class EntityModifierLoader {
         Node root = loader.fromJson(new InputStreamReader(dataStream), Node.class);
         traverse(nodeMap, root, null);
 
-        Map<EntityType, List<GenericModifier>> output = new HashMap<>();
+        Map<EntityType, ImmutableList<GenericModifier>> output = new HashMap<>();
 
         for (Map.Entry<EntityType, Node> e : nodeMap.entrySet()) {
             List<GenericModifier> modifiers = new ArrayList<>();
@@ -48,10 +50,10 @@ public class EntityModifierLoader {
             do {
                 for (Node.Attribute a : current.getAttributes()) modifiers.addAll(a.asGenericModifier());
             } while ((current = current.getParent()) != null);
-            output.put(e.getKey(), modifiers);
+            output.put(e.getKey(), ImmutableList.copyOf(modifiers));
         }
 
-        return output;
+        return ImmutableMap.copyOf(output);
     }
 
     private static void traverse(Map<EntityType, Node> nodeMap, Node node, Node parent) {

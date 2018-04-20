@@ -1,7 +1,6 @@
 package net.blitzcube.peapi.entity.modifiers;
 
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.sun.istack.internal.NotNull;
 import net.blitzcube.peapi.api.entity.IEntityModifier;
 import net.blitzcube.peapi.api.entity.IModifiableEntity;
 
@@ -15,12 +14,16 @@ public class GenericModifier<T> implements IEntityModifier<T> {
     private final String label;
     private final T def;
 
-    public GenericModifier(Class<T> clazz, int index, String label, @NotNull T def) {
+    public GenericModifier(Class<T> clazz, int index, String label, T def) {
         this.clazz = clazz;
         this.serializer = clazz != null ? WrappedDataWatcher.Registry.get(clazz) : null;
         this.index = index;
         this.label = label;
         this.def = def;
+    }
+
+    public Class<T> getFieldType() {
+        return clazz;
     }
 
     public String getLabel() {

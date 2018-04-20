@@ -1,5 +1,7 @@
 package net.blitzcube.peapi.entity.loader.tree;
 
+import net.blitzcube.peapi.entity.modifiers.BitmaskModifier;
+import net.blitzcube.peapi.entity.modifiers.ByteBitmaskModifier;
 import net.blitzcube.peapi.entity.modifiers.GenericModifier;
 
 import java.util.ArrayList;
@@ -32,8 +34,15 @@ public class Bitmask extends Node.Attribute {
 
     @Override
     public List<GenericModifier> asGenericModifier() {
-        //TODO
-        return null;
+        List<GenericModifier> modifiers = new ArrayList<>();
+        for (Key k : keys) {
+            if (Integer.toBinaryString(k.mask).replace(" ", "").length() > 1) {
+                modifiers.add(new ByteBitmaskModifier(index, k.mask, k.label, def));
+            } else {
+                modifiers.add(new BitmaskModifier(index, k.mask, k.label, def));
+            }
+        }
+        return modifiers;
     }
 
     public static class Key {

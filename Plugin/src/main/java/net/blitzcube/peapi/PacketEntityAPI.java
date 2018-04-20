@@ -2,7 +2,9 @@ package net.blitzcube.peapi;
 
 import com.google.common.base.Preconditions;
 import net.blitzcube.peapi.api.IPacketEntityAPI;
+import net.blitzcube.peapi.api.entity.IEntityModifierRegistry;
 import net.blitzcube.peapi.api.listener.IListener;
+import net.blitzcube.peapi.entity.EntityModifierRegistry;
 import net.blitzcube.peapi.event.engine.PacketEventDispatcher;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
@@ -55,6 +57,8 @@ public class PacketEntityAPI implements IPacketEntityAPI {
         OBJECTS.put(EntityType.LIGHTNING, -1);
     }
 
+    private final EntityModifierRegistry modifierRegistry;
+
     private static boolean compareVersions(String fullVersion) {
         String[][] input = new String[][]{fullVersion.split("\\."), ProviderStub.FULL_VERSION.split("\\.")};
         int size = Math.max(input[0].length, input[1].length);
@@ -75,6 +79,7 @@ public class PacketEntityAPI implements IPacketEntityAPI {
 
     private PacketEntityAPI() {
         this.dispatcher = new PacketEventDispatcher(this);
+        this.modifierRegistry = new EntityModifierRegistry();
     }
 
     public static void initialize(JavaPlugin parent, Consumer<IPacketEntityAPI> onLoad) {
@@ -131,6 +136,11 @@ public class PacketEntityAPI implements IPacketEntityAPI {
     @Override
     public boolean isFakeID(int entityID) {
         return false;
+    }
+
+    @Override
+    public IEntityModifierRegistry getModifierRegistry() {
+        return modifierRegistry;
     }
 
     public static EntityType lookupObject(Byte read) {

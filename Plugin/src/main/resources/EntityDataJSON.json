@@ -731,7 +731,7 @@
                           "index": 12,
                           "type": "Direction",
                           "label": "FACING_DIRECTION",
-                          "def": "0"
+                          "def": 0
                         },
                         {
                           "index": 13,

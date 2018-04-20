@@ -9,18 +9,15 @@ import org.bukkit.block.BlockFace;
  * Created by iso2013 on 4/20/2018.
  */
 public class DirectionModifier extends GenericModifier<BlockFace> {
-    private final WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.get(EnumWrappers.Direction
-            .class);
+    private final WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.getDirectionSerializer();
 
-    public DirectionModifier(int index, String label, BlockFace def) {
-        super(BlockFace.class, index, label, def);
+    public DirectionModifier(int index, String label, EnumWrappers.Direction def) {
+        super(BlockFace.class, index, label, fromWrapped(def));
     }
 
-    @Override
-    public BlockFace getValue(IModifiableEntity target) {
-        EnumWrappers.Direction bp = (EnumWrappers.Direction) target.read(super.index);
-        if (bp == null) return null;
-        switch (bp) {
+    private static BlockFace fromWrapped(EnumWrappers.Direction wrapped) {
+        if (wrapped == null) return null;
+        switch (wrapped) {
             case DOWN:
                 return BlockFace.DOWN;
             case UP:
@@ -35,6 +32,11 @@ public class DirectionModifier extends GenericModifier<BlockFace> {
                 return BlockFace.EAST;
         }
         return null;
+    }
+
+    @Override
+    public BlockFace getValue(IModifiableEntity target) {
+        return fromWrapped((EnumWrappers.Direction) target.read(super.index));
     }
 
     @Override
@@ -63,7 +65,7 @@ public class DirectionModifier extends GenericModifier<BlockFace> {
                 default:
                     throw new IllegalArgumentException("Incorrect value for block face!");
             }
-            target.write(super.index, d, serializer);
+            target.write(super.index, EnumWrappers.getDirectionConverter().getGeneric(d), serializer);
         } else super.unsetValue(target);
     }
 }

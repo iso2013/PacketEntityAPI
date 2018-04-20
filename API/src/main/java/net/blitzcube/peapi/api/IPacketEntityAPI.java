@@ -1,5 +1,6 @@
 package net.blitzcube.peapi.api;
 
+import net.blitzcube.peapi.api.entity.IEntityModifierRegistry;
 import net.blitzcube.peapi.api.listener.IListener;
 
 /**
@@ -13,6 +14,8 @@ public interface IPacketEntityAPI {
     boolean isListenerRegistered(IListener eventListener);
 
     boolean isFakeID(int entityID);
+
+    IEntityModifierRegistry getModifierRegistry();
 
     interface ProviderStub {
         String getMajorVersion();

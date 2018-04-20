@@ -9,7 +9,7 @@ import org.bukkit.util.EulerAngle;
  * Created by iso2013 on 4/18/2018.
  */
 public class EulerAngleModifier extends GenericModifier<EulerAngle> {
-    private final WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.get(Vector3F.class);
+    private final WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.getVectorSerializer();
 
     public EulerAngleModifier(int index, String label, EulerAngle def) {
         super(EulerAngle.class, index, label, def);
@@ -27,7 +27,8 @@ public class EulerAngleModifier extends GenericModifier<EulerAngle> {
         if (newValue != null) {
             target.write(
                     super.index,
-                    new Vector3F((float) newValue.getX(), (float) newValue.getY(), (float) newValue.getZ()),
+                    Vector3F.getConverter().getGeneric(new Vector3F((float) newValue.getX(), (float) newValue.getY(),
+                            (float) newValue.getZ())),
                     serializer
             );
         } else super.unsetValue(target);

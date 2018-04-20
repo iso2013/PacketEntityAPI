@@ -9,7 +9,8 @@ import org.bukkit.util.Vector;
  * Created by iso2013 on 4/18/2018.
  */
 public class PositionModifier extends GenericModifier<Vector> {
-    private final WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.get(BlockPosition.class);
+    private final WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.getBlockPositionSerializer
+            (false);
 
     public PositionModifier(int index, String label, Vector def) {
         super(Vector.class, index, label, def);
@@ -27,7 +28,8 @@ public class PositionModifier extends GenericModifier<Vector> {
         if (newValue != null) {
             target.write(
                     super.index,
-                    new BlockPosition(newValue.getBlockX(), newValue.getBlockY(), newValue.getBlockZ()),
+                    BlockPosition.getConverter().getGeneric(new BlockPosition(newValue.getBlockX(), newValue
+                            .getBlockY(), newValue.getBlockZ())),
                     serializer
             );
         } else super.unsetValue(target);

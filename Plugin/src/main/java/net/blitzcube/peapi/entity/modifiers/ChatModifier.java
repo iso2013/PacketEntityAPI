@@ -10,8 +10,7 @@ import net.md_5.bungee.chat.ComponentSerializer;
  * Created by iso2013 on 4/18/2018.
  */
 public class ChatModifier extends GenericModifier<BaseComponent[]> {
-    private final WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.get(WrappedChatComponent
-            .class);
+    private final WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.getChatComponentSerializer();
 
     public ChatModifier(int index, String label, String def) {
         super(BaseComponent[].class, index, label, ComponentSerializer.parse(def));
@@ -27,7 +26,7 @@ public class ChatModifier extends GenericModifier<BaseComponent[]> {
         if (newValue != null) {
             target.write(
                     super.index,
-                    WrappedChatComponent.fromJson(ComponentSerializer.toString(newValue)),
+                    WrappedChatComponent.fromJson(ComponentSerializer.toString(newValue)).getHandle(),
                     serializer
             );
         } else super.unsetValue(target);

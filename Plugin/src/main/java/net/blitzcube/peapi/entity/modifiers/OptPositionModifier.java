@@ -9,12 +9,16 @@ import org.bukkit.util.Vector;
 /**
  * Created by iso2013 on 4/20/2018.
  */
-public class OptPositionModifier extends GenericModifier<Optional<Vector>> {
-    private final WrappedDataWatcher.Serializer serializer =
-            WrappedDataWatcher.Registry.get(BlockPosition.class, true);
+public class OptPositionModifier extends OptModifier<Vector> {
+    private final WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.getBlockPositionSerializer
+            (true);
 
     public OptPositionModifier(int index, String label, Optional<Vector> def) {
-        super(null, index, label, def);
+        super(Vector.class, index, label, def);
+    }
+
+    public Class getOptionalType() {
+        return BlockPosition.class;
     }
 
     @Override
@@ -36,7 +40,8 @@ public class OptPositionModifier extends GenericModifier<Optional<Vector>> {
                 Vector v = newValue.get();
                 target.write(
                         super.index,
-                        Optional.of(new BlockPosition(v.getBlockX(), v.getBlockY(), v.getBlockZ())),
+                        Optional.of(BlockPosition.getConverter().getGeneric(new BlockPosition(v.getBlockX(), v
+                                .getBlockY(), v.getBlockZ()))),
                         serializer
                 );
             } else {

@@ -20,7 +20,7 @@ public class PacketEntityAnimationEvent extends PacketEntityEvent implements IPa
 
     public static IPacketEntityAnimationEvent unwrapPacket(int entityID, PacketContainer p, Player target) {
         return new PacketEntityAnimationEvent(new EntityIdentifier(entityID, target), target, AnimationType.values()
-                [p.getBytes().read(0)], p);
+                [p.getIntegers().read(1)], p);
     }
 
     @Override

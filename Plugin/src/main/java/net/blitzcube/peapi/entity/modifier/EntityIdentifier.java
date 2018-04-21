@@ -1,6 +1,6 @@
-package net.blitzcube.peapi.entity;
+package net.blitzcube.peapi.entity.modifier;
 
-import net.blitzcube.peapi.api.entity.IEntityIdentifier;
+import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 

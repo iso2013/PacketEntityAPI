@@ -1,18 +1,18 @@
-package net.blitzcube.peapi.entity.modifiers;
+package net.blitzcube.peapi.entity.modifier.modifiers;
 
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import net.blitzcube.peapi.api.entity.IModifiableEntity;
+import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
 
 /**
  * Created by iso2013 on 4/20/2018.
  */
-public class BitmaskModifier extends GenericModifier<Boolean> {
+public class ByteBitmaskModifier extends GenericModifier<Byte> {
     private final WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.get(Byte.class);
     private final byte def;
     private final byte mask;
 
-    public BitmaskModifier(int index, byte mask, String label, Byte def) {
-        super(Boolean.class, index, label, false);
+    public ByteBitmaskModifier(int index, byte mask, String label, Byte def) {
+        super(Byte.class, index, label, def);
         this.def = def;
         this.mask = mask;
     }
@@ -22,15 +22,15 @@ public class BitmaskModifier extends GenericModifier<Boolean> {
     }
 
     @Override
-    public Boolean getValue(IModifiableEntity target) {
-        return (getOrDef(target) & mask) > 0;
+    public Byte getValue(IModifiableEntity target) {
+        return (byte) (getOrDef(target) & mask);
     }
 
     @Override
-    public void setValue(IModifiableEntity target, Boolean newValue) {
+    public void setValue(IModifiableEntity target, Byte newValue) {
         target.write(
                 super.index,
-                (byte) ((getOrDef(target) & ~mask) | (newValue ? mask : 0)),
+                (byte) ((getOrDef(target) & ~mask) | newValue),
                 serializer
         );
     }

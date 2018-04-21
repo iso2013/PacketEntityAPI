@@ -1,6 +1,6 @@
 package net.blitzcube.peapi.api;
 
-import net.blitzcube.peapi.api.entity.IEntityModifierRegistry;
+import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
 import net.blitzcube.peapi.api.listener.IListener;
 
 /**

@@ -1,4 +1,4 @@
-package net.blitzcube.peapi.api.entity;
+package net.blitzcube.peapi.api.entity.modifier;
 
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;

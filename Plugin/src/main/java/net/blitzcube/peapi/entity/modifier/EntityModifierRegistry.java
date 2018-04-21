@@ -1,12 +1,12 @@
-package net.blitzcube.peapi.entity;
+package net.blitzcube.peapi.entity.modifier;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import net.blitzcube.peapi.api.entity.IEntityModifier;
-import net.blitzcube.peapi.api.entity.IEntityModifierRegistry;
-import net.blitzcube.peapi.entity.loader.EntityModifierLoader;
-import net.blitzcube.peapi.entity.modifiers.GenericModifier;
-import net.blitzcube.peapi.entity.modifiers.OptModifier;
+import net.blitzcube.peapi.api.entity.modifier.IEntityModifier;
+import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
+import net.blitzcube.peapi.entity.modifier.loader.EntityModifierLoader;
+import net.blitzcube.peapi.entity.modifier.modifiers.GenericModifier;
+import net.blitzcube.peapi.entity.modifier.modifiers.OptModifier;
 import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;

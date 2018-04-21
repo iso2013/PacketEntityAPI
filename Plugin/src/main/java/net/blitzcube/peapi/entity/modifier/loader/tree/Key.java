@@ -1,4 +1,4 @@
-package net.blitzcube.peapi.entity.loader.tree;
+package net.blitzcube.peapi.entity.modifier.loader.tree;
 
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.nbt.NbtCompound;
@@ -6,7 +6,7 @@ import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
-import net.blitzcube.peapi.entity.modifiers.*;
+import net.blitzcube.peapi.entity.modifier.modifiers.*;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;

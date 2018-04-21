@@ -2,9 +2,9 @@ package net.blitzcube.peapi.event;
 
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
-import net.blitzcube.peapi.api.entity.IEntityIdentifier;
+import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import net.blitzcube.peapi.api.event.IPacketEntityEquipmentEvent;
-import net.blitzcube.peapi.entity.EntityIdentifier;
+import net.blitzcube.peapi.entity.modifier.EntityIdentifier;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;

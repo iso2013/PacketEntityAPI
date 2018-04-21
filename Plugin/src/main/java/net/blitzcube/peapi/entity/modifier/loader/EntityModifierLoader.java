@@ -1,4 +1,4 @@
-package net.blitzcube.peapi.entity.loader;
+package net.blitzcube.peapi.entity.modifier.loader;
 
 import com.google.common.base.Enums;
 import com.google.common.base.Optional;
@@ -7,10 +7,10 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import net.blitzcube.peapi.entity.loader.tree.Bitmask;
-import net.blitzcube.peapi.entity.loader.tree.Node;
-import net.blitzcube.peapi.entity.loader.tree.TreeDeserializer;
-import net.blitzcube.peapi.entity.modifiers.GenericModifier;
+import net.blitzcube.peapi.entity.modifier.loader.tree.Bitmask;
+import net.blitzcube.peapi.entity.modifier.loader.tree.Node;
+import net.blitzcube.peapi.entity.modifier.loader.tree.TreeDeserializer;
+import net.blitzcube.peapi.entity.modifier.modifiers.GenericModifier;
 import org.bukkit.entity.EntityType;
 
 import java.io.InputStream;

@@ -1,8 +1,8 @@
-package net.blitzcube.peapi.entity.modifiers;
+package net.blitzcube.peapi.entity.modifier.modifiers;
 
 import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import net.blitzcube.peapi.api.entity.IModifiableEntity;
+import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
 import org.bukkit.util.Vector;
 
 /**

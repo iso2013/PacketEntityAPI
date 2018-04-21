@@ -1,8 +1,8 @@
-package net.blitzcube.peapi.entity;
+package net.blitzcube.peapi.entity.modifier;
 
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
-import net.blitzcube.peapi.api.entity.IModifiableEntity;
+import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;

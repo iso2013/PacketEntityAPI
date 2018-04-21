@@ -1,6 +1,6 @@
-package net.blitzcube.peapi.entity.loader.tree;
+package net.blitzcube.peapi.entity.modifier.loader.tree;
 
-import net.blitzcube.peapi.entity.modifiers.GenericModifier;
+import net.blitzcube.peapi.entity.modifier.modifiers.GenericModifier;
 
 import java.util.ArrayList;
 import java.util.List;

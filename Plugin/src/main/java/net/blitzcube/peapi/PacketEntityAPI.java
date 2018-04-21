@@ -2,9 +2,9 @@ package net.blitzcube.peapi;
 
 import com.google.common.base.Preconditions;
 import net.blitzcube.peapi.api.IPacketEntityAPI;
-import net.blitzcube.peapi.api.entity.IEntityModifierRegistry;
+import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
 import net.blitzcube.peapi.api.listener.IListener;
-import net.blitzcube.peapi.entity.EntityModifierRegistry;
+import net.blitzcube.peapi.entity.modifier.EntityModifierRegistry;
 import net.blitzcube.peapi.event.engine.PacketEventDispatcher;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;

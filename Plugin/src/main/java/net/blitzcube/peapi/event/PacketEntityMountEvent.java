@@ -2,9 +2,9 @@ package net.blitzcube.peapi.event;
 
 import com.comphenix.protocol.events.PacketContainer;
 import com.google.common.collect.ImmutableList;
-import net.blitzcube.peapi.api.entity.IEntityIdentifier;
+import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import net.blitzcube.peapi.api.event.IPacketEntityMountEvent;
-import net.blitzcube.peapi.entity.EntityIdentifier;
+import net.blitzcube.peapi.entity.modifier.EntityIdentifier;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;

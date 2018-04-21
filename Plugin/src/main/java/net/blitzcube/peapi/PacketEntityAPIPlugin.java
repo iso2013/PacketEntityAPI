@@ -1,14 +1,14 @@
 package net.blitzcube.peapi;
 
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
-import net.blitzcube.peapi.api.entity.IEntityModifier;
-import net.blitzcube.peapi.api.entity.IModifiableEntity;
+import net.blitzcube.peapi.api.entity.modifier.IEntityModifier;
+import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
 import net.blitzcube.peapi.api.event.IPacketEntityDataEvent;
 import net.blitzcube.peapi.api.event.IPacketEntityEvent;
 import net.blitzcube.peapi.api.event.IPacketEntitySpawnEvent;
 import net.blitzcube.peapi.api.event.IPacketObjectSpawnEvent;
 import net.blitzcube.peapi.api.listener.IListener;
-import net.blitzcube.peapi.entity.ModifiableEntity;
+import net.blitzcube.peapi.entity.modifier.ModifiableEntity;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.Listener;

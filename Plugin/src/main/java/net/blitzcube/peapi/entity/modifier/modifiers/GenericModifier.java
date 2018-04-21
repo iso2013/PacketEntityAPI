@@ -1,8 +1,8 @@
-package net.blitzcube.peapi.entity.modifiers;
+package net.blitzcube.peapi.entity.modifier.modifiers;
 
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import net.blitzcube.peapi.api.entity.IEntityModifier;
-import net.blitzcube.peapi.api.entity.IModifiableEntity;
+import net.blitzcube.peapi.api.entity.modifier.IEntityModifier;
+import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
 
 /**
  * Created by iso2013 on 4/18/2018.

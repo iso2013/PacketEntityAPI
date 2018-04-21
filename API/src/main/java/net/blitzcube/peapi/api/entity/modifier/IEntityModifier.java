@@ -1,4 +1,4 @@
-package net.blitzcube.peapi.api.entity;
+package net.blitzcube.peapi.api.entity.modifier;
 
 /**
  * Created by iso2013 on 4/18/2018.

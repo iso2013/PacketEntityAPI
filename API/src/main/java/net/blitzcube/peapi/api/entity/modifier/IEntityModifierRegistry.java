@@ -1,4 +1,4 @@
-package net.blitzcube.peapi.api.entity;
+package net.blitzcube.peapi.api.entity.modifier;
 
 import org.bukkit.entity.EntityType;
 

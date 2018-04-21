@@ -1,8 +1,8 @@
-package net.blitzcube.peapi.entity.loader.tree;
+package net.blitzcube.peapi.entity.modifier.loader.tree;
 
-import net.blitzcube.peapi.entity.modifiers.BitmaskModifier;
-import net.blitzcube.peapi.entity.modifiers.ByteBitmaskModifier;
-import net.blitzcube.peapi.entity.modifiers.GenericModifier;
+import net.blitzcube.peapi.entity.modifier.modifiers.BitmaskModifier;
+import net.blitzcube.peapi.entity.modifier.modifiers.ByteBitmaskModifier;
+import net.blitzcube.peapi.entity.modifier.modifiers.GenericModifier;
 
 import java.util.ArrayList;
 import java.util.List;

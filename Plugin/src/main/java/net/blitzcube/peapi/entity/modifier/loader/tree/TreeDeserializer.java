@@ -1,4 +1,4 @@
-package net.blitzcube.peapi.entity.loader.tree;
+package net.blitzcube.peapi.entity.modifier.loader.tree;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;

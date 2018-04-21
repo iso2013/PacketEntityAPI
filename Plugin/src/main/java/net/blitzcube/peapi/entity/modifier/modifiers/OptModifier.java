@@ -1,4 +1,4 @@
-package net.blitzcube.peapi.entity.modifiers;
+package net.blitzcube.peapi.entity.modifier.modifiers;
 
 import com.google.common.base.Optional;
 

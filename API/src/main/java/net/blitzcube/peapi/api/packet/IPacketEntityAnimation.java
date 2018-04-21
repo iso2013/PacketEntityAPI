@@ -1,9 +1,9 @@
-package net.blitzcube.peapi.api.event;
+package net.blitzcube.peapi.api.packet;
 
 /**
- * Created by iso2013 on 2/24/2018.
+ * Created by iso2013 on 4/21/2018.
  */
-public interface IPacketEntityAnimationEvent extends IPacketEntityEvent {
+public interface IPacketEntityAnimation extends IPacketEntity {
     AnimationType getAnimation();
 
     void setAnimation(AnimationType type);

@@ -3,12 +3,12 @@ package net.blitzcube.peapi;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifier;
 import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
-import net.blitzcube.peapi.api.event.IPacketEntityDataEvent;
-import net.blitzcube.peapi.api.event.IPacketEntityEvent;
-import net.blitzcube.peapi.api.event.IPacketEntitySpawnEvent;
-import net.blitzcube.peapi.api.event.IPacketObjectSpawnEvent;
+import net.blitzcube.peapi.api.event.IEntityPacketEvent;
 import net.blitzcube.peapi.api.listener.IListener;
 import net.blitzcube.peapi.entity.modifier.ModifiableEntity;
+import net.blitzcube.peapi.packet.EntityDataPacket;
+import net.blitzcube.peapi.packet.EntitySpawnPacket;
+import net.blitzcube.peapi.packet.ObjectSpawnPacket;
 import org.bukkit.DyeColor;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.Listener;
@@ -42,34 +42,38 @@ public final class PacketEntityAPIPlugin extends JavaPlugin implements Listener 
                 }
 
                 @Override
-                public void onEvent(IPacketEntityEvent e) {
-                    if (!((e instanceof IPacketEntityDataEvent) || (e instanceof
-                            IPacketEntitySpawnEvent) || (e instanceof IPacketObjectSpawnEvent))) return;
+                public void onEvent(IEntityPacketEvent e) {
                     List<WrappedWatchableObject> objs;
-                    if (e instanceof IPacketEntityDataEvent) {
-                        objs = ((IPacketEntityDataEvent) e).getMetadata();
-                    } else if (e instanceof IPacketEntitySpawnEvent) {
-                        objs = ((IPacketEntitySpawnEvent) e).getMetadata();
-                        ids.put(e.getIdentifier().getEntityID(), ((IPacketEntitySpawnEvent) e).getEntityType());
-                    } else {
-                        ids.put(e.getIdentifier().getEntityID(), ((IPacketObjectSpawnEvent) e).getEntityType());
-                        return;
+                    switch (e.getPacketType()) {
+                        case DATA:
+                            objs = ((EntityDataPacket) e.getPacket()).getMetadata();
+                            break;
+                        case ENTITY_SPAWN:
+                            objs = ((EntitySpawnPacket) e.getPacket()).getMetadata();
+                            ids.put(e.getPacket().getIdentifier().getEntityID(), ((EntitySpawnPacket) e.getPacket())
+                                    .getEntityType());
+                            break;
+                        case OBJECT_SPAWN:
+                            ids.put(e.getPacket().getIdentifier().getEntityID(), ((ObjectSpawnPacket) e.getPacket())
+                                    .getEntityType());
+                        default:
+                            return;
                     }
 
-                    EntityType t = ids.get(e.getIdentifier().getEntityID());
+                    EntityType t = ids.get(e.getPacket().getIdentifier().getEntityID());
                     IModifiableEntity m = new ModifiableEntity.ListBased(objs);
                     if (t == EntityType.SHEEP) {
                         name.setValue(m, "Yay!");
                         nameVisible.setValue(m, true);
-                        color.setValue(m, (byte) DyeColor.PURPLE.ordinal());
+                        color.setValue(m, (byte) DyeColor.ORANGE.ordinal());
                         burning.setValue(m, true);
                     } else if (t == EntityType.SLIME) {
                         size.setValue(m, 100);
                     } else return;
-                    if (e instanceof IPacketEntityDataEvent) {
-                        ((IPacketEntityDataEvent) e).setMetadata(m.getWatchableObjects());
+                    if (e.getPacketType().equals(IEntityPacketEvent.EntityPacketType.DATA)) {
+                        ((EntityDataPacket) e.getPacket()).rewriteMetadata();
                     } else {
-                        ((IPacketEntitySpawnEvent) e).setMetadata(m.getWatchableObjects());
+                        ((EntitySpawnPacket) e.getPacket()).rewriteMetadata();
                     }
                 }
 

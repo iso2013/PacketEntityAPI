@@ -1,4 +1,4 @@
-package net.blitzcube.peapi.api.event;
+package net.blitzcube.peapi.api.packet;
 
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
@@ -6,9 +6,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
 
 /**
- * Created by iso2013 on 2/24/2018.
+ * Created by iso2013 on 4/21/2018.
  */
-public interface IPacketObjectSpawnEvent extends IPacketEntityEvent {
+public interface IPacketObjectSpawn {
     EntityType getEntityType();
 
     void setEntityType(EntityType type);

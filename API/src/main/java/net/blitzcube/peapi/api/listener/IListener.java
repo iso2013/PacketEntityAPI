@@ -1,6 +1,6 @@
 package net.blitzcube.peapi.api.listener;
 
-import net.blitzcube.peapi.api.event.IPacketEntityEvent;
+import net.blitzcube.peapi.api.event.IEntityPacketEvent;
 import org.bukkit.entity.EntityType;
 
 import java.util.Comparator;
@@ -11,7 +11,7 @@ import java.util.Comparator;
 public interface IListener {
     ListenerPriority getPriority();
 
-    void onEvent(IPacketEntityEvent e);
+    void onEvent(IEntityPacketEvent e);
 
     default boolean shouldFireForFake() {
         return false;

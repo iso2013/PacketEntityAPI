@@ -1,4 +1,4 @@
-package net.blitzcube.peapi.event;
+package net.blitzcube.peapi.packet;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
@@ -6,7 +6,7 @@ import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.google.common.base.Preconditions;
 import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
-import net.blitzcube.peapi.api.event.IPacketObjectSpawnEvent;
+import net.blitzcube.peapi.api.packet.IPacketObjectSpawn;
 import net.blitzcube.peapi.entity.modifier.EntityIdentifier;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
@@ -17,9 +17,10 @@ import org.bukkit.util.Vector;
 import java.util.UUID;
 
 /**
- * Created by iso2013 on 2/24/2018.
+ * Created by iso2013 on 4/21/2018.
  */
-public class PacketObjectSpawnEvent extends PacketEntityEvent implements IPacketObjectSpawnEvent {
+public class ObjectSpawnPacket extends EntityPacket implements IPacketObjectSpawn {
+    private static final int TICK_DELAY = 0;
     private EntityType type;
     private Location location;
     private Vector velocity;
@@ -28,41 +29,47 @@ public class PacketObjectSpawnEvent extends PacketEntityEvent implements IPacket
     private BlockFace direction;
     private int data;
 
-    private PacketObjectSpawnEvent(IEntityIdentifier identifier, Player target, EntityType type, Location location,
-                                   Vector velocity, int data, PacketContainer packet) {
-        super(identifier, target, packet);
+    private ObjectSpawnPacket(IEntityIdentifier identifier, EntityType type) {
+        super(identifier, new PacketContainer(entityTypeToPacket(type)));
+        this.velocity = new Vector(0, 0, 0);
+        data = 0;
+    }
+
+    private ObjectSpawnPacket(IEntityIdentifier identifier, PacketContainer packet, EntityType type, Location location,
+                              Vector velocity, int data) {
+        super(identifier, packet);
         this.type = type;
         this.location = location;
         this.velocity = velocity;
         this.data = data;
     }
 
-    private PacketObjectSpawnEvent(IEntityIdentifier identifier, Player target, EntityType type, Location location,
-                                   String title, BlockFace direction, PacketContainer packet) {
-        super(identifier, target, packet);
+    private ObjectSpawnPacket(IEntityIdentifier identifier, PacketContainer packet, EntityType type, Location location,
+                              String title, BlockFace direction) {
+        super(identifier, packet);
         this.type = type;
         this.location = location;
         this.title = title;
         this.direction = direction;
     }
 
-    private PacketObjectSpawnEvent(IEntityIdentifier identifier, Player target, EntityType type, Location location,
-                                   Integer orbCount, PacketContainer packet) {
-        super(identifier, target, packet);
+    private ObjectSpawnPacket(IEntityIdentifier identifier, PacketContainer packet, EntityType type, Location location,
+                              Integer orbCount) {
+        super(identifier, packet);
         this.type = type;
         this.location = location;
         this.orbCount = orbCount;
     }
 
-    private PacketObjectSpawnEvent(IEntityIdentifier identifier, Player target, EntityType type, Location location,
-                                   PacketContainer packet) {
-        super(identifier, target, packet);
+    private ObjectSpawnPacket(IEntityIdentifier identifier, PacketContainer packet, EntityType type,
+                              Location location) {
+        super(identifier, packet);
         this.type = type;
         this.location = location;
     }
 
-    public static IPacketObjectSpawnEvent unwrapPacket(int id, PacketContainer p, Player target) {
-        EntityType t = packetTypeToEntity(p.getType());
+    public static ObjectSpawnPacket unwrap(int entityID, PacketContainer c, Player p) {
+        EntityType t = packetTypeToEntity(c.getType());
         float pitch = 0.0F, yaw = 0.0F;
         Vector velocity = new Vector();
         int data = 0;
@@ -71,27 +78,27 @@ public class PacketObjectSpawnEvent extends PacketEntityEvent implements IPacket
         if (t == null) return null;
         switch (t) {
             case UNKNOWN:
-                yaw = p.getIntegers().read(1).floatValue() * (360.0F / 256.0F);
-                pitch = p.getIntegers().read(2).floatValue() * (360.0F / 256.0F);
-                t = PacketEntityAPI.lookupObject(p.getIntegers().read(6).byteValue());
+                yaw = c.getIntegers().read(1).floatValue() * (360.0F / 256.0F);
+                pitch = c.getIntegers().read(2).floatValue() * (360.0F / 256.0F);
+                t = PacketEntityAPI.lookupObject(c.getIntegers().read(6).byteValue());
                 velocity = new Vector(
-                        p.getIntegers().read(2),
-                        p.getIntegers().read(3),
-                        p.getIntegers().read(4)
+                        c.getIntegers().read(2),
+                        c.getIntegers().read(3),
+                        c.getIntegers().read(4)
                 );
-                data = p.getIntegers().read(4);
+                data = c.getIntegers().read(4);
             case PAINTING:
-                uuid = p.getUUIDs().read(0);
+                uuid = c.getUUIDs().read(0);
                 if (EntityType.PAINTING.equals(t)) {
-                    location = p.getBlockPositionModifier().read(0).toLocation(target.getWorld());
+                    location = c.getBlockPositionModifier().read(0).toLocation(p.getWorld());
                     break;
                 }
             default:
                 location = new Location(
-                        target.getWorld(),
-                        p.getDoubles().read(0),
-                        p.getDoubles().read(1),
-                        p.getDoubles().read(2),
+                        p.getWorld(),
+                        c.getDoubles().read(0),
+                        c.getDoubles().read(1),
+                        c.getDoubles().read(2),
                         yaw,
                         pitch
                 );
@@ -99,16 +106,16 @@ public class PacketObjectSpawnEvent extends PacketEntityEvent implements IPacket
         if (t == null) return null;
         switch (t) {
             case PAINTING:
-                return new PacketObjectSpawnEvent(new EntityIdentifier(id, uuid, target), target, t, location, p
-                        .getStrings().read(0), directionToBlockFace(p.getDirections().read(0)), p);
+                return new ObjectSpawnPacket(new EntityIdentifier(entityID, uuid, p), c, t, location, c
+                        .getStrings().read(0), directionToBlockFace(c.getDirections().read(0)));
             case EXPERIENCE_ORB:
-                return new PacketObjectSpawnEvent(new EntityIdentifier(id, target), target, t, location, p.getIntegers
-                        ().read(1), p);
+                return new ObjectSpawnPacket(new EntityIdentifier(entityID, p), c, t, location, c.getIntegers
+                        ().read(1));
             case LIGHTNING:
-                return new PacketObjectSpawnEvent(new EntityIdentifier(id, target), target, t, location, p);
+                return new ObjectSpawnPacket(new EntityIdentifier(entityID, p), c, t, location);
             default:
-                return new PacketObjectSpawnEvent(new EntityIdentifier(id, uuid, target), target, t, location,
-                        velocity, data, p);
+                return new ObjectSpawnPacket(new EntityIdentifier(entityID, uuid, p), c, t, location,
+                        velocity, data);
         }
     }
 
@@ -121,6 +128,18 @@ public class PacketObjectSpawnEvent extends PacketEntityEvent implements IPacket
             return EntityType.PAINTING;
         }
         return EntityType.UNKNOWN;
+    }
+
+    private static PacketType entityTypeToPacket(EntityType type) {
+        switch (type) {
+            case LIGHTNING:
+                return PacketType.Play.Server.SPAWN_ENTITY_WEATHER;
+            case EXPERIENCE_ORB:
+                return PacketType.Play.Server.SPAWN_ENTITY_EXPERIENCE_ORB;
+            case PAINTING:
+                return PacketType.Play.Server.SPAWN_ENTITY_PAINTING;
+        }
+        return PacketType.Play.Server.SPAWN_ENTITY;
     }
 
     private static BlockFace directionToBlockFace(EnumWrappers.Direction d) {
@@ -172,7 +191,7 @@ public class PacketObjectSpawnEvent extends PacketEntityEvent implements IPacket
         Preconditions.checkArgument(PacketEntityAPI.OBJECTS.containsKey(type),
                 "You cannot spawn an entity with an object packet!");
         this.type = type;
-        super.packet.getBytes().write(0, PacketEntityAPI.OBJECTS.get(type).byteValue());
+        super.rawPacket.getBytes().write(0, PacketEntityAPI.OBJECTS.get(type).byteValue());
     }
 
     @Override
@@ -183,12 +202,12 @@ public class PacketObjectSpawnEvent extends PacketEntityEvent implements IPacket
     @Override
     public void setLocation(Location location) {
         this.location = location;
-        super.packet.getDoubles().write(0, location.getX());
-        super.packet.getDoubles().write(1, location.getY());
-        super.packet.getDoubles().write(2, location.getZ());
+        super.rawPacket.getDoubles().write(0, location.getX());
+        super.rawPacket.getDoubles().write(1, location.getY());
+        super.rawPacket.getDoubles().write(2, location.getZ());
         if (type != EntityType.LIGHTNING && type != EntityType.PAINTING && type != EntityType.EXPERIENCE_ORB) {
-            super.packet.getIntegers().write(1, (int) (location.getYaw() * (256.0F / 360.0F)));
-            super.packet.getIntegers().write(2, (int) (location.getPitch() * (256.0F / 360.0F)));
+            super.rawPacket.getIntegers().write(1, (int) (location.getYaw() * (256.0F / 360.0F)));
+            super.rawPacket.getIntegers().write(2, (int) (location.getPitch() * (256.0F / 360.0F)));
         }
     }
 
@@ -206,7 +225,7 @@ public class PacketObjectSpawnEvent extends PacketEntityEvent implements IPacket
                         type != EntityType.EXPERIENCE_ORB,
                 "You cannot set data for a " + type.name() + "!");
         this.data = data;
-        super.packet.getIntegers().write(7, data);
+        super.rawPacket.getIntegers().write(7, data);
     }
 
     @Override
@@ -221,9 +240,9 @@ public class PacketObjectSpawnEvent extends PacketEntityEvent implements IPacket
                 "You cannot set a velocity for a " + type.name() + "!");
         this.velocity = velocity;
         //TODO: This is wrong.
-        super.packet.getIntegers().write(3, (int) velocity.getX());
-        super.packet.getIntegers().write(4, (int) velocity.getY());
-        super.packet.getIntegers().write(5, (int) velocity.getZ());
+        super.rawPacket.getIntegers().write(3, (int) velocity.getX());
+        super.rawPacket.getIntegers().write(4, (int) velocity.getY());
+        super.rawPacket.getIntegers().write(5, (int) velocity.getZ());
     }
 
     @Override
@@ -234,11 +253,11 @@ public class PacketObjectSpawnEvent extends PacketEntityEvent implements IPacket
     }
 
     @Override
-    public void setOrbCount(Integer orbCount) {
+    public void setOrbCount(Integer count) {
         Preconditions.checkArgument(type == EntityType.EXPERIENCE_ORB,
                 type.name() + " is not an experience orb!");
         this.orbCount = orbCount;
-        super.packet.getIntegers().write(1, orbCount);
+        super.rawPacket.getIntegers().write(1, orbCount);
     }
 
     @Override
@@ -255,7 +274,7 @@ public class PacketObjectSpawnEvent extends PacketEntityEvent implements IPacket
         Preconditions.checkArgument(title.length() > 13,
                 "That title is too long! Maximum 13 characters.");
         this.title = title;
-        super.packet.getStrings().write(0, title);
+        super.rawPacket.getStrings().write(0, title);
     }
 
     @Override
@@ -270,6 +289,22 @@ public class PacketObjectSpawnEvent extends PacketEntityEvent implements IPacket
         Preconditions.checkArgument(type == EntityType.PAINTING,
                 type.name() + " is not a painting!");
         this.direction = direction;
-        super.packet.getDirections().write(0, blockFaceToDirection(direction));
+        super.rawPacket.getDirections().write(0, blockFaceToDirection(direction));
+    }
+
+    @Override
+    public PacketContainer getRawPacket() {
+        switch (type) {
+            case EXPERIENCE_ORB:
+                assert location != null && orbCount > 0;
+                break;
+            case PAINTING:
+                assert title != null && !title.isEmpty() && direction != null;
+            case LIGHTNING:
+            default:
+                assert location != null;
+                break;
+        }
+        return super.getRawPacket();
     }
 }

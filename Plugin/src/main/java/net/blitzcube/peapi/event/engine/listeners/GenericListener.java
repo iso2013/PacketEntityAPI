@@ -4,12 +4,17 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.*;
 import com.comphenix.protocol.injector.GamePhase;
 import net.blitzcube.peapi.PacketEntityAPI;
-import net.blitzcube.peapi.api.event.IPacketEntityEvent;
-import net.blitzcube.peapi.api.event.IPacketGroupEntityEvent;
-import net.blitzcube.peapi.event.*;
+import net.blitzcube.peapi.api.event.IEntityPacketEvent;
+import net.blitzcube.peapi.api.packet.IPacketEntity;
+import net.blitzcube.peapi.api.packet.IPacketGroupEntity;
+import net.blitzcube.peapi.event.EntityPacketEvent;
 import net.blitzcube.peapi.event.engine.PacketEventDispatcher;
+import net.blitzcube.peapi.packet.EntityPacket;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by iso2013 on 2/24/2018.
@@ -18,6 +23,16 @@ public class GenericListener implements PacketListener {
     private final PacketEntityAPI parent;
     private final PacketEventDispatcher dispatcher;
     private boolean sendForFake;
+    private static final Map<PacketType, IEntityPacketEvent.EntityPacketType> TYPES = new HashMap<>();
+
+    static {
+        TYPES.put(PacketType.Play.Server.ENTITY_METADATA, IEntityPacketEvent.EntityPacketType.DATA);
+        TYPES.put(PacketType.Play.Server.ENTITY_EQUIPMENT, IEntityPacketEvent.EntityPacketType.EQUIPMENT);
+        TYPES.put(PacketType.Play.Server.MOUNT, IEntityPacketEvent.EntityPacketType.MOUNT);
+        TYPES.put(PacketType.Play.Server.ENTITY_DESTROY, IEntityPacketEvent.EntityPacketType.DESTROY);
+        TYPES.put(PacketType.Play.Server.ENTITY_STATUS, IEntityPacketEvent.EntityPacketType.STATUS);
+        TYPES.put(PacketType.Play.Server.ANIMATION, IEntityPacketEvent.EntityPacketType.ANIMATION);
+    }
 
     public GenericListener(PacketEntityAPI parent, PacketEventDispatcher
             dispatcher) {
@@ -28,38 +43,31 @@ public class GenericListener implements PacketListener {
 
     @Override
     public void onPacketSending(PacketEvent packetEvent) {
-        PacketType t = packetEvent.getPacketType();
-        PacketContainer p = packetEvent.getPacket();
+        PacketType type = packetEvent.getPacketType();
+        PacketContainer c = packetEvent.getPacket();
         Player target = packetEvent.getPlayer();
 
         int entityID = 0;
-        if (!PacketType.Play.Server.ENTITY_DESTROY.equals(t)) {
-            entityID = p.getIntegers().read(0);
+        if (!PacketType.Play.Server.ENTITY_DESTROY.equals(type)) {
+            entityID = c.getIntegers().read(0);
             if (!sendForFake && parent.isFakeID(entityID)) return;
         }
 
-        IPacketEntityEvent e = null;
-        if (PacketType.Play.Server.ENTITY_METADATA.equals(t)) {
-            e = PacketEntityDataEvent.unwrapPacket(entityID, p, target);
-        } else if (PacketType.Play.Server.ENTITY_EQUIPMENT.equals(t)) {
-            e = PacketEntityEquipmentEvent.unwrapPacket(entityID, p, target);
-        } else if (PacketType.Play.Server.MOUNT.equals(t)) {
-            e = PacketEntityMountEvent.unwrapPacket(entityID, p, target);
-        } else if (PacketType.Play.Server.ENTITY_DESTROY.equals(t)) {
-            e = PacketEntityDestroyEvent.unwrapPacket(p, target);
-        } else if (PacketType.Play.Server.ENTITY_STATUS.equals(t)) {
-            e = PacketEntityStatusEvent.unwrapPacket(entityID, p, target);
-        } else if (PacketType.Play.Server.ANIMATION.equals(t)) {
-            e = PacketEntityAnimationEvent.unwrapPacket(entityID, p, target);
-        }
-        if (e == null) return;
+        IEntityPacketEvent.EntityPacketType eT = TYPES.get(type);
+        IPacketEntity w = EntityPacket.unwrapFromType(entityID, eT, c, target);
+        if (w == null) return;
+        IEntityPacketEvent e = new EntityPacketEvent(
+                w,
+                eT,
+                target
+        );
         dispatcher.dispatch(e, null);
-        if (e instanceof IPacketGroupEntityEvent) {
-            if (((IPacketGroupEntityEvent) e).getGroup().size() == 0 || e.isCancelled()) {
+        if (e.getPacket() instanceof IPacketGroupEntity) {
+            if (((IPacketGroupEntity) e.getPacket()).getGroup().size() == 0 || e.isCancelled()) {
                 packetEvent.setCancelled(true);
                 return;
             }
-            ((IPacketGroupEntityEvent) e).apply();
+            ((IPacketGroupEntity) e.getPacket()).apply();
         } else if (e.isCancelled()) {
             packetEvent.setCancelled(true);
         }
@@ -73,7 +81,8 @@ public class GenericListener implements PacketListener {
         int entityID = p.getIntegers().read(0);
         if (!sendForFake && parent.isFakeID(entityID)) return;
 
-        IPacketEntityEvent e = PacketEntityClickEvent.unwrapPacket(entityID, p, target);
+        IPacketEntity w = EntityPacket.unwrapFromType(entityID, IEntityPacketEvent.EntityPacketType.CLICK, p, target);
+        IEntityPacketEvent e = new EntityPacketEvent(w, IEntityPacketEvent.EntityPacketType.CLICK, target);
         dispatcher.dispatch(e, null);
         if (e.isCancelled()) {
             packetEvent.setCancelled(true);

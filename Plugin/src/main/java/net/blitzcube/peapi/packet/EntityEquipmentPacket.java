@@ -1,35 +1,41 @@
-package net.blitzcube.peapi.event;
+package net.blitzcube.peapi.packet;
 
+import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
-import net.blitzcube.peapi.api.event.IPacketEntityEquipmentEvent;
+import net.blitzcube.peapi.api.packet.IPacketEntityEquipment;
 import net.blitzcube.peapi.entity.modifier.EntityIdentifier;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Created by iso2013 on 2/24/2018.
+ * Created by iso2013 on 4/21/2018.
  */
-public class PacketEntityEquipmentEvent extends PacketEntityEvent implements IPacketEntityEquipmentEvent {
+public class EntityEquipmentPacket extends EntityPacket implements IPacketEntityEquipment {
+    private static final int TICK_DELAY = 1;
+    private static final PacketType TYPE = PacketType.Play.Server.ENTITY_EQUIPMENT;
     private EquipmentSlot slot;
     private ItemStack item;
 
-    private PacketEntityEquipmentEvent(IEntityIdentifier identifier, Player target, EquipmentSlot slot, ItemStack
-            item, PacketContainer packet) {
-        super(identifier, target, packet);
+    private EntityEquipmentPacket(IEntityIdentifier identifier) {
+        super(identifier, new PacketContainer(TYPE));
+    }
+
+    protected EntityEquipmentPacket(IEntityIdentifier identifier, PacketContainer rawPacket, EquipmentSlot slot,
+                                    ItemStack item) {
+        super(identifier, rawPacket);
         this.slot = slot;
         this.item = item;
     }
 
-    public static IPacketEntityEquipmentEvent unwrapPacket(int id, PacketContainer p, Player target) {
-        return new PacketEntityEquipmentEvent(
-                new EntityIdentifier(id, target),
-                target,
-                fromItemSlot(p.getItemSlots().read(0)),
-                p.getItemModifier().read(0),
-                p
+    public static EntityPacket unwrap(int entityID, PacketContainer c, Player p) {
+        return new EntityEquipmentPacket(
+                new EntityIdentifier(entityID, p),
+                c,
+                fromItemSlot(c.getItemSlots().read(0)),
+                c.getItemModifier().read(0)
         );
     }
 
@@ -71,23 +77,29 @@ public class PacketEntityEquipmentEvent extends PacketEntityEvent implements IPa
 
     @Override
     public EquipmentSlot getSlot() {
-        return this.slot;
+        return slot;
     }
 
     @Override
     public void setSlot(EquipmentSlot slot) {
         this.slot = slot;
-        super.packet.getItemSlots().write(0, fromEquipmentSlot(slot));
+        super.rawPacket.getItemSlots().write(0, fromEquipmentSlot(slot));
     }
 
     @Override
     public ItemStack getItem() {
-        return this.item;
+        return item;
     }
 
     @Override
     public void setItem(ItemStack item) {
         this.item = item;
-        super.packet.getItemModifier().write(0, item);
+        super.rawPacket.getItemModifier().write(0, item);
+    }
+
+    @Override
+    public PacketContainer getRawPacket() {
+        assert slot != null && item != null;
+        return super.getRawPacket();
     }
 }

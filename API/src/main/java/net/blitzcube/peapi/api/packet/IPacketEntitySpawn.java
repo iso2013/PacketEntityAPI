@@ -1,4 +1,4 @@
-package net.blitzcube.peapi.api.event;
+package net.blitzcube.peapi.api.packet;
 
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import org.bukkit.Location;
@@ -8,9 +8,9 @@ import org.bukkit.util.Vector;
 import java.util.List;
 
 /**
- * Created by iso2013 on 2/23/2018.
+ * Created by iso2013 on 4/21/2018.
  */
-public interface IPacketEntitySpawnEvent extends IPacketEntityEvent {
+public interface IPacketEntitySpawn {
     EntityType getEntityType();
 
     void setEntityType(EntityType type);
@@ -30,4 +30,6 @@ public interface IPacketEntitySpawnEvent extends IPacketEntityEvent {
     List<WrappedWatchableObject> getMetadata();
 
     void setMetadata(List<WrappedWatchableObject> data);
+
+    void rewriteMetadata();
 }

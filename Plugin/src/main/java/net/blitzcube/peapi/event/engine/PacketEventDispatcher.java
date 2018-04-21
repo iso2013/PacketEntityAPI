@@ -1,9 +1,9 @@
 package net.blitzcube.peapi.event.engine;
 
 import net.blitzcube.peapi.PacketEntityAPI;
-import net.blitzcube.peapi.api.event.IPacketEntityEvent;
-import net.blitzcube.peapi.api.event.IPacketEntitySpawnEvent;
+import net.blitzcube.peapi.api.event.IEntityPacketEvent;
 import net.blitzcube.peapi.api.listener.IListener;
+import net.blitzcube.peapi.packet.EntitySpawnPacket;
 import org.bukkit.entity.EntityType;
 
 import java.util.*;
@@ -59,10 +59,11 @@ public class PacketEventDispatcher {
         }
     }
 
-    public void dispatch(IPacketEntityEvent e, Boolean object) {
+    public void dispatch(IEntityPacketEvent e, Boolean object) {
         if (e == null) return;
-        if (e instanceof IPacketEntitySpawnEvent) {
-            EntityType t = ((IPacketEntitySpawnEvent) e).getEntityType();
+        if (e.getPacketType().equals(IEntityPacketEvent.EntityPacketType.ENTITY_SPAWN)
+                && e.getPacket() instanceof EntitySpawnPacket) {
+            EntityType t = ((EntitySpawnPacket) e.getPacket()).getEntityType();
             if (this.listenerLookup.get(t) != null)
                 this.listenerLookup.get(t).forEach(i -> i.onEvent(e));
         } else {

@@ -1,11 +1,11 @@
-package net.blitzcube.peapi.api.event;
+package net.blitzcube.peapi.api.packet;
 
 import com.comphenix.protocol.wrappers.EnumWrappers;
 
 /**
- * Created by iso2013 on 2/24/2018.
+ * Created by iso2013 on 4/21/2018.
  */
-public interface IPacketEntityClickEvent extends IPacketEntityEvent {
+public interface IPacketEntityClick extends IPacketEntity {
     ClickType getClickType();
 
     void setClickType(ClickType type);

@@ -18,11 +18,11 @@ public class OptBlockModifier extends OptModifier<MaterialData> {
     }
 
     @Override
+    @SuppressWarnings({"unchecked", "deprecation"})
     public Optional<MaterialData> getValue(IModifiableEntity target) {
-        //TODO: Make this less gross.
         Object val = target.read(super.index);
         if (val == null) return null;
-        if (!Optional.class.isAssignableFrom(val.getClass()))
+        if (!(val instanceof Optional))
             throw new IllegalStateException("Read inappropriate type from modifiable entity!");
         Optional<WrappedBlockData> bp = (Optional<WrappedBlockData>) val;
         if (!bp.isPresent()) return Optional.absent();

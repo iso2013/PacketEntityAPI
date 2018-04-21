@@ -14,7 +14,7 @@ public class Node {
     private final List<Node> children = new ArrayList<>();
     private final List<Attribute> attributes = new ArrayList<>();
 
-    public Node(Node parent, String name) {
+    Node(Node parent, String name) {
         this.parent = parent;
         this.name = name;
     }
@@ -22,10 +22,6 @@ public class Node {
     public void setParent(Node parent) {
         this.parent = parent;
     }
-
-    public void addChild(Node child) {children.add(child);}
-
-    public void addAttribute(Attribute attribute) {attributes.add(attribute);}
 
     public String getName() { return name; }
 

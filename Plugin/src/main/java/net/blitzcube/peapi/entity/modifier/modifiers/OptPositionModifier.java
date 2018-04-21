@@ -22,11 +22,11 @@ public class OptPositionModifier extends OptModifier<Vector> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Optional<Vector> getValue(IModifiableEntity target) {
-        //TODO: Make this less gross.
         Object val = target.read(super.index);
         if (val == null) return null;
-        if (!Optional.class.isAssignableFrom(val.getClass()))
+        if (!(val instanceof Optional))
             throw new IllegalStateException("Read inappropriate type from modifiable entity!");
         Optional<BlockPosition> bp = (Optional<BlockPosition>) val;
         if (!bp.isPresent()) return Optional.absent();

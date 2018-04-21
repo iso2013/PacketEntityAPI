@@ -12,10 +12,10 @@ import java.util.UUID;
  */
 public class EntityIdentifier implements IEntityIdentifier {
     private final int entityID;
-    private UUID uuid;
-    private WeakReference<Player> near;
+    private final UUID uuid;
+    private final WeakReference<Player> near;
     private WeakReference<Entity> entity;
-    private WeakReference<Object> fakeEntity; //TODO
+    private WeakReference<Object> fakeEntity;
 
     public EntityIdentifier(int entityID, UUID uuid, Player near) {
         this.entityID = entityID;

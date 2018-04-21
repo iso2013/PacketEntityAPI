@@ -46,6 +46,7 @@ public class EntitySpawnPacket extends EntityPacket implements IPacketEntitySpaw
         this.metadata = metadata;
     }
 
+    @SuppressWarnings("deprecation")
     public static EntityPacket unwrap(int entityID, PacketContainer c, Player p) {
         PacketType t = c.getType();
         UUID uuid = c.getUUIDs().read(0);
@@ -57,7 +58,6 @@ public class EntitySpawnPacket extends EntityPacket implements IPacketEntitySpaw
                 c.getIntegers().read(2).floatValue() * (360.0F / 256.0F),
                 c.getIntegers().read(3).floatValue() * (360.0F / 256.0F)
         );
-        //TODO: Read metadata.
         IEntityIdentifier identifier = new EntityIdentifier(entityID, uuid, p);
         if (PacketType.Play.Server.NAMED_ENTITY_SPAWN.equals(t)) {
             return new EntitySpawnPacket(identifier, c, EntityType.PLAYER, location, new Vector(0, 0,
@@ -82,6 +82,7 @@ public class EntitySpawnPacket extends EntityPacket implements IPacketEntitySpaw
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void setEntityType(EntityType type) {
         this.type = type;
         super.rawPacket.getIntegers().write(1, (int) type.getTypeId());

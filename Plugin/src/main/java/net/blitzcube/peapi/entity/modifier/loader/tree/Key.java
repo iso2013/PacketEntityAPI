@@ -17,32 +17,16 @@ import java.util.List;
  * Created by iso2013 on 4/20/2018.
  */
 public class Key extends Node.Attribute {
-    private int index;
-    private String type;
-    private String label;
-    private JsonElement def;
+    private final int index;
+    private final String type;
+    private final String label;
+    private final JsonElement def;
 
     Key(int index, String type, String label, JsonElement def) {
         this.index = index;
         this.type = type;
         this.label = label;
         this.def = def;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public Object getDef() {
-        return def;
     }
 
     @Override
@@ -86,11 +70,11 @@ public class Key extends Node.Attribute {
     private EulerAngle stringToEulerAngle(String input) {
         input = input.replace("(", "")
                 .replace(")", "");
-        String[] vals = input.split(",");
+        String[] values = input.split(",");
         return new EulerAngle(
-                Double.valueOf(vals[0]),
-                Double.valueOf(vals[1]),
-                Double.valueOf(vals[2])
+                Double.valueOf(values[0]),
+                Double.valueOf(values[1]),
+                Double.valueOf(values[2])
         );
     }
 }

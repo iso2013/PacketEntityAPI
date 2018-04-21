@@ -27,7 +27,7 @@ public class EntityDestroyPacket extends EntityPacket implements IPacketEntityDe
         this.targets = new ArrayList<>();
     }
 
-    protected EntityDestroyPacket(PacketContainer rawPacket, List<IEntityIdentifier> targets) {
+    private EntityDestroyPacket(PacketContainer rawPacket, List<IEntityIdentifier> targets) {
         super(null, rawPacket);
         this.targets = targets;
     }

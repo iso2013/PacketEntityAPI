@@ -23,8 +23,8 @@ public class EntityEquipmentPacket extends EntityPacket implements IPacketEntity
         super(identifier, new PacketContainer(TYPE));
     }
 
-    protected EntityEquipmentPacket(IEntityIdentifier identifier, PacketContainer rawPacket, EquipmentSlot slot,
-                                    ItemStack item) {
+    private EntityEquipmentPacket(IEntityIdentifier identifier, PacketContainer rawPacket, EquipmentSlot slot,
+                                  ItemStack item) {
         super(identifier, rawPacket);
         this.slot = slot;
         this.item = item;

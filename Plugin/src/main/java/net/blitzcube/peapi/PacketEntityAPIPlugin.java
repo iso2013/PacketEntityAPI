@@ -20,8 +20,7 @@ import java.util.Map;
 
 @SuppressWarnings("unused")
 public final class PacketEntityAPIPlugin extends JavaPlugin implements Listener {
-
-    private Map<Integer, EntityType> ids = new HashMap<>();
+    private final Map<Integer, EntityType> ids = new HashMap<>();
 
     @Override
     @SuppressWarnings("unchecked")
@@ -43,13 +42,13 @@ public final class PacketEntityAPIPlugin extends JavaPlugin implements Listener 
 
                 @Override
                 public void onEvent(IEntityPacketEvent e) {
-                    List<WrappedWatchableObject> objs;
+                    List<WrappedWatchableObject> objects;
                     switch (e.getPacketType()) {
                         case DATA:
-                            objs = ((EntityDataPacket) e.getPacket()).getMetadata();
+                            objects = ((EntityDataPacket) e.getPacket()).getMetadata();
                             break;
                         case ENTITY_SPAWN:
-                            objs = ((EntitySpawnPacket) e.getPacket()).getMetadata();
+                            objects = ((EntitySpawnPacket) e.getPacket()).getMetadata();
                             ids.put(e.getPacket().getIdentifier().getEntityID(), ((EntitySpawnPacket) e.getPacket())
                                     .getEntityType());
                             break;
@@ -61,7 +60,7 @@ public final class PacketEntityAPIPlugin extends JavaPlugin implements Listener 
                     }
 
                     EntityType t = ids.get(e.getPacket().getIdentifier().getEntityID());
-                    IModifiableEntity m = new ModifiableEntity.ListBased(objs);
+                    IModifiableEntity m = new ModifiableEntity.ListBased(objects);
                     if (t == EntityType.SHEEP) {
                         name.setValue(m, "Yay!");
                         nameVisible.setValue(m, true);

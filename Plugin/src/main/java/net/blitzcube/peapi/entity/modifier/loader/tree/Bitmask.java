@@ -12,23 +12,15 @@ import java.util.List;
  */
 public class Bitmask extends Node.Attribute {
     private final List<Key> keys = new ArrayList<>();
-    private int index;
-    private byte def;
+    private final int index;
+    private final byte def;
 
-    public Bitmask(int index, byte def) {
+    Bitmask(int index, byte def) {
         this.index = index;
         this.def = def;
     }
 
-    public int getIndex() {
-        return index;
-    }
-
-    public byte getDef() {
-        return def;
-    }
-
-    public List<Key> getKeys() {
+    List<Key> getKeys() {
         return keys;
     }
 
@@ -46,20 +38,12 @@ public class Bitmask extends Node.Attribute {
     }
 
     public static class Key {
-        private byte mask;
-        private String label;
+        private final byte mask;
+        private final String label;
 
-        public Key(byte mask, String label) {
+        Key(byte mask, String label) {
             this.mask = mask;
             this.label = label;
-        }
-
-        public byte getMask() {
-            return mask;
-        }
-
-        public String getLabel() {
-            return label;
         }
     }
 }

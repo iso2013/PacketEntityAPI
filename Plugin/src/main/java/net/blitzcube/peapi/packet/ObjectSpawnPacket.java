@@ -253,7 +253,7 @@ public class ObjectSpawnPacket extends EntityPacket implements IPacketObjectSpaw
     }
 
     @Override
-    public void setOrbCount(Integer count) {
+    public void setOrbCount(Integer orbCount) {
         Preconditions.checkArgument(type == EntityType.EXPERIENCE_ORB,
                 type.name() + " is not an experience orb!");
         this.orbCount = orbCount;

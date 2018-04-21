@@ -27,7 +27,7 @@ public class EntityMountPacket extends EntityPacket implements IPacketEntityMoun
         this.targets = new ArrayList<>();
     }
 
-    protected EntityMountPacket(IEntityIdentifier identifier, PacketContainer rawPacket, List<IEntityIdentifier>
+    private EntityMountPacket(IEntityIdentifier identifier, PacketContainer rawPacket, List<IEntityIdentifier>
             targets) {
         super(identifier, rawPacket);
         this.targets = targets;

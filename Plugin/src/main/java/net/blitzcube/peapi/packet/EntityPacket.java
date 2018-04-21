@@ -9,11 +9,11 @@ import org.bukkit.entity.Player;
 /**
  * Created by iso2013 on 4/21/2018.
  */
-public abstract class EntityPacket implements IPacketEntity {
+public class EntityPacket implements IPacketEntity {
     final PacketContainer rawPacket;
     private final IEntityIdentifier identifier;
 
-    protected EntityPacket(IEntityIdentifier identifier, PacketContainer rawPacket) {
+    EntityPacket(IEntityIdentifier identifier, PacketContainer rawPacket) {
         this.identifier = identifier;
         this.rawPacket = rawPacket;
     }
@@ -48,7 +48,7 @@ public abstract class EntityPacket implements IPacketEntity {
         return identifier;
     }
 
-    public PacketContainer getRawPacket() {
+    PacketContainer getRawPacket() {
         return rawPacket;
     }
 }

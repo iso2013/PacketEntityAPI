@@ -20,7 +20,7 @@ public class EntityStatusPacket extends EntityPacket implements IPacketEntitySta
         this.status = -1;
     }
 
-    protected EntityStatusPacket(IEntityIdentifier identifier, PacketContainer rawPacket, byte status) {
+    private EntityStatusPacket(IEntityIdentifier identifier, PacketContainer rawPacket, byte status) {
         super(identifier, rawPacket);
         this.status = status;
     }

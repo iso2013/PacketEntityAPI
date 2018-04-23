@@ -50,14 +50,24 @@ public class EntitySpawnPacket extends EntityPacket implements IPacketEntitySpaw
     public static EntityPacket unwrap(int entityID, PacketContainer c, Player p) {
         PacketType t = c.getType();
         UUID uuid = c.getUUIDs().read(0);
-        Location location = new Location(
-                p.getWorld(),
-                c.getDoubles().read(0),
-                c.getDoubles().read(1),
-                c.getDoubles().read(2),
-                c.getIntegers().read(2).floatValue() * (360.0F / 256.0F),
-                c.getIntegers().read(3).floatValue() * (360.0F / 256.0F)
-        );
+        Location location;
+        if (t.equals(PacketType.Play.Server.NAMED_ENTITY_SPAWN)) {
+            location = new Location(
+                    p.getWorld(),
+                    c.getDoubles().read(0),
+                    c.getDoubles().read(1),
+                    c.getDoubles().read(2)
+            );
+        } else {
+            location = new Location(
+                    p.getWorld(),
+                    c.getDoubles().read(0),
+                    c.getDoubles().read(1),
+                    c.getDoubles().read(2),
+                    c.getIntegers().read(2).floatValue() * (360.0F / 256.0F),
+                    c.getIntegers().read(3).floatValue() * (360.0F / 256.0F)
+            );
+        }
         IEntityIdentifier identifier = new EntityIdentifier(entityID, uuid, p);
         if (PacketType.Play.Server.NAMED_ENTITY_SPAWN.equals(t)) {
             return new EntitySpawnPacket(identifier, c, EntityType.PLAYER, location, new Vector(0, 0,
@@ -122,7 +132,7 @@ public class EntitySpawnPacket extends EntityPacket implements IPacketEntitySpaw
     @Override
     public void setVelocity(Vector velocity) {
         Preconditions.checkArgument(type != EntityType.PLAYER,
-                "You cannot set the velocity for a player!");
+                "You cannot set the velocity of a player!");
         this.velocity = velocity;
         super.rawPacket.getBytes().write(0, (byte) velocity.getX());
         super.rawPacket.getBytes().write(1, (byte) velocity.getY());

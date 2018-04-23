@@ -1,6 +1,8 @@
 package net.blitzcube.peapi.entity.modifier;
 
+import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
+import net.blitzcube.peapi.entity.fake.FakeEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -13,9 +15,9 @@ import java.util.UUID;
 public class EntityIdentifier implements IEntityIdentifier {
     private final int entityID;
     private final UUID uuid;
-    private final WeakReference<Player> near;
+    private WeakReference<Player> near;
     private WeakReference<Entity> entity;
-    private WeakReference<Object> fakeEntity;
+    private WeakReference<IFakeEntity> fakeEntity;
 
     public EntityIdentifier(int entityID, UUID uuid, Player near) {
         this.entityID = entityID;
@@ -27,9 +29,21 @@ public class EntityIdentifier implements IEntityIdentifier {
         this(entityID, null, near);
     }
 
+    public EntityIdentifier(FakeEntity fakeEntity) {
+        this.entityID = fakeEntity.getEntityID();
+        this.uuid = fakeEntity.getUUID();
+        this.fakeEntity = new WeakReference<>(fakeEntity);
+    }
+
+    public EntityIdentifier(Entity entity) {
+        this.entityID = entity.getEntityId();
+        this.uuid = entity.getUniqueId();
+        this.entity = new WeakReference<>(entity);
+    }
+
     @Override
     public void moreSpecific() {
-
+        //TODO
     }
 
     @Override
@@ -53,7 +67,7 @@ public class EntityIdentifier implements IEntityIdentifier {
     }
 
     @Override
-    public WeakReference<Object> getFakeEntity() {
+    public WeakReference<IFakeEntity> getFakeEntity() {
         return fakeEntity;
     }
 }

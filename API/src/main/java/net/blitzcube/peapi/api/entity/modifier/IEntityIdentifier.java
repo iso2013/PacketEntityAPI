@@ -1,5 +1,6 @@
 package net.blitzcube.peapi.api.entity.modifier;
 
+import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -21,5 +22,5 @@ public interface IEntityIdentifier {
 
     WeakReference<Entity> getEntity();
 
-    WeakReference<Object> getFakeEntity();
+    WeakReference<IFakeEntity> getFakeEntity();
 }

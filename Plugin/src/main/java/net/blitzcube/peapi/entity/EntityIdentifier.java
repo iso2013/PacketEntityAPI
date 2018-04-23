@@ -1,4 +1,4 @@
-package net.blitzcube.peapi.entity.modifier;
+package net.blitzcube.peapi.entity;
 
 import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
@@ -69,5 +69,10 @@ public class EntityIdentifier implements IEntityIdentifier {
     @Override
     public WeakReference<IFakeEntity> getFakeEntity() {
         return fakeEntity;
+    }
+
+    @Override
+    public boolean isFakeEntity() {
+        return fakeEntity != null;
     }
 }

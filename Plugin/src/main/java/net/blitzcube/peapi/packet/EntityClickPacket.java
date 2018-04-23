@@ -4,7 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import net.blitzcube.peapi.api.packet.IEntityClickPacket;
-import net.blitzcube.peapi.entity.modifier.EntityIdentifier;
+import net.blitzcube.peapi.entity.EntityIdentifier;
 import org.bukkit.entity.Player;
 
 /**

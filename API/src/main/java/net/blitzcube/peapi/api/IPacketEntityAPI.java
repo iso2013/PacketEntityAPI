@@ -4,6 +4,7 @@ import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntityFactory;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
 import net.blitzcube.peapi.api.listener.IListener;
+import net.blitzcube.peapi.api.packet.IEntityPacketFactory;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -26,6 +27,8 @@ public interface IPacketEntityAPI {
     IFakeEntity getFakeByID(int entityID);
 
     boolean isVisible(Location location, Player target, double v);
+
+    IEntityPacketFactory getPacketFactory();
 
     interface ProviderStub {
         String getMajorVersion();

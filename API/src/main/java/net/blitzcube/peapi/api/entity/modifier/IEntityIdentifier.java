@@ -23,4 +23,6 @@ public interface IEntityIdentifier {
     WeakReference<Entity> getEntity();
 
     WeakReference<IFakeEntity> getFakeEntity();
+
+    boolean isFakeEntity();
 }

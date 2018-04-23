@@ -5,7 +5,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.google.common.collect.ImmutableList;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import net.blitzcube.peapi.api.packet.IEntityPacketMount;
-import net.blitzcube.peapi.entity.modifier.EntityIdentifier;
+import net.blitzcube.peapi.entity.EntityIdentifier;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class EntityMountPacket extends EntityPacket implements IEntityPacketMoun
     private final List<IEntityIdentifier> targets;
     private boolean changed = false;
 
-    private EntityMountPacket(IEntityIdentifier identifier) {
+    EntityMountPacket(IEntityIdentifier identifier) {
         super(identifier, new PacketContainer(TYPE));
         this.targets = new ArrayList<>();
     }

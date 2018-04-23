@@ -4,7 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import net.blitzcube.peapi.api.packet.IEntityPacketStatus;
-import net.blitzcube.peapi.entity.modifier.EntityIdentifier;
+import net.blitzcube.peapi.entity.EntityIdentifier;
 import org.bukkit.entity.Player;
 
 /**
@@ -15,7 +15,7 @@ public class EntityStatusPacket extends EntityPacket implements IEntityPacketSta
     private static final PacketType TYPE = PacketType.Play.Server.ENTITY_STATUS;
     private byte status;
 
-    private EntityStatusPacket(IEntityIdentifier identifier) {
+    EntityStatusPacket(IEntityIdentifier identifier) {
         super(identifier, new PacketContainer(TYPE));
         this.status = -1;
     }

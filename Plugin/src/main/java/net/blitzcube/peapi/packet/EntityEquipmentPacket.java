@@ -5,7 +5,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import net.blitzcube.peapi.api.packet.IEntityPacketEquipment;
-import net.blitzcube.peapi.entity.modifier.EntityIdentifier;
+import net.blitzcube.peapi.entity.EntityIdentifier;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -19,7 +19,7 @@ public class EntityEquipmentPacket extends EntityPacket implements IEntityPacket
     private EquipmentSlot slot;
     private ItemStack item;
 
-    private EntityEquipmentPacket(IEntityIdentifier identifier) {
+    EntityEquipmentPacket(IEntityIdentifier identifier) {
         super(identifier, new PacketContainer(TYPE));
     }
 

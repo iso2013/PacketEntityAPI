@@ -6,11 +6,13 @@ import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntityFactory;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
 import net.blitzcube.peapi.api.listener.IListener;
+import net.blitzcube.peapi.api.packet.IEntityPacketFactory;
 import net.blitzcube.peapi.entity.SightDistanceRegistry;
 import net.blitzcube.peapi.entity.fake.FakeEntity;
 import net.blitzcube.peapi.entity.fake.FakeEntityFactory;
 import net.blitzcube.peapi.entity.modifier.EntityModifierRegistry;
 import net.blitzcube.peapi.event.engine.PacketEventDispatcher;
+import net.blitzcube.peapi.packet.EntityPacketFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -81,13 +83,14 @@ public class PacketEntityAPI implements IPacketEntityAPI {
      */
     private final EntityModifierRegistry modifierRegistry;
     private FakeEntityFactory fakeEntityFactory;
+    private EntityPacketFactory packetFactory;
     private PacketEventDispatcher dispatcher;
 
-
     private PacketEntityAPI() {
-        this.dispatcher = new PacketEventDispatcher(this);
         this.modifierRegistry = new EntityModifierRegistry();
         this.fakeEntityFactory = new FakeEntityFactory(this);
+        this.packetFactory = new EntityPacketFactory();
+        this.dispatcher = new PacketEventDispatcher(this);
     }
 
     static void initialize(JavaPlugin parent, Consumer<IPacketEntityAPI> onLoad) {
@@ -171,6 +174,9 @@ public class PacketEntityAPI implements IPacketEntityAPI {
 
     @Override
     public IFakeEntityFactory getEntityFactory() { return fakeEntityFactory; }
+
+    @Override
+    public IEntityPacketFactory getPacketFactory() { return packetFactory; }
 
     public Collection<FakeEntity> getFakeEntities() {
         return fakeEntityFactory.getFakeEntities();

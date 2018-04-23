@@ -5,7 +5,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import net.blitzcube.peapi.api.packet.IEntityPacketData;
-import net.blitzcube.peapi.entity.modifier.EntityIdentifier;
+import net.blitzcube.peapi.entity.EntityIdentifier;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class EntityDataPacket extends EntityPacket implements IEntityPacketData 
     private static final PacketType TYPE = PacketType.Play.Server.ENTITY_METADATA;
     private List<WrappedWatchableObject> metadata;
 
-    private EntityDataPacket(IEntityIdentifier identifier) {
+    EntityDataPacket(IEntityIdentifier identifier) {
         super(identifier, new PacketContainer(TYPE));
     }
 

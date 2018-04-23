@@ -6,8 +6,8 @@ import net.blitzcube.peapi.api.entity.hitbox.IHitbox;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifier;
 import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
+import net.blitzcube.peapi.entity.EntityIdentifier;
 import net.blitzcube.peapi.entity.hitbox.Hitbox;
-import net.blitzcube.peapi.entity.modifier.EntityIdentifier;
 import net.blitzcube.peapi.entity.modifier.ModifiableEntity;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -29,6 +29,7 @@ public class FakeEntity implements IFakeEntity {
     private IHitbox hitbox;
     private IModifiableEntity modifiableEntity;
     private Map<String, IEntityModifier> modifiers;
+    private Map<String, Object> fields;
     private BiFunction<Player, IFakeEntity, Boolean> checkIntersect;
 
     FakeEntity(int id, UUID uuid, EntityType type, Map<String, IEntityModifier> modifiers) {
@@ -105,5 +106,20 @@ public class FakeEntity implements IFakeEntity {
     @Override
     public void setCheckIntersect(BiFunction<Player, IFakeEntity, Boolean> checkIntersect) {
         this.checkIntersect = checkIntersect;
+    }
+
+    @Override
+    public Object getField(String name) {
+        return fields.get(name);
+    }
+
+    @Override
+    public void setField(String name, Object value) {
+        fields.put(name, value);
+    }
+
+    @Override
+    public boolean hasField(String name) {
+        return fields.containsKey(name);
     }
 }

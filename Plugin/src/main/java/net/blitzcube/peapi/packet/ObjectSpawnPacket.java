@@ -7,7 +7,7 @@ import com.google.common.base.Preconditions;
 import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import net.blitzcube.peapi.api.packet.IObjectSpawnPacket;
-import net.blitzcube.peapi.entity.modifier.EntityIdentifier;
+import net.blitzcube.peapi.entity.EntityIdentifier;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
@@ -29,7 +29,7 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
     private BlockFace direction;
     private int data;
 
-    private ObjectSpawnPacket(IEntityIdentifier identifier, EntityType type) {
+    ObjectSpawnPacket(IEntityIdentifier identifier, EntityType type) {
         super(identifier, new PacketContainer(entityTypeToPacket(type)));
         this.velocity = new Vector(0, 0, 0);
         data = 0;

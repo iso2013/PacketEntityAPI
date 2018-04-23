@@ -39,4 +39,10 @@ public interface IFakeEntity {
     boolean checkIntersect(Player target);
 
     void setCheckIntersect(BiFunction<Player, IFakeEntity, Boolean> checkIntersect);
+
+    Object getField(String title);
+
+    void setField(String name, Object value);
+
+    boolean hasField(String velocity);
 }

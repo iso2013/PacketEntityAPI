@@ -6,7 +6,7 @@ import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.google.common.base.Preconditions;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import net.blitzcube.peapi.api.packet.IEntityPacketSpawn;
-import net.blitzcube.peapi.entity.modifier.EntityIdentifier;
+import net.blitzcube.peapi.entity.EntityIdentifier;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -28,7 +28,7 @@ public class EntitySpawnPacket extends EntityPacket implements IEntityPacketSpaw
     private float headPitch;
     private List<WrappedWatchableObject> metadata;
 
-    private EntitySpawnPacket(IEntityIdentifier identifier) {
+    EntitySpawnPacket(IEntityIdentifier identifier) {
         super(identifier, new PacketContainer(TYPE));
         this.velocity = new Vector(0, 0, 0);
         this.headPitch = 0.0f;

@@ -4,7 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import net.blitzcube.peapi.api.packet.IEntityPacketAnimation;
-import net.blitzcube.peapi.entity.modifier.EntityIdentifier;
+import net.blitzcube.peapi.entity.EntityIdentifier;
 import org.bukkit.entity.Player;
 
 /**
@@ -15,7 +15,7 @@ public class EntityAnimationPacket extends EntityPacket implements IEntityPacket
     private static final PacketType TYPE = PacketType.Play.Server.ANIMATION;
     private AnimationType type;
 
-    private EntityAnimationPacket(IEntityIdentifier identifier) {
+    EntityAnimationPacket(IEntityIdentifier identifier) {
         super(identifier, new PacketContainer(TYPE));
     }
 

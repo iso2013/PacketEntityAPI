@@ -80,7 +80,7 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
             case UNKNOWN:
                 yaw = c.getIntegers().read(1).floatValue() * (360.0F / 256.0F);
                 pitch = c.getIntegers().read(2).floatValue() * (360.0F / 256.0F);
-                t = PacketEntityAPI.lookupObject(c.getIntegers().read(6).byteValue());
+                t = PacketEntityAPI.lookupObject(c.getIntegers().read(6));
                 velocity = new Vector(
                         c.getIntegers().read(2),
                         c.getIntegers().read(3),

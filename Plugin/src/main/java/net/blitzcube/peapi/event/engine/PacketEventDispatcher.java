@@ -20,7 +20,7 @@ public class PacketEventDispatcher {
     private final Set<IListener> entityListeners;
     private final Map<EntityType, SortedSet<IListener>> listenerLookup;
     private final PacketEventEngine engine;
-    private int sendingForFake = 0, targetingObjects = 0, targetingEntities = 0;
+    private int sendingForFake = 0, requiresCollidable = 0, targetingObjects = 0, targetingEntities = 0;
 
     public PacketEventDispatcher(PacketEntityAPI parent) {
         this.allListeners = new TreeSet<>(LISTENER_COMPARATOR);
@@ -35,6 +35,10 @@ public class PacketEventDispatcher {
         if (l.shouldFireForFake()) {
             if (sendingForFake == 0) engine.setSendForFake(true);
             sendingForFake++;
+        }
+        if (l.requiresCollidable()) {
+            if (requiresCollidable == 0) engine.setCollidable(true);
+            requiresCollidable++;
         }
         boolean e = false, o = false;
         for (EntityType en : l.getTargets()) {
@@ -60,7 +64,7 @@ public class PacketEventDispatcher {
     }
 
     public void dispatch(IEntityPacketEvent e, Boolean object) {
-        if (e == null) return;
+        if (e == null || e.getPacket() == null) return;
         if (e.getPacketType().equals(IEntityPacketEvent.EntityPacketType.ENTITY_SPAWN)
                 && e.getPacket() instanceof EntitySpawnPacket) {
             EntityType t = ((EntitySpawnPacket) e.getPacket()).getEntityType();
@@ -78,6 +82,10 @@ public class PacketEventDispatcher {
         if (l.shouldFireForFake()) {
             sendingForFake--;
             if (sendingForFake == 0) engine.setSendForFake(false);
+        }
+        if (l.requiresCollidable()) {
+            requiresCollidable--;
+            if (requiresCollidable == 0) engine.setCollidable(false);
         }
         boolean e = false, o = false;
         for (EntityType en : l.getTargets()) {

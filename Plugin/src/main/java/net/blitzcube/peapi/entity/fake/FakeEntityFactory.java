@@ -11,7 +11,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -20,11 +22,15 @@ import java.util.stream.Collectors;
  */
 public class FakeEntityFactory implements IFakeEntityFactory {
     private PacketEntityAPI parent;
+    private Map<Integer, FakeEntity> fakeEntities;
+
     private Field entityID;
     private int fallbackId = -1;
 
+
     public FakeEntityFactory(PacketEntityAPI parent) {
         this.parent = parent;
+        this.fakeEntities = new HashMap<>();
 
         String version = Bukkit.getServer().getClass().getPackage().getName();
         version = version.substring(version.lastIndexOf('.') + 1);
@@ -45,6 +51,8 @@ public class FakeEntityFactory implements IFakeEntityFactory {
             entityID.setInt(null, id + 1);
             return id;
         } catch (IllegalAccessException e) {
+            Bukkit.getLogger().severe("PacketEntityAPI switching to negative-based IDs - unable to access " +
+                    "entity ID field.");
             entityID = null;
             return fallbackId--;
         }
@@ -67,21 +75,28 @@ public class FakeEntityFactory implements IFakeEntityFactory {
 
     @Override
     public IFakeEntity createFakeEntity(EntityType type, boolean lookupModifiers) {
+        Map<String, IEntityModifier> modifiers;
         if (lookupModifiers) {
-            return new FakeEntity(
-                    getNextID(),
-                    UUID.randomUUID(),
-                    type,
-                    parent.getModifierRegistry().lookup(type).stream()
-                            .collect(Collectors.toMap(IEntityModifier::getLabel, it -> it))
-            );
-        } else {
-            return new FakeEntity(
-                    getNextID(),
-                    UUID.randomUUID(),
-                    type,
-                    new HashMap<>()
-            );
-        }
+            modifiers = parent.getModifierRegistry().lookup(type).stream()
+                    .collect(Collectors.toMap(IEntityModifier::getLabel, it -> it));
+        } else modifiers = new HashMap<>();
+
+        FakeEntity entity = new FakeEntity(getNextID(), UUID.randomUUID(), type, modifiers);
+        fakeEntities.put(entity.getEntityID(), entity);
+        return entity;
+    }
+
+    @Override
+    public boolean isFakeEntity(int entityID) {
+        return fakeEntities.containsKey(entityID);
+    }
+
+    @Override
+    public IFakeEntity getFakeByID(int entityID) {
+        return fakeEntities.get(entityID);
+    }
+
+    public Collection<FakeEntity> getFakeEntities() {
+        return fakeEntities.values();
     }
 }

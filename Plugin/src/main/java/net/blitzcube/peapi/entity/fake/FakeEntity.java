@@ -11,6 +11,7 @@ import net.blitzcube.peapi.entity.modifier.EntityIdentifier;
 import net.blitzcube.peapi.entity.modifier.ModifiableEntity;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 
 import java.util.Map;
 import java.util.UUID;
@@ -87,5 +88,11 @@ public class FakeEntity implements IFakeEntity {
     @Override
     public Map<String, IEntityModifier> getModifiers() {
         return modifiers;
+    }
+
+    @Override
+    public boolean checkIntersect(Player target) {
+        //TODO
+        return false;
     }
 }

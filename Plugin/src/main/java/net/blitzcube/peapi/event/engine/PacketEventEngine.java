@@ -30,6 +30,10 @@ class PacketEventEngine {
         object.setSendForFake(sendForFake);
     }
 
+    public void setCollidable(boolean collidable) {
+        generic.setCollidable(collidable);
+    }
+
     public void enableObjects() {
         if (object == null && entity == null) {
             generic = new GenericListener(parent, dispatcher);

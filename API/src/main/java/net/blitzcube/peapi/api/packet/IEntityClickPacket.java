@@ -5,7 +5,7 @@ import com.comphenix.protocol.wrappers.EnumWrappers;
 /**
  * Created by iso2013 on 4/21/2018.
  */
-public interface IEntityPacketClick extends IEntityPacket {
+public interface IEntityClickPacket extends IEntityPacket {
     ClickType getClickType();
 
     void setClickType(ClickType type);

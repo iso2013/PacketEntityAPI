@@ -5,10 +5,13 @@ import com.comphenix.protocol.events.*;
 import com.comphenix.protocol.injector.GamePhase;
 import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.event.IEntityPacketEvent;
+import net.blitzcube.peapi.api.packet.IEntityClickPacket;
 import net.blitzcube.peapi.api.packet.IEntityGroupPacket;
 import net.blitzcube.peapi.api.packet.IEntityPacket;
+import net.blitzcube.peapi.entity.fake.FakeEntity;
 import net.blitzcube.peapi.event.EntityPacketEvent;
 import net.blitzcube.peapi.event.engine.PacketEventDispatcher;
+import net.blitzcube.peapi.packet.EntityClickPacket;
 import net.blitzcube.peapi.packet.EntityPacket;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -23,6 +26,7 @@ public class GenericListener implements PacketListener {
     private final PacketEntityAPI parent;
     private final PacketEventDispatcher dispatcher;
     private boolean sendForFake;
+    private boolean collidable;
     private static final Map<PacketType, IEntityPacketEvent.EntityPacketType> TYPES = new HashMap<>();
 
     static {
@@ -39,6 +43,7 @@ public class GenericListener implements PacketListener {
         this.parent = parent;
         this.dispatcher = dispatcher;
         this.sendForFake = false;
+        this.collidable = false;
     }
 
     @Override
@@ -56,11 +61,7 @@ public class GenericListener implements PacketListener {
         IEntityPacketEvent.EntityPacketType eT = TYPES.get(type);
         IEntityPacket w = EntityPacket.unwrapFromType(entityID, eT, c, target);
         if (w == null) return;
-        IEntityPacketEvent e = new EntityPacketEvent(
-                w,
-                eT,
-                target
-        );
+        IEntityPacketEvent e = new EntityPacketEvent(w, eT, target);
         dispatcher.dispatch(e, null);
         if (e.getPacket() instanceof IEntityGroupPacket) {
             if (((IEntityGroupPacket) e.getPacket()).getGroup().size() == 0 || e.isCancelled()) {
@@ -75,13 +76,32 @@ public class GenericListener implements PacketListener {
 
     @Override
     public void onPacketReceiving(PacketEvent packetEvent) {
-        PacketContainer p = packetEvent.getPacket();
+        PacketType type = packetEvent.getPacketType();
+        PacketContainer c = packetEvent.getPacket();
         Player target = packetEvent.getPlayer();
 
-        int entityID = p.getIntegers().read(0);
-        if (!sendForFake && parent.isFakeID(entityID)) return;
+        IEntityPacket w = null;
+        if (type.equals(PacketType.Play.Client.USE_ENTITY)) {
+            int entityID = c.getIntegers().read(0);
+            boolean fake = parent.isFakeID(entityID);
+            if (fake) {
+                if (!sendForFake) return;
+                if (!parent.getFakeByID(entityID).checkIntersect(target)) return;
+            }
 
-        IEntityPacket w = EntityPacket.unwrapFromType(entityID, IEntityPacketEvent.EntityPacketType.CLICK, p, target);
+            w = EntityPacket.unwrapFromType(entityID, IEntityPacketEvent.EntityPacketType.CLICK, c, target);
+        } else if (type.equals(PacketType.Play.Client.ARM_ANIMATION)) {
+            if (!collidable) return;
+            FakeEntity lookingAt = parent.getFakeEntities().stream()
+                    .filter(e -> parent.isVisible(e.getLocation(), target, 1) &&
+                            e.checkIntersect(target))
+                    .findAny().orElse(null);
+            if (lookingAt == null) return;
+            packetEvent.setCancelled(true);
+
+            w = new EntityClickPacket(lookingAt.getIdentifier());
+            ((EntityClickPacket) w).setClickType(IEntityClickPacket.ClickType.ATTACK);
+        }
         IEntityPacketEvent e = new EntityPacketEvent(w, IEntityPacketEvent.EntityPacketType.CLICK, target);
         dispatcher.dispatch(e, null);
         if (e.isCancelled()) {
@@ -106,7 +126,8 @@ public class GenericListener implements PacketListener {
     public ListeningWhitelist getReceivingWhitelist() {
         return ListeningWhitelist.newBuilder()
                 .gamePhase(GamePhase.PLAYING).normal().types(
-                        PacketType.Play.Client.USE_ENTITY
+                        PacketType.Play.Client.USE_ENTITY,
+                        PacketType.Play.Client.ARM_ANIMATION
                 ).mergeOptions(ListenerOptions.SKIP_PLUGIN_VERIFIER).build();
     }
 
@@ -117,5 +138,9 @@ public class GenericListener implements PacketListener {
 
     public void setSendForFake(boolean sendForFake) {
         this.sendForFake = sendForFake;
+    }
+
+    public void setCollidable(boolean collidable) {
+        this.collidable = collidable;
     }
 }

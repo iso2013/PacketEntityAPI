@@ -2,12 +2,19 @@ package net.blitzcube.peapi;
 
 import com.google.common.base.Preconditions;
 import net.blitzcube.peapi.api.IPacketEntityAPI;
+import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
+import net.blitzcube.peapi.api.entity.fake.IFakeEntityFactory;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
 import net.blitzcube.peapi.api.listener.IListener;
+import net.blitzcube.peapi.entity.SightDistanceRegistry;
+import net.blitzcube.peapi.entity.fake.FakeEntity;
+import net.blitzcube.peapi.entity.fake.FakeEntityFactory;
 import net.blitzcube.peapi.entity.modifier.EntityModifierRegistry;
 import net.blitzcube.peapi.event.engine.PacketEventDispatcher;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
@@ -57,8 +64,6 @@ public class PacketEntityAPI implements IPacketEntityAPI {
         OBJECTS.put(EntityType.LIGHTNING, -1);
     }
 
-    private final EntityModifierRegistry modifierRegistry;
-
     private static boolean compareVersions(String fullVersion) {
         String[][] input = new String[][]{fullVersion.split("\\."), ProviderStub.FULL_VERSION.split("\\.")};
         int size = Math.max(input[0].length, input[1].length);
@@ -74,15 +79,18 @@ public class PacketEntityAPI implements IPacketEntityAPI {
     /*
      * Begin actual API implementation:
      */
+    private final EntityModifierRegistry modifierRegistry;
+    private FakeEntityFactory fakeEntityFactory;
     private PacketEventDispatcher dispatcher;
 
 
     private PacketEntityAPI() {
         this.dispatcher = new PacketEventDispatcher(this);
         this.modifierRegistry = new EntityModifierRegistry();
+        this.fakeEntityFactory = new FakeEntityFactory(this);
     }
 
-    public static void initialize(JavaPlugin parent, Consumer<IPacketEntityAPI> onLoad) {
+    static void initialize(JavaPlugin parent, Consumer<IPacketEntityAPI> onLoad) {
         ServicesManager m = Bukkit.getServicesManager();
 
         Collection<RegisteredServiceProvider<IPacketEntityAPI.ProviderStub>> r = m.getRegistrations(IPacketEntityAPI
@@ -133,9 +141,17 @@ public class PacketEntityAPI implements IPacketEntityAPI {
         return this.dispatcher.contains(eventListener);
     }
 
+    public static EntityType lookupObject(int read) {
+        for (Map.Entry<EntityType, Integer> e : OBJECTS.entrySet()) {
+            if (e.getValue() == null) continue;
+            if (e.getValue() == read) return e.getKey();
+        }
+        return null;
+    }
+
     @Override
     public boolean isFakeID(int entityID) {
-        return false;
+        return fakeEntityFactory.isFakeEntity(entityID);
     }
 
     @Override
@@ -143,12 +159,21 @@ public class PacketEntityAPI implements IPacketEntityAPI {
         return modifierRegistry;
     }
 
-    public static EntityType lookupObject(Byte read) {
-        for (Map.Entry<EntityType, Integer> e : OBJECTS.entrySet()) {
-            if (e.getValue() == null) continue;
-            if (e.getValue().byteValue() == read) return e.getKey();
-        }
-        return null;
+    @Override
+    public IFakeEntity getFakeByID(int entityID) {
+        return fakeEntityFactory.getFakeByID(entityID);
+    }
+
+    @Override
+    public boolean isVisible(Location location, Player target, double error) {
+        return SightDistanceRegistry.isVisible(location, target, error);
+    }
+
+    @Override
+    public IFakeEntityFactory getEntityFactory() { return fakeEntityFactory; }
+
+    public Collection<FakeEntity> getFakeEntities() {
+        return fakeEntityFactory.getFakeEntities();
     }
 
     private static class ProviderStub implements IPacketEntityAPI.ProviderStub {

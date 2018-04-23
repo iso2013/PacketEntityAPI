@@ -19,6 +19,8 @@ public interface IListener {
 
     EntityType[] getTargets();
 
+    default boolean requiresCollidable() { return false; }
+
     enum ListenerPriority {
         MONITOR(3),
         HIGHEST(2),

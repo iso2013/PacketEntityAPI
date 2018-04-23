@@ -15,4 +15,8 @@ public interface IFakeEntityFactory {
     IFakeEntity createFakeEntity(EntityType type);
 
     IFakeEntity createFakeEntity(EntityType type, boolean lookupModifiers);
+
+    boolean isFakeEntity(int entityID);
+
+    IFakeEntity getFakeByID(int entityID);
 }

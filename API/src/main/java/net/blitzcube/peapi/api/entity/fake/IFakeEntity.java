@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.BiFunction;
 
 /**
  * Created by iso2013 on 4/21/2018.
@@ -36,4 +37,6 @@ public interface IFakeEntity {
     Map<String, IEntityModifier> getModifiers();
 
     boolean checkIntersect(Player target);
+
+    void setCheckIntersect(BiFunction<Player, IFakeEntity, Boolean> checkIntersect);
 }

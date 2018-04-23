@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.BiFunction;
 
 /**
  * Created by iso2013 on 4/21/2018.
@@ -28,6 +29,7 @@ public class FakeEntity implements IFakeEntity {
     private IHitbox hitbox;
     private IModifiableEntity modifiableEntity;
     private Map<String, IEntityModifier> modifiers;
+    private BiFunction<Player, IFakeEntity, Boolean> checkIntersect;
 
     FakeEntity(int id, UUID uuid, EntityType type, Map<String, IEntityModifier> modifiers) {
         this.id = id;
@@ -38,6 +40,11 @@ public class FakeEntity implements IFakeEntity {
         this.hitbox = Hitbox.getByType(type);
         this.modifiableEntity = new ModifiableEntity.WatcherBased(new WrappedDataWatcher());
         for (IEntityModifier m : modifiers.values()) m.unsetValue(modifiableEntity, true);
+        this.checkIntersect = (p, e) -> e.getHitbox().intersects(
+                p.getEyeLocation().toVector(),
+                p.getEyeLocation().getDirection(),
+                location.toVector()
+        );
     }
 
     @Override
@@ -92,7 +99,11 @@ public class FakeEntity implements IFakeEntity {
 
     @Override
     public boolean checkIntersect(Player target) {
-        //TODO
-        return false;
+        return checkIntersect.apply(target, this);
+    }
+
+    @Override
+    public void setCheckIntersect(BiFunction<Player, IFakeEntity, Boolean> checkIntersect) {
+        this.checkIntersect = checkIntersect;
     }
 }

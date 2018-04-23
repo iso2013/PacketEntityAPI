@@ -5,8 +5,8 @@ import com.comphenix.protocol.events.*;
 import com.comphenix.protocol.injector.GamePhase;
 import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.event.IEntityPacketEvent;
-import net.blitzcube.peapi.api.packet.IPacketEntity;
-import net.blitzcube.peapi.api.packet.IPacketGroupEntity;
+import net.blitzcube.peapi.api.packet.IEntityGroupPacket;
+import net.blitzcube.peapi.api.packet.IEntityPacket;
 import net.blitzcube.peapi.event.EntityPacketEvent;
 import net.blitzcube.peapi.event.engine.PacketEventDispatcher;
 import net.blitzcube.peapi.packet.EntityPacket;
@@ -54,7 +54,7 @@ public class GenericListener implements PacketListener {
         }
 
         IEntityPacketEvent.EntityPacketType eT = TYPES.get(type);
-        IPacketEntity w = EntityPacket.unwrapFromType(entityID, eT, c, target);
+        IEntityPacket w = EntityPacket.unwrapFromType(entityID, eT, c, target);
         if (w == null) return;
         IEntityPacketEvent e = new EntityPacketEvent(
                 w,
@@ -62,12 +62,12 @@ public class GenericListener implements PacketListener {
                 target
         );
         dispatcher.dispatch(e, null);
-        if (e.getPacket() instanceof IPacketGroupEntity) {
-            if (((IPacketGroupEntity) e.getPacket()).getGroup().size() == 0 || e.isCancelled()) {
+        if (e.getPacket() instanceof IEntityGroupPacket) {
+            if (((IEntityGroupPacket) e.getPacket()).getGroup().size() == 0 || e.isCancelled()) {
                 packetEvent.setCancelled(true);
                 return;
             }
-            ((IPacketGroupEntity) e.getPacket()).apply();
+            ((IEntityGroupPacket) e.getPacket()).apply();
         } else if (e.isCancelled()) {
             packetEvent.setCancelled(true);
         }
@@ -81,7 +81,7 @@ public class GenericListener implements PacketListener {
         int entityID = p.getIntegers().read(0);
         if (!sendForFake && parent.isFakeID(entityID)) return;
 
-        IPacketEntity w = EntityPacket.unwrapFromType(entityID, IEntityPacketEvent.EntityPacketType.CLICK, p, target);
+        IEntityPacket w = EntityPacket.unwrapFromType(entityID, IEntityPacketEvent.EntityPacketType.CLICK, p, target);
         IEntityPacketEvent e = new EntityPacketEvent(w, IEntityPacketEvent.EntityPacketType.CLICK, target);
         dispatcher.dispatch(e, null);
         if (e.isCancelled()) {

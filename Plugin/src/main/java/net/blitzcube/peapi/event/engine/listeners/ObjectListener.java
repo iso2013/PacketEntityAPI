@@ -5,7 +5,7 @@ import com.comphenix.protocol.events.*;
 import com.comphenix.protocol.injector.GamePhase;
 import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.event.IEntityPacketEvent;
-import net.blitzcube.peapi.api.packet.IPacketEntity;
+import net.blitzcube.peapi.api.packet.IEntityPacket;
 import net.blitzcube.peapi.event.EntityPacketEvent;
 import net.blitzcube.peapi.event.engine.PacketEventDispatcher;
 import net.blitzcube.peapi.packet.EntityPacket;
@@ -39,7 +39,7 @@ public class ObjectListener implements PacketListener {
             if (!sendForFake && parent.isFakeID(entityID)) return;
         }
 
-        IPacketEntity w = EntityPacket.unwrapFromType(entityID, IEntityPacketEvent.EntityPacketType.OBJECT_SPAWN,
+        IEntityPacket w = EntityPacket.unwrapFromType(entityID, IEntityPacketEvent.EntityPacketType.OBJECT_SPAWN,
                 p, target);
         if (w == null) return;
         IEntityPacketEvent e = new EntityPacketEvent(w, IEntityPacketEvent.EntityPacketType.OBJECT_SPAWN, target);

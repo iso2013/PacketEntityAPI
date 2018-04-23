@@ -6,7 +6,7 @@ import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.google.common.base.Preconditions;
 import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
-import net.blitzcube.peapi.api.packet.IPacketObjectSpawn;
+import net.blitzcube.peapi.api.packet.IObjectSpawnPacket;
 import net.blitzcube.peapi.entity.modifier.EntityIdentifier;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
@@ -19,7 +19,7 @@ import java.util.UUID;
 /**
  * Created by iso2013 on 4/21/2018.
  */
-public class ObjectSpawnPacket extends EntityPacket implements IPacketObjectSpawn {
+public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacket {
     private static final int TICK_DELAY = 0;
     private EntityType type;
     private Location location;

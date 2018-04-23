@@ -5,7 +5,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.google.common.base.Preconditions;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
-import net.blitzcube.peapi.api.packet.IPacketEntitySpawn;
+import net.blitzcube.peapi.api.packet.IEntityPacketSpawn;
 import net.blitzcube.peapi.entity.modifier.EntityIdentifier;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -19,7 +19,7 @@ import java.util.UUID;
 /**
  * Created by iso2013 on 4/21/2018.
  */
-public class EntitySpawnPacket extends EntityPacket implements IPacketEntitySpawn {
+public class EntitySpawnPacket extends EntityPacket implements IEntityPacketSpawn {
     private static final int TICK_DELAY = 0;
     private static final PacketType TYPE = PacketType.Play.Server.SPAWN_ENTITY_LIVING;
     private EntityType type;

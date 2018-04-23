@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by iso2013 on 4/21/2018.
  */
-public interface IPacketEntityData extends IPacketEntity {
+public interface IEntityPacketData extends IEntityPacket {
     List<WrappedWatchableObject> getMetadata();
 
     void setMetadata(List<WrappedWatchableObject> data);

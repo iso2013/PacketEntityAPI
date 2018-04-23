@@ -1,14 +1,16 @@
 package net.blitzcube.peapi.api.packet;
 
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import org.bukkit.Location;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
+
+import java.util.List;
 
 /**
  * Created by iso2013 on 4/21/2018.
  */
-public interface IPacketObjectSpawn {
+public interface IEntityPacketSpawn extends IEntityPacket {
     EntityType getEntityType();
 
     void setEntityType(EntityType type);
@@ -17,23 +19,17 @@ public interface IPacketObjectSpawn {
 
     void setLocation(Location location);
 
-    int getData();
+    float getHeadPitch();
 
-    void setData(int data);
+    void setHeadPitch(float headPitch);
 
     Vector getVelocity();
 
     void setVelocity(Vector velocity);
 
-    Integer getOrbCount();
+    List<WrappedWatchableObject> getMetadata();
 
-    void setOrbCount(Integer count);
+    void setMetadata(List<WrappedWatchableObject> data);
 
-    String getTitle();
-
-    void setTitle(String title);
-
-    BlockFace getDirection();
-
-    void setDirection(BlockFace direction);
+    void rewriteMetadata();
 }

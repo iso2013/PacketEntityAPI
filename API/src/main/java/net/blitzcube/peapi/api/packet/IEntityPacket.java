@@ -5,6 +5,6 @@ import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 /**
  * Created by iso2013 on 4/21/2018.
  */
-public interface IPacketEntity {
+public interface IEntityPacket {
     IEntityIdentifier getIdentifier();
 }

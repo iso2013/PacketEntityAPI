@@ -4,7 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
-import net.blitzcube.peapi.api.packet.IPacketEntityEquipment;
+import net.blitzcube.peapi.api.packet.IEntityPacketEquipment;
 import net.blitzcube.peapi.entity.modifier.EntityIdentifier;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by iso2013 on 4/21/2018.
  */
-public class EntityEquipmentPacket extends EntityPacket implements IPacketEntityEquipment {
+public class EntityEquipmentPacket extends EntityPacket implements IEntityPacketEquipment {
     private static final int TICK_DELAY = 1;
     private static final PacketType TYPE = PacketType.Play.Server.ENTITY_EQUIPMENT;
     private EquipmentSlot slot;

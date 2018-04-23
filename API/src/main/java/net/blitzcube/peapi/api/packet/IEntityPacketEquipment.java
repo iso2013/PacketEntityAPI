@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by iso2013 on 4/21/2018.
  */
-public interface IPacketEntityEquipment extends IPacketEntity {
+public interface IEntityPacketEquipment extends IEntityPacket {
     EquipmentSlot getSlot();
 
     void setSlot(EquipmentSlot slot);

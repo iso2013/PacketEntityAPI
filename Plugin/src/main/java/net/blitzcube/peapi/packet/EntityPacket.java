@@ -3,13 +3,13 @@ package net.blitzcube.peapi.packet;
 import com.comphenix.protocol.events.PacketContainer;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import net.blitzcube.peapi.api.event.IEntityPacketEvent;
-import net.blitzcube.peapi.api.packet.IPacketEntity;
+import net.blitzcube.peapi.api.packet.IEntityPacket;
 import org.bukkit.entity.Player;
 
 /**
  * Created by iso2013 on 4/21/2018.
  */
-public class EntityPacket implements IPacketEntity {
+public class EntityPacket implements IEntityPacket {
     final PacketContainer rawPacket;
     private final IEntityIdentifier identifier;
 

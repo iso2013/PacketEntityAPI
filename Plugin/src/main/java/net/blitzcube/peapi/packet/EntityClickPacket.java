@@ -3,14 +3,14 @@ package net.blitzcube.peapi.packet;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
-import net.blitzcube.peapi.api.packet.IPacketEntityClick;
+import net.blitzcube.peapi.api.packet.IEntityPacketClick;
 import net.blitzcube.peapi.entity.modifier.EntityIdentifier;
 import org.bukkit.entity.Player;
 
 /**
  * Created by iso2013 on 4/21/2018.
  */
-public class EntityClickPacket extends EntityPacket implements IPacketEntityClick {
+public class EntityClickPacket extends EntityPacket implements IEntityPacketClick {
     private static final int TICK_DELAY = 0;
     private static final PacketType TYPE = PacketType.Play.Client.USE_ENTITY;
     private ClickType type;

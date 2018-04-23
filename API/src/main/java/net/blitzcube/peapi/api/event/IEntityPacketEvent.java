@@ -1,6 +1,6 @@
 package net.blitzcube.peapi.api.event;
 
-import net.blitzcube.peapi.api.packet.IPacketEntity;
+import net.blitzcube.peapi.api.packet.IEntityPacket;
 import org.bukkit.entity.Player;
 
 /**
@@ -13,7 +13,7 @@ public interface IEntityPacketEvent {
 
     Player getPlayer();
 
-    IPacketEntity getPacket();
+    IEntityPacket getPacket();
 
     EntityPacketType getPacketType();
 

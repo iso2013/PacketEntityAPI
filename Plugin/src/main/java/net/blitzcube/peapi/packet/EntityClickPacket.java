@@ -16,11 +16,11 @@ public class EntityClickPacket extends EntityPacket implements IEntityClickPacke
     private ClickType type;
 
     public EntityClickPacket(IEntityIdentifier identifier) {
-        super(identifier, new PacketContainer(TYPE));
+        super(identifier, new PacketContainer(TYPE), true);
     }
 
     private EntityClickPacket(IEntityIdentifier identifier, PacketContainer rawPacket, ClickType type) {
-        super(identifier, rawPacket);
+        super(identifier, rawPacket, false);
         this.type = type;
     }
 

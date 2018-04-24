@@ -70,7 +70,7 @@ public class FakeEntityFactory implements IFakeEntityFactory {
 
     @Override
     public IFakeEntity createFakeEntity(EntityType type) {
-        return createFakeEntity(type, true);
+        return createFakeEntity(type, false);
     }
 
     @Override

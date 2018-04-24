@@ -44,6 +44,7 @@ public class EntityPacketFactory implements IEntityPacketFactory {
     public IEntityPacket createDestroyPacket(IEntityIdentifier... entities) {
         EntityDestroyPacket p = new EntityDestroyPacket();
         for (IEntityIdentifier i : entities) p.addToGroup(i);
+        p.apply();
         return p;
     }
 
@@ -71,6 +72,7 @@ public class EntityPacketFactory implements IEntityPacketFactory {
     public IEntityPacket createMountPacket(IEntityIdentifier vehicle, IEntityIdentifier... passengers) {
         EntityMountPacket p = new EntityMountPacket(vehicle);
         for (IEntityIdentifier passenger : passengers) p.addToGroup(passenger);
+        p.apply();
         return p;
     }
 
@@ -123,6 +125,7 @@ public class EntityPacketFactory implements IEntityPacketFactory {
         if (!PacketEntityAPI.OBJECTS.containsKey(t))
             throw new IllegalStateException("Tried to spawn an entity with an object packet!");
         ObjectSpawnPacket p = new ObjectSpawnPacket(identifier, t);
+        p.setEntityType(t);
         p.setLocation(fake ? f.getLocation() : e.getLocation());
         if (t.equals(EntityType.PAINTING)) {
             if (fake && !f.hasField("title")) throw new IllegalStateException("A title has not been specified!");

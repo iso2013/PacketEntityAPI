@@ -16,12 +16,12 @@ public class EntityStatusPacket extends EntityPacket implements IEntityPacketSta
     private byte status;
 
     EntityStatusPacket(IEntityIdentifier identifier) {
-        super(identifier, new PacketContainer(TYPE));
+        super(identifier, new PacketContainer(TYPE), true);
         this.status = -1;
     }
 
     private EntityStatusPacket(IEntityIdentifier identifier, PacketContainer rawPacket, byte status) {
-        super(identifier, rawPacket);
+        super(identifier, rawPacket, false);
         this.status = status;
     }
 

@@ -30,14 +30,16 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
     private int data;
 
     ObjectSpawnPacket(IEntityIdentifier identifier, EntityType type) {
-        super(identifier, new PacketContainer(entityTypeToPacket(type)));
+        super(identifier, new PacketContainer(entityTypeToPacket(type)), true);
         this.velocity = new Vector(0, 0, 0);
         data = 0;
+
+        super.rawPacket.getUUIDs().write(0, identifier.getUUID());
     }
 
     private ObjectSpawnPacket(IEntityIdentifier identifier, PacketContainer packet, EntityType type, Location location,
                               Vector velocity, int data) {
-        super(identifier, packet);
+        super(identifier, packet, false);
         this.type = type;
         this.location = location;
         this.velocity = velocity;
@@ -46,7 +48,7 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
 
     private ObjectSpawnPacket(IEntityIdentifier identifier, PacketContainer packet, EntityType type, Location location,
                               String title, BlockFace direction) {
-        super(identifier, packet);
+        super(identifier, packet, false);
         this.type = type;
         this.location = location;
         this.title = title;
@@ -55,7 +57,7 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
 
     private ObjectSpawnPacket(IEntityIdentifier identifier, PacketContainer packet, EntityType type, Location location,
                               Integer orbCount) {
-        super(identifier, packet);
+        super(identifier, packet, false);
         this.type = type;
         this.location = location;
         this.orbCount = orbCount;
@@ -63,7 +65,7 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
 
     private ObjectSpawnPacket(IEntityIdentifier identifier, PacketContainer packet, EntityType type,
                               Location location) {
-        super(identifier, packet);
+        super(identifier, packet, false);
         this.type = type;
         this.location = location;
     }
@@ -78,15 +80,15 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
         if (t == null) return null;
         switch (t) {
             case UNKNOWN:
-                yaw = c.getIntegers().read(1).floatValue() * (360.0F / 256.0F);
-                pitch = c.getIntegers().read(2).floatValue() * (360.0F / 256.0F);
+                yaw = c.getIntegers().read(5).floatValue() * (360.0F / 256.0F);
+                pitch = c.getIntegers().read(4).floatValue() * (360.0F / 256.0F);
                 t = PacketEntityAPI.lookupObject(c.getIntegers().read(6));
                 velocity = new Vector(
+                        c.getIntegers().read(1),
                         c.getIntegers().read(2),
-                        c.getIntegers().read(3),
-                        c.getIntegers().read(4)
+                        c.getIntegers().read(3)
                 );
-                data = c.getIntegers().read(4);
+                data = c.getIntegers().read(7);
             case PAINTING:
                 uuid = c.getUUIDs().read(0);
                 if (EntityType.PAINTING.equals(t)) {
@@ -191,7 +193,7 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
         Preconditions.checkArgument(PacketEntityAPI.OBJECTS.containsKey(type),
                 "You cannot spawn an entity with an object packet!");
         this.type = type;
-        super.rawPacket.getBytes().write(0, PacketEntityAPI.OBJECTS.get(type).byteValue());
+        super.rawPacket.getIntegers().write(6, PacketEntityAPI.OBJECTS.get(type));
     }
 
     @Override
@@ -202,12 +204,17 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
     @Override
     public void setLocation(Location location) {
         this.location = location;
-        super.rawPacket.getDoubles().write(0, location.getX());
-        super.rawPacket.getDoubles().write(1, location.getY());
-        super.rawPacket.getDoubles().write(2, location.getZ());
-        if (type != EntityType.LIGHTNING && type != EntityType.PAINTING && type != EntityType.EXPERIENCE_ORB) {
-            super.rawPacket.getIntegers().write(1, (int) (location.getYaw() * (256.0F / 360.0F)));
-            super.rawPacket.getIntegers().write(2, (int) (location.getPitch() * (256.0F / 360.0F)));
+        Vector v;
+        if (this.location == null) {
+            v = new Vector(0, 0, 0);
+        } else v = this.location.toVector();
+        super.rawPacket.getDoubles().write(0, v.getX());
+        super.rawPacket.getDoubles().write(1, v.getY());
+        super.rawPacket.getDoubles().write(2, v.getZ());
+        if (type != EntityType.LIGHTNING && type != EntityType.PAINTING && type != EntityType.EXPERIENCE_ORB && this
+                .location != null) {
+            super.rawPacket.getIntegers().write(5, (int) (location.getYaw() * (256.0F / 360.0F)));
+            super.rawPacket.getIntegers().write(4, (int) (location.getPitch() * (256.0F / 360.0F)));
         }
     }
 
@@ -240,9 +247,9 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
                 "You cannot set a velocity for a " + type.name() + "!");
         this.velocity = velocity;
         //TODO: This is wrong.
-        super.rawPacket.getIntegers().write(3, (int) velocity.getX());
-        super.rawPacket.getIntegers().write(4, (int) velocity.getY());
-        super.rawPacket.getIntegers().write(5, (int) velocity.getZ());
+        super.rawPacket.getIntegers().write(1, (int) velocity.getX());
+        super.rawPacket.getIntegers().write(2, (int) velocity.getY());
+        super.rawPacket.getIntegers().write(3, (int) velocity.getZ());
     }
 
     @Override

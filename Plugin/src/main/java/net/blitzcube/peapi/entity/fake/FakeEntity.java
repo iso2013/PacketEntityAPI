@@ -1,6 +1,5 @@
 package net.blitzcube.peapi.entity.fake;
 
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.entity.hitbox.IHitbox;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
@@ -13,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -41,7 +41,7 @@ public class FakeEntity implements IFakeEntity {
         this.modifiers = modifiers;
         this.fields = new HashMap<>();
         this.hitbox = Hitbox.getByType(type);
-        this.modifiableEntity = new ModifiableEntity.WatcherBased(new WrappedDataWatcher());
+        this.modifiableEntity = new ModifiableEntity.ListBased(new ArrayList<>());
         for (IEntityModifier m : modifiers.values()) m.unsetValue(modifiableEntity, true);
         this.checkIntersect = (p, e) -> e.getHitbox().intersects(
                 p.getEyeLocation().toVector(),

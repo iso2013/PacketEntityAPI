@@ -10,7 +10,11 @@ public interface IEntityPacketContext {
 
     IEntityPacketContext queueDispatch(IEntityPacket[] packets, int[] delays);
 
+    IEntityPacketContext queueDispatch(IEntityPacket[] packets, int delay);
+
     IEntityPacketContext queueDispatch(IEntityPacket packet, int delay);
 
     IEntityPacketContext queueDispatch(IEntityPacket packet);
+
+    void execute();
 }

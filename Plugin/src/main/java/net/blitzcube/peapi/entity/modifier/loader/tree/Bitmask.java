@@ -28,7 +28,7 @@ public class Bitmask extends Node.Attribute {
     public List<GenericModifier> asGenericModifier() {
         List<GenericModifier> modifiers = new ArrayList<>();
         for (Key k : keys) {
-            if (Integer.toBinaryString(k.mask).replace(" ", "").length() > 1) {
+            if (Integer.toBinaryString(k.mask).replaceAll("[0 ]", "").length() > 1) {
                 modifiers.add(new ByteBitmaskModifier(index, k.mask, k.label, def));
             } else {
                 modifiers.add(new BitmaskModifier(index, k.mask, k.label, def));

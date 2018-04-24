@@ -13,9 +13,14 @@ public abstract class EntityPacket implements IEntityPacket {
     final PacketContainer rawPacket;
     private final IEntityIdentifier identifier;
 
-    EntityPacket(IEntityIdentifier identifier, PacketContainer rawPacket) {
+    EntityPacket(IEntityIdentifier identifier, PacketContainer rawPacket, boolean writeDefaults) {
         this.identifier = identifier;
         this.rawPacket = rawPacket;
+        if (writeDefaults)
+            this.rawPacket.getModifier().writeDefaults();
+
+        if (identifier != null)
+            this.rawPacket.getIntegers().write(0, identifier.getEntityID());
     }
 
     public static EntityPacket unwrapFromType(int entityID, IEntityPacketEvent.EntityPacketType type, PacketContainer

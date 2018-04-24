@@ -23,13 +23,13 @@ public class EntityMountPacket extends EntityPacket implements IEntityPacketMoun
     private boolean changed = false;
 
     EntityMountPacket(IEntityIdentifier identifier) {
-        super(identifier, new PacketContainer(TYPE));
+        super(identifier, new PacketContainer(TYPE), true);
         this.targets = new ArrayList<>();
     }
 
     private EntityMountPacket(IEntityIdentifier identifier, PacketContainer rawPacket, List<IEntityIdentifier>
             targets) {
-        super(identifier, rawPacket);
+        super(identifier, rawPacket, false);
         this.targets = targets;
     }
 

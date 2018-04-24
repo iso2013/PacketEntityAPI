@@ -20,12 +20,12 @@ public class EntityEquipmentPacket extends EntityPacket implements IEntityPacket
     private ItemStack item;
 
     EntityEquipmentPacket(IEntityIdentifier identifier) {
-        super(identifier, new PacketContainer(TYPE));
+        super(identifier, new PacketContainer(TYPE), true);
     }
 
     private EntityEquipmentPacket(IEntityIdentifier identifier, PacketContainer rawPacket, EquipmentSlot slot,
                                   ItemStack item) {
-        super(identifier, rawPacket);
+        super(identifier, rawPacket, false);
         this.slot = slot;
         this.item = item;
     }

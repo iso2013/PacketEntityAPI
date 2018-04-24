@@ -75,6 +75,7 @@ public class PacketEventDispatcher {
                     || (object && objectListeners.contains(iListener))
                     || (!object && entityListeners.contains(iListener))).forEach(i -> i.onEvent(e));
         }
+        e.context().execute();
     }
 
     public void remove(IListener l) {

@@ -2,6 +2,7 @@ package net.blitzcube.peapi.packet;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.google.common.base.Preconditions;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
@@ -29,16 +30,18 @@ public class EntitySpawnPacket extends EntityPacket implements IEntityPacketSpaw
     private List<WrappedWatchableObject> metadata;
 
     EntitySpawnPacket(IEntityIdentifier identifier) {
-        super(identifier, new PacketContainer(TYPE));
+        super(identifier, new PacketContainer(TYPE), true);
         this.velocity = new Vector(0, 0, 0);
         this.headPitch = 0.0f;
         this.metadata = new ArrayList<>();
+
+        super.rawPacket.getUUIDs().write(0, identifier.getUUID());
     }
 
     private EntitySpawnPacket(IEntityIdentifier identifier, PacketContainer rawPacket, EntityType type,
                               Location location, Vector velocity, float headPitch,
                               List<WrappedWatchableObject> metadata) {
-        super(identifier, rawPacket);
+        super(identifier, rawPacket, false);
         this.type = type;
         this.location = location;
         this.velocity = velocity;
@@ -94,6 +97,8 @@ public class EntitySpawnPacket extends EntityPacket implements IEntityPacketSpaw
     @Override
     @SuppressWarnings("deprecation")
     public void setEntityType(EntityType type) {
+        Preconditions.checkArgument(this.type != EntityType.PLAYER, "You cannot modify the " +
+                "type of a player spawn packet!");
         this.type = type;
         super.rawPacket.getIntegers().write(1, (int) type.getTypeId());
     }
@@ -106,11 +111,17 @@ public class EntitySpawnPacket extends EntityPacket implements IEntityPacketSpaw
     @Override
     public void setLocation(Location location) {
         this.location = location;
-        super.rawPacket.getDoubles().write(0, location.getX());
-        super.rawPacket.getDoubles().write(1, location.getY());
-        super.rawPacket.getDoubles().write(2, location.getZ());
-        super.rawPacket.getIntegers().write(2, (int) (location.getYaw() * (256.0F / 360.0F)));
-        super.rawPacket.getIntegers().write(3, (int) (location.getPitch() * (256.0F / 360.0F)));
+        Vector v;
+        if (this.location == null) {
+            v = new Vector(0, 0, 0);
+        } else v = this.location.toVector();
+        super.rawPacket.getDoubles().write(0, v.getX());
+        super.rawPacket.getDoubles().write(1, v.getY());
+        super.rawPacket.getDoubles().write(2, v.getZ());
+        if (this.location != null) {
+            super.rawPacket.getIntegers().write(2, (int) (location.getYaw() * (256.0F / 360.0F)));
+            super.rawPacket.getIntegers().write(3, (int) (location.getPitch() * (256.0F / 360.0F)));
+        }
     }
 
     @Override
@@ -158,6 +169,7 @@ public class EntitySpawnPacket extends EntityPacket implements IEntityPacketSpaw
     @Override
     public PacketContainer getRawPacket() {
         assert type != null && location != null;
+        super.rawPacket.getDataWatcherModifier().write(0, new WrappedDataWatcher(metadata));
         return super.getRawPacket();
     }
 

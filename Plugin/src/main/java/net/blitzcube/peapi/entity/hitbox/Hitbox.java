@@ -66,7 +66,9 @@ public class Hitbox implements IHitbox {
         if (boxes.containsKey(type)) return boxes.get(type).deepClone();
 
         try {
-            Class<?> mcClass = Class.forName("net.minecraft.server." + version + "." + type.getEntityClass().getName());
+            String className = type.getEntityClass().getName();
+            Class<?> mcClass = Class.forName("net.minecraft.server." + version + ".Entity" + className.substring
+                    (className.lastIndexOf('.') + 1));
             Object bb = getBB.invoke(mcClass.getConstructor(world).newInstance(new Object[]{null}));
             double[] c = new double[]{
                     (double) coordinates[0].get(bb),

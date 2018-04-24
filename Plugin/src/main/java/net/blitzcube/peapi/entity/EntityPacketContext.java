@@ -61,6 +61,13 @@ public class EntityPacketContext implements IEntityPacketContext {
     }
 
     @Override
+    public IEntityPacketContext queueDispatch(IEntityPacket[] packets, int delay) {
+        int[] delays = new int[packets.length];
+        delays[0] = delay;
+        return queueDispatch(packets, delays);
+    }
+
+    @Override
     public IEntityPacketContext queueDispatch(IEntityPacket packet, int delay) {
         PacketContainer c = packet.getRawPacket();
         if (c.getType().isClient()) {
@@ -84,6 +91,11 @@ public class EntityPacketContext implements IEntityPacketContext {
         int delay = packet.getDelay();
         if (delay > 0) chain = chain.delay(delay);
         return this;
+    }
+
+    @Override
+    public void execute() {
+        chain.execute();
     }
 
     private void safeSend(PacketContainer packet) {

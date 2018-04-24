@@ -19,12 +19,12 @@ public class EntityDataPacket extends EntityPacket implements IEntityPacketData 
     private List<WrappedWatchableObject> metadata;
 
     EntityDataPacket(IEntityIdentifier identifier) {
-        super(identifier, new PacketContainer(TYPE));
+        super(identifier, new PacketContainer(TYPE), true);
     }
 
     private EntityDataPacket(IEntityIdentifier identifier, PacketContainer rawPacket, List<WrappedWatchableObject>
             metadata) {
-        super(identifier, rawPacket);
+        super(identifier, rawPacket, false);
         this.metadata = metadata;
     }
 

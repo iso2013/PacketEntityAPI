@@ -23,12 +23,12 @@ public class EntityDestroyPacket extends EntityPacket implements IEntityPacketDe
     private boolean changed = false;
 
     EntityDestroyPacket() {
-        super(null, new PacketContainer(TYPE));
+        super(null, new PacketContainer(TYPE), true);
         this.targets = new ArrayList<>();
     }
 
     private EntityDestroyPacket(PacketContainer rawPacket, List<IEntityIdentifier> targets) {
-        super(null, rawPacket);
+        super(null, rawPacket, false);
         this.targets = targets;
     }
 

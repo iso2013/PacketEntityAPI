@@ -16,11 +16,11 @@ public class EntityAnimationPacket extends EntityPacket implements IEntityPacket
     private AnimationType type;
 
     EntityAnimationPacket(IEntityIdentifier identifier) {
-        super(identifier, new PacketContainer(TYPE));
+        super(identifier, new PacketContainer(TYPE), true);
     }
 
     private EntityAnimationPacket(IEntityIdentifier identifier, PacketContainer packet, AnimationType type) {
-        super(identifier, packet);
+        super(identifier, packet, false);
         this.type = type;
     }
 

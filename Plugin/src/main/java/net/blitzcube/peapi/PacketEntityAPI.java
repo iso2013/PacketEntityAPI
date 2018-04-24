@@ -182,8 +182,8 @@ public class PacketEntityAPI implements IPacketEntityAPI {
     }
 
     @Override
-    public boolean isVisible(Location location, Player target, double error) {
-        return SightDistanceRegistry.isVisible(location, target, error);
+    public boolean isVisible(Location location, Player target, double err) {
+        return SightDistanceRegistry.isVisible(location, target, err);
     }
 
     @Override

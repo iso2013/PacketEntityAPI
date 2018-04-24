@@ -17,7 +17,8 @@ public interface IEntityPacketContext {
 
     /**
      * Queue a set of entity packets for sending after the event. Delays for each packet will be taken from the array
-     * at the same index; however, if the delays array is not big enough, the default delay will be used.
+     * at the same index; however, if the delays array is not big enough, the default delay will be used. If the delay
+     * given by the array is negative, the default delay will also be used.
      * @param packets the packets to queue
      * @param delays the delays to use for these packets
      * @return this to allow for chaining

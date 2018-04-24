@@ -9,7 +9,9 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 /**
- * Created by iso2013 on 2/13/2018.
+ * @author iso2013
+ * @version 0.1
+ * @since 2018-02-13
  */
 public interface IPacketEntityAPI {
     /**

@@ -4,7 +4,9 @@ import com.comphenix.protocol.wrappers.EnumWrappers;
 import net.blitzcube.peapi.api.entity.hitbox.IHitbox;
 
 /**
- * Created by iso2013 on 4/21/2018.
+ * @author iso2013
+ * @version 0.1
+ * @since 2018-04-21
  */
 public interface IEntityClickPacket extends IEntityPacket {
     /**

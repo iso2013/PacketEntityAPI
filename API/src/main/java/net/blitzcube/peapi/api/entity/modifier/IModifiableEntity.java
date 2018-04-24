@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by iso2013 on 4/18/2018.
+ * @author iso2013
+ * @version 0.1
+ * @since 2018-04-18
  */
 public interface IModifiableEntity {
     /**

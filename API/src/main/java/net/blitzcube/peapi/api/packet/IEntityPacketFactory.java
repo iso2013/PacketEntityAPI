@@ -4,7 +4,9 @@ import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import org.bukkit.inventory.EntityEquipment;
 
 /**
- * Created by iso2013 on 4/23/2018.
+ * @author iso2013
+ * @version 0.1
+ * @since 2018-04-23
  */
 public interface IEntityPacketFactory {
     /**

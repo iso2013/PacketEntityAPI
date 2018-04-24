@@ -102,4 +102,9 @@ public class EntityEquipmentPacket extends EntityPacket implements IEntityPacket
         assert slot != null && item != null;
         return super.getRawPacket();
     }
+
+    @Override
+    public int getDelay() {
+        return TICK_DELAY;
+    }
 }

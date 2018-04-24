@@ -307,4 +307,9 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
         }
         return super.getRawPacket();
     }
+
+    @Override
+    public int getDelay() {
+        return TICK_DELAY;
+    }
 }

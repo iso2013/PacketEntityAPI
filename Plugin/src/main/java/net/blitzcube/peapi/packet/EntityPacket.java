@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 /**
  * Created by iso2013 on 4/21/2018.
  */
-public class EntityPacket implements IEntityPacket {
+public abstract class EntityPacket implements IEntityPacket {
     final PacketContainer rawPacket;
     private final IEntityIdentifier identifier;
 
@@ -48,7 +48,8 @@ public class EntityPacket implements IEntityPacket {
         return identifier;
     }
 
-    PacketContainer getRawPacket() {
+    @Override
+    public PacketContainer getRawPacket() {
         return rawPacket;
     }
 }

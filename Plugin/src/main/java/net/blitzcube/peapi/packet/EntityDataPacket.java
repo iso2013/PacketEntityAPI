@@ -57,4 +57,9 @@ public class EntityDataPacket extends EntityPacket implements IEntityPacketData 
         assert metadata != null && metadata.size() > 0;
         return super.getRawPacket();
     }
+
+    @Override
+    public int getDelay() {
+        return TICK_DELAY;
+    }
 }

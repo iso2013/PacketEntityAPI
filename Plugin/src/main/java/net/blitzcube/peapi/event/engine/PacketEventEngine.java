@@ -24,35 +24,35 @@ class PacketEventEngine {
         this.dispatcher = dispatcher;
     }
 
-    public void setSendForFake(boolean sendForFake) {
+    void setSendForFake(boolean sendForFake) {
         entity.setSendForFake(sendForFake);
         generic.setSendForFake(sendForFake);
         object.setSendForFake(sendForFake);
     }
 
-    public void setCollidable(boolean collidable) {
+    void setCollidable(boolean collidable) {
         generic.setCollidable(collidable);
     }
 
-    public void enableObjects() {
+    void enableObjects() {
         if (object == null && entity == null) {
-            generic = new GenericListener(parent, dispatcher);
+            generic = new GenericListener(parent, dispatcher, manager);
             manager.addPacketListener(generic);
         }
-        if (object == null) object = new ObjectListener(parent, dispatcher);
+        if (object == null) object = new ObjectListener(parent, dispatcher, manager);
         manager.addPacketListener(object);
     }
 
-    public void enableEntities() {
+    void enableEntities() {
         if (object == null && entity == null) {
-            generic = new GenericListener(parent, dispatcher);
+            generic = new GenericListener(parent, dispatcher, manager);
             manager.addPacketListener(generic);
         }
-        if (entity == null) entity = new EntityListener(parent, dispatcher);
+        if (entity == null) entity = new EntityListener(parent, dispatcher, manager);
         manager.addPacketListener(entity);
     }
 
-    public void disableObjects() {
+    void disableObjects() {
         if (object != null) {
             manager.removePacketListener(object);
         }
@@ -62,7 +62,7 @@ class PacketEventEngine {
         }
     }
 
-    public void disableEntities() {
+    void disableEntities() {
         if (entity != null) {
             manager.removePacketListener(entity);
         }

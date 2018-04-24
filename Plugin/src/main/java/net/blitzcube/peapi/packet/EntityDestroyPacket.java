@@ -67,4 +67,9 @@ public class EntityDestroyPacket extends EntityPacket implements IEntityPacketDe
         assert targets.size() > 0;
         return super.getRawPacket();
     }
+
+    @Override
+    public int getDelay() {
+        return TICK_DELAY;
+    }
 }

@@ -63,4 +63,9 @@ public class EntityMountPacket extends EntityPacket implements IEntityPacketMoun
         super.rawPacket.getIntegerArrays().write(0, targets.stream().mapToInt(IEntityIdentifier::getEntityID)
                 .toArray());
     }
+
+    @Override
+    public int getDelay() {
+        return TICK_DELAY;
+    }
 }

@@ -48,4 +48,9 @@ public class EntityClickPacket extends EntityPacket implements IEntityClickPacke
         assert type != null;
         return super.getRawPacket();
     }
+
+    @Override
+    public int getDelay() {
+        return TICK_DELAY;
+    }
 }

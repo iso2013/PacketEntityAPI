@@ -160,4 +160,9 @@ public class EntitySpawnPacket extends EntityPacket implements IEntityPacketSpaw
         assert type != null && location != null;
         return super.getRawPacket();
     }
+
+    @Override
+    public int getDelay() {
+        return TICK_DELAY;
+    }
 }

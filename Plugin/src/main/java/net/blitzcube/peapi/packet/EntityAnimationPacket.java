@@ -48,4 +48,9 @@ public class EntityAnimationPacket extends EntityPacket implements IEntityPacket
         assert type != null;
         return super.getRawPacket();
     }
+
+    @Override
+    public int getDelay() {
+        return TICK_DELAY;
+    }
 }

@@ -17,6 +17,8 @@ public interface IEntityPacketEvent {
 
     EntityPacketType getPacketType();
 
+    IEntityPacketContext context();
+
     enum EntityPacketType {
         ANIMATION,
         CLICK,

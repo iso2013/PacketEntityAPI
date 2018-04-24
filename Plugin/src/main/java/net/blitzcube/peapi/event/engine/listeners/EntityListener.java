@@ -1,6 +1,7 @@
 package net.blitzcube.peapi.event.engine.listeners;
 
 import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.*;
 import com.comphenix.protocol.injector.GamePhase;
 import net.blitzcube.peapi.PacketEntityAPI;
@@ -17,12 +18,14 @@ import org.bukkit.plugin.Plugin;
 public class EntityListener implements PacketListener {
     private final PacketEntityAPI parent;
     private final PacketEventDispatcher dispatcher;
+    private final ProtocolManager manager;
     private boolean sendForFake;
 
     public EntityListener(PacketEntityAPI parent, PacketEventDispatcher
-            dispatcher) {
+            dispatcher, ProtocolManager manager) {
         this.parent = parent;
         this.dispatcher = dispatcher;
+        this.manager = manager;
         this.sendForFake = false;
     }
 
@@ -38,7 +41,7 @@ public class EntityListener implements PacketListener {
         IEntityPacketEvent e = null;
         if (PacketType.Play.Server.SPAWN_ENTITY_LIVING.equals(t) || PacketType.Play.Server.NAMED_ENTITY_SPAWN.equals
                 (t)) {
-            e = new EntityPacketEvent(
+            e = new EntityPacketEvent(manager,
                     EntityPacket.unwrapFromType(entityID, IEntityPacketEvent.EntityPacketType.ENTITY_SPAWN, p, target),
                     IEntityPacketEvent.EntityPacketType.ENTITY_SPAWN,
                     target

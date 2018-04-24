@@ -1,6 +1,7 @@
 package net.blitzcube.peapi.event.engine.listeners;
 
 import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.*;
 import com.comphenix.protocol.injector.GamePhase;
 import net.blitzcube.peapi.PacketEntityAPI;
@@ -18,12 +19,14 @@ import org.bukkit.plugin.Plugin;
 public class ObjectListener implements PacketListener {
     private final PacketEntityAPI parent;
     private final PacketEventDispatcher dispatcher;
+    private final ProtocolManager manager;
     private boolean sendForFake;
 
     public ObjectListener(PacketEntityAPI parent, PacketEventDispatcher
-            dispatcher) {
+            dispatcher, ProtocolManager manager) {
         this.parent = parent;
         this.dispatcher = dispatcher;
+        this.manager = manager;
         this.sendForFake = false;
     }
 
@@ -42,7 +45,8 @@ public class ObjectListener implements PacketListener {
         IEntityPacket w = EntityPacket.unwrapFromType(entityID, IEntityPacketEvent.EntityPacketType.OBJECT_SPAWN,
                 p, target);
         if (w == null) return;
-        IEntityPacketEvent e = new EntityPacketEvent(w, IEntityPacketEvent.EntityPacketType.OBJECT_SPAWN, target);
+        IEntityPacketEvent e = new EntityPacketEvent(manager, w, IEntityPacketEvent.EntityPacketType.OBJECT_SPAWN,
+                target);
         dispatcher.dispatch(e, true);
         if (e.isCancelled()) {
             packetEvent.setCancelled(true);

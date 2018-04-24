@@ -1,7 +1,11 @@
 package net.blitzcube.peapi.event;
 
+import com.comphenix.protocol.ProtocolManager;
+import net.blitzcube.peapi.PacketEntityAPI;
+import net.blitzcube.peapi.api.event.IEntityPacketContext;
 import net.blitzcube.peapi.api.event.IEntityPacketEvent;
 import net.blitzcube.peapi.api.packet.IEntityPacket;
+import net.blitzcube.peapi.entity.EntityPacketContext;
 import org.bukkit.entity.Player;
 
 /**
@@ -12,13 +16,15 @@ public class EntityPacketEvent implements IEntityPacketEvent {
     private final EntityPacketType packetType;
     private final Player target;
     private boolean cancelled;
+    private IEntityPacketContext context;
 
-    public EntityPacketEvent(IEntityPacket packet, EntityPacketType packetType, Player target) {
+    public EntityPacketEvent(ProtocolManager manager, IEntityPacket packet, EntityPacketType packetType, Player
+            target) {
         this.packet = packet;
         this.packetType = packetType;
         this.target = target;
+        this.context = new EntityPacketContext(manager, PacketEntityAPI.getChainFactory(), target);
     }
-
 
     @Override
     public boolean isCancelled() {
@@ -44,4 +50,7 @@ public class EntityPacketEvent implements IEntityPacketEvent {
     public EntityPacketType getPacketType() {
         return packetType;
     }
+
+    @Override
+    public IEntityPacketContext context() { return context; }
 }

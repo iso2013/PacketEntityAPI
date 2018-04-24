@@ -1,5 +1,7 @@
 package net.blitzcube.peapi;
 
+import co.aikar.taskchain.BukkitTaskChainFactory;
+import co.aikar.taskchain.TaskChainFactory;
 import com.google.common.base.Preconditions;
 import net.blitzcube.peapi.api.IPacketEntityAPI;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
@@ -78,6 +80,9 @@ public class PacketEntityAPI implements IPacketEntityAPI {
         return false;
     }
 
+    private static JavaPlugin parent;
+
+    private static TaskChainFactory chainFactory;
     /*
      * Begin actual API implementation:
      */
@@ -85,12 +90,13 @@ public class PacketEntityAPI implements IPacketEntityAPI {
     private FakeEntityFactory fakeEntityFactory;
     private EntityPacketFactory packetFactory;
     private PacketEventDispatcher dispatcher;
-
     private PacketEntityAPI() {
         this.modifierRegistry = new EntityModifierRegistry();
         this.fakeEntityFactory = new FakeEntityFactory(this);
         this.packetFactory = new EntityPacketFactory();
         this.dispatcher = new PacketEventDispatcher(this);
+
+        chainFactory = BukkitTaskChainFactory.create(parent);
     }
 
     static void initialize(JavaPlugin parent, Consumer<IPacketEntityAPI> onLoad) {
@@ -108,8 +114,16 @@ public class PacketEntityAPI implements IPacketEntityAPI {
         m.register(IPacketEntityAPI.ProviderStub.class, new PacketEntityAPI.ProviderStub(), parent, ServicePriority
                 .Normal);
 
+        if (PacketEntityAPI.parent == null || parent.getName().equals("PacketEntityAPI")) {
+            PacketEntityAPI.parent = parent;
+        }
+
         if (onLoad != null)
             Bukkit.getScheduler().runTask(parent, () -> onLoad.accept(getLatestCompatibleVersion()));
+    }
+
+    public static TaskChainFactory getChainFactory() {
+        return chainFactory;
     }
 
     private static IPacketEntityAPI getLatestCompatibleVersion() {

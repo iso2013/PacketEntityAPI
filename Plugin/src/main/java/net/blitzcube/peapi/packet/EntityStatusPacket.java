@@ -45,4 +45,9 @@ public class EntityStatusPacket extends EntityPacket implements IEntityPacketSta
         assert status > 0;
         return super.getRawPacket();
     }
+
+    @Override
+    public int getDelay() {
+        return TICK_DELAY;
+    }
 }

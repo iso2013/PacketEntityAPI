@@ -5,5 +5,5 @@ package net.blitzcube.peapi.api.packet;
  * @version 0.1
  * @since 2018-04-21
  */
-public interface IEntityPacketDestroy extends IEntityPacket, IEntityGroupPacket {
+public interface IEntityDestroyPacket extends IEntityPacket, IEntityGroupPacket {
 }

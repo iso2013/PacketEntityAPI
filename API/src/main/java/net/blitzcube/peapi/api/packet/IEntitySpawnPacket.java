@@ -12,7 +12,7 @@ import java.util.List;
  * @version 0.1
  * @since 2018-04-21
  */
-public interface IEntityPacketSpawn extends IEntityPacket {
+public interface IEntitySpawnPacket extends IEntityPacket {
     /**
      * Gets the entity type that will be created by this packet
      *

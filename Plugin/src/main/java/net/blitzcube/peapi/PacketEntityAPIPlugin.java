@@ -8,7 +8,7 @@ import net.blitzcube.peapi.api.event.IEntityPacketEvent;
 import net.blitzcube.peapi.api.listener.IListener;
 import net.blitzcube.peapi.api.packet.IEntityPacket;
 import net.blitzcube.peapi.api.packet.IEntityPacketFactory;
-import net.blitzcube.peapi.api.packet.IEntityPacketSpawn;
+import net.blitzcube.peapi.api.packet.IEntitySpawnPacket;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -68,7 +68,7 @@ public final class PacketEntityAPIPlugin extends JavaPlugin implements Listener 
 
         @Override
         public void onEvent(IEntityPacketEvent e) {
-            if (e.getPacket() instanceof IEntityPacketSpawn) {
+            if (e.getPacket() instanceof IEntitySpawnPacket) {
                 IFakeEntity sf1 = entity.createFakeEntity(EntityType.SILVERFISH);
                 IFakeEntity sf2 = entity.createFakeEntity(EntityType.SILVERFISH);
                 IFakeEntity sf3 = entity.createFakeEntity(EntityType.SILVERFISH);
@@ -76,14 +76,14 @@ public final class PacketEntityAPIPlugin extends JavaPlugin implements Listener 
                 IFakeEntity armorStand1 = entity.createFakeEntity(EntityType.ARMOR_STAND);
                 IFakeEntity armorStand2 = entity.createFakeEntity(EntityType.ARMOR_STAND);
 
-                sf1.setLocation(((IEntityPacketSpawn) e.getPacket()).getLocation().clone().add(new Vector(0, 1.5, 0)));
-                sf2.setLocation(((IEntityPacketSpawn) e.getPacket()).getLocation().clone().add(new Vector(0, 1.5, 0)));
-                sf3.setLocation(((IEntityPacketSpawn) e.getPacket()).getLocation().clone().add(new Vector(0, 1.5, 0)));
-                slime.setLocation(((IEntityPacketSpawn) e.getPacket()).getLocation().clone().add(new Vector(0, 1.5,
+                sf1.setLocation(((IEntitySpawnPacket) e.getPacket()).getLocation().clone().add(new Vector(0, 1.5, 0)));
+                sf2.setLocation(((IEntitySpawnPacket) e.getPacket()).getLocation().clone().add(new Vector(0, 1.5, 0)));
+                sf3.setLocation(((IEntitySpawnPacket) e.getPacket()).getLocation().clone().add(new Vector(0, 1.5, 0)));
+                slime.setLocation(((IEntitySpawnPacket) e.getPacket()).getLocation().clone().add(new Vector(0, 1.5,
                         0)));
-                armorStand1.setLocation(((IEntityPacketSpawn) e.getPacket()).getLocation().clone().add(new Vector(0,
+                armorStand1.setLocation(((IEntitySpawnPacket) e.getPacket()).getLocation().clone().add(new Vector(0,
                         1.5, 0)));
-                armorStand2.setLocation(((IEntityPacketSpawn) e.getPacket()).getLocation().clone().add(new Vector(0,
+                armorStand2.setLocation(((IEntitySpawnPacket) e.getPacket()).getLocation().clone().add(new Vector(0,
                         1.5, 0)));
 
                 //These are commented out because debugging:

@@ -4,7 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.google.common.collect.ImmutableList;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
-import net.blitzcube.peapi.api.packet.IEntityPacketMount;
+import net.blitzcube.peapi.api.packet.IEntityMountPacket;
 import net.blitzcube.peapi.entity.EntityIdentifier;
 import org.bukkit.entity.Player;
 
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Created by iso2013 on 4/21/2018.
  */
-public class EntityMountPacket extends EntityPacket implements IEntityPacketMount {
+public class EntityMountPacket extends EntityPacket implements IEntityMountPacket {
     private static final int TICK_DELAY = 1;
     private static final PacketType TYPE = PacketType.Play.Server.MOUNT;
     private final List<IEntityIdentifier> targets;

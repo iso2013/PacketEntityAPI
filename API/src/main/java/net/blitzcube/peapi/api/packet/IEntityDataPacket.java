@@ -9,7 +9,7 @@ import java.util.List;
  * @version 0.1
  * @since 2018-04-21
  */
-public interface IEntityPacketData extends IEntityPacket {
+public interface IEntityDataPacket extends IEntityPacket {
     /**
      * Gets a list containing all of the metadata stored in this packet
      *

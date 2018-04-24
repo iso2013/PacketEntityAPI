@@ -16,7 +16,7 @@ public interface IEntityPacketFactory {
      * @param type   the type of animation to send
      * @return the constructed packet
      */
-    IEntityPacket createAnimationPacket(IEntityIdentifier entity, IEntityPacketAnimation.AnimationType type);
+    IEntityPacket createAnimationPacket(IEntityIdentifier entity, IEntityAnimationPacket.AnimationType type);
 
     /**
      * Create an inbound click packet using an entity identifier.

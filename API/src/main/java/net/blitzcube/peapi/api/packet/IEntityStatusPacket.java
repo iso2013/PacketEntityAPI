@@ -5,7 +5,7 @@ package net.blitzcube.peapi.api.packet;
  * @version 0.1
  * @since 2018-04-21
  */
-public interface IEntityPacketStatus extends IEntityPacket {
+public interface IEntityStatusPacket extends IEntityPacket {
     /**
      * Gets the status that will be sent
      *

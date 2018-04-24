@@ -3,14 +3,14 @@ package net.blitzcube.peapi.packet;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
-import net.blitzcube.peapi.api.packet.IEntityPacketAnimation;
+import net.blitzcube.peapi.api.packet.IEntityAnimationPacket;
 import net.blitzcube.peapi.entity.EntityIdentifier;
 import org.bukkit.entity.Player;
 
 /**
  * Created by iso2013 on 4/21/2018.
  */
-public class EntityAnimationPacket extends EntityPacket implements IEntityPacketAnimation {
+public class EntityAnimationPacket extends EntityPacket implements IEntityAnimationPacket {
     private static final int TICK_DELAY = 1;
     private static final PacketType TYPE = PacketType.Play.Server.ANIMATION;
     private AnimationType type;

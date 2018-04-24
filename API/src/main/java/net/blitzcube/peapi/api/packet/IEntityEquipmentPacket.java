@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
  * @version 0.1
  * @since 2018-04-21
  */
-public interface IEntityPacketEquipment extends IEntityPacket {
+public interface IEntityEquipmentPacket extends IEntityPacket {
     /**
      * Gets the equipment slot that is being set by this packet
      *

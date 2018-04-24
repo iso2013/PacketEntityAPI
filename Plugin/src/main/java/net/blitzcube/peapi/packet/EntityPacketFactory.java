@@ -3,8 +3,8 @@ package net.blitzcube.peapi.packet;
 import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
+import net.blitzcube.peapi.api.packet.IEntityAnimationPacket;
 import net.blitzcube.peapi.api.packet.IEntityPacket;
-import net.blitzcube.peapi.api.packet.IEntityPacketAnimation;
 import net.blitzcube.peapi.api.packet.IEntityPacketFactory;
 import org.bukkit.Art;
 import org.bukkit.block.BlockFace;
@@ -19,7 +19,7 @@ import org.bukkit.util.Vector;
  */
 public class EntityPacketFactory implements IEntityPacketFactory {
     @Override
-    public IEntityPacket createAnimationPacket(IEntityIdentifier entity, IEntityPacketAnimation.AnimationType type) {
+    public IEntityPacket createAnimationPacket(IEntityIdentifier entity, IEntityAnimationPacket.AnimationType type) {
         EntityPacket p = new EntityAnimationPacket(entity);
         ((EntityAnimationPacket) p).setAnimation(type);
         return p;

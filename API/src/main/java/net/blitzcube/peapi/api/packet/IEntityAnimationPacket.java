@@ -5,7 +5,7 @@ package net.blitzcube.peapi.api.packet;
  * @version 0.1
  * @since 2018-04-21
  */
-public interface IEntityPacketAnimation extends IEntityPacket {
+public interface IEntityAnimationPacket extends IEntityPacket {
     /**
      * Gets the animation that this packet is invoking
      *

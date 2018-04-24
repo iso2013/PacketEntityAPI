@@ -60,7 +60,9 @@ public class FakeEntityFactory implements IFakeEntityFactory {
 
     @Override
     public IHitbox createHitboxFromType(EntityType type) {
-        return Hitbox.getByType(type);
+        IHitbox h = Hitbox.getByType(type);
+        if (h == null) return null;
+        return h.deepClone();
     }
 
     @Override

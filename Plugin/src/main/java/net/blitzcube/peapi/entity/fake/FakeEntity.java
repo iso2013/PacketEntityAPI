@@ -112,16 +112,16 @@ public class FakeEntity implements IFakeEntity {
 
     @Override
     public Object getField(String name) {
-        return fields.get(name);
+        return fields.get(name.toLowerCase());
     }
 
     @Override
     public void setField(String name, Object value) {
-        fields.put(name, value);
+        fields.put(name.toLowerCase(), value);
     }
 
     @Override
     public boolean hasField(String name) {
-        return fields.containsKey(name);
+        return fields.containsKey(name.toLowerCase());
     }
 }

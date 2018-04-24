@@ -185,7 +185,7 @@ public class EntityPacketFactory implements IEntityPacketFactory {
             case LLAMA_SPIT:
                 return 0;
             case ITEM_FRAME:
-                switch (fake ? (BlockFace) f.getField("facing") : ((ItemFrame) e).getFacing()) {
+                switch (fake ? (BlockFace) f.getField("direction") : ((ItemFrame) e).getFacing()) {
                     case WEST:
                         return 1;
                     case NORTH:

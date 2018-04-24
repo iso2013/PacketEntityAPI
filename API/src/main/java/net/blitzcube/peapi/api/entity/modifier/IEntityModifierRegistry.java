@@ -2,15 +2,21 @@ package net.blitzcube.peapi.api.entity.modifier;
 
 import org.bukkit.entity.EntityType;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by iso2013 on 4/20/2018.
  */
 public interface IEntityModifierRegistry {
-    List<IEntityModifier> lookup(EntityType type);
+    Set<IEntityModifier> lookup(EntityType type);
 
     IEntityModifier lookup(EntityType type, String label);
 
-    List<IEntityModifier> lookup(EntityType type, Class field);
+    <T> Set<IEntityModifier<T>> lookup(EntityType type, Class<? extends T> field);
+
+    <T> IEntityModifier<T> lookup(EntityType type, String label, Class<? extends T> field);
+
+    <T> Set<IEntityModifier<T>> lookup(EntityType type, Class<? extends T> field, boolean optional);
+
+    <T> IEntityModifier<T> lookup(EntityType type, String label, Class<? extends T> field, boolean optional);
 }

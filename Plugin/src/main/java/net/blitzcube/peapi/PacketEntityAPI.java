@@ -81,6 +81,7 @@ public class PacketEntityAPI implements IPacketEntityAPI {
     }
 
     private static JavaPlugin parent;
+    private static IPacketEntityAPI instance;
 
     private static TaskChainFactory chainFactory;
     /*
@@ -118,8 +119,10 @@ public class PacketEntityAPI implements IPacketEntityAPI {
             PacketEntityAPI.parent = parent;
         }
 
+        PacketEntityAPI.instance = getLatestCompatibleVersion();
+
         if (onLoad != null)
-            Bukkit.getScheduler().runTask(parent, () -> onLoad.accept(getLatestCompatibleVersion()));
+            Bukkit.getScheduler().runTask(parent, () -> onLoad.accept(instance));
     }
 
     public static TaskChainFactory getChainFactory() {
@@ -137,6 +140,14 @@ public class PacketEntityAPI implements IPacketEntityAPI {
             throw new IllegalStateException("No compatible API version found! List of current versions:");
         }
         return match.getProvider().getInstance();
+    }
+
+    public static IFakeEntity getFakeEntity(int entityID) {
+        return instance.getFakeByID(entityID);
+    }
+
+    public static boolean isFakeEntity(int entityID) {
+        return instance.isFakeID(entityID);
     }
 
     @Override

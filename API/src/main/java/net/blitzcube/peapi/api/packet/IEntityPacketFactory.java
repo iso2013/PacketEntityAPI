@@ -2,6 +2,8 @@ package net.blitzcube.peapi.api.packet;
 
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * @author iso2013
@@ -24,7 +26,7 @@ public interface IEntityPacketFactory {
      * @param entity the entity to control in the packet
      * @return the constructed packet
      */
-    IEntityPacket createClickPacket(IEntityIdentifier entity);
+    IEntityPacket createClickPacket(IEntityIdentifier entity, IEntityClickPacket.ClickType type);
 
     /**
      * Create a data packet using the entity identifier. Data will be pulled from the identifier by default <b>only if
@@ -51,6 +53,16 @@ public interface IEntityPacketFactory {
      * @return the constructed packet
      */
     IEntityPacket[] createEquipmentPacket(IEntityIdentifier entity, EntityEquipment equipment);
+
+    /**
+     * Creates a packet that will modify one equipment slot of an entity.
+     *
+     * @param entity the entity to modify
+     * @param slot   the slot to change
+     * @param item   the new item to put in the slot
+     * @return the constructed packet
+     */
+    IEntityPacket createEquipmentPacket(IEntityIdentifier entity, EquipmentSlot slot, ItemStack item);
 
     /**
      * Creates a mount packet that will update a vehicle's passengers

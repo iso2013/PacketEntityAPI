@@ -1,5 +1,6 @@
 package net.blitzcube.peapi.entity;
 
+import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import net.blitzcube.peapi.entity.fake.FakeEntity;
@@ -14,7 +15,7 @@ import java.util.UUID;
  */
 public class EntityIdentifier implements IEntityIdentifier {
     private final int entityID;
-    private final UUID uuid;
+    private UUID uuid;
     private WeakReference<Player> near;
     private WeakReference<Entity> entity;
     private WeakReference<IFakeEntity> fakeEntity;
@@ -43,7 +44,18 @@ public class EntityIdentifier implements IEntityIdentifier {
 
     @Override
     public void moreSpecific() {
-        //TODO
+        if (this.near == null) return;
+        if (PacketEntityAPI.isFakeEntity(this.entityID)) {
+            this.fakeEntity = new WeakReference<>(PacketEntityAPI.getFakeEntity(this.entityID));
+        } else {
+            if (this.near.get() == null) return;
+            Entity e = SightDistanceRegistry.getNearby(near.get(), 1.03).filter(entity ->
+                    entity.getEntityId() == entityID && (uuid == null || entity.getUniqueId().equals(uuid))).findAny()
+                    .orElse(null);
+            if (e == null) return;
+            this.entity = new WeakReference<>(e);
+            if (this.uuid == null) this.uuid = e.getUniqueId();
+        }
     }
 
     @Override

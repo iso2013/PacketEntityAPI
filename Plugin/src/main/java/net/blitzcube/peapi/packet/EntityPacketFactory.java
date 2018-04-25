@@ -4,6 +4,7 @@ import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import net.blitzcube.peapi.api.packet.IEntityAnimationPacket;
+import net.blitzcube.peapi.api.packet.IEntityClickPacket;
 import net.blitzcube.peapi.api.packet.IEntityPacket;
 import net.blitzcube.peapi.api.packet.IEntityPacketFactory;
 import org.bukkit.Art;
@@ -11,6 +12,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 
@@ -26,8 +28,10 @@ public class EntityPacketFactory implements IEntityPacketFactory {
     }
 
     @Override
-    public IEntityPacket createClickPacket(IEntityIdentifier entity) {
-        return new EntityClickPacket(entity);
+    public IEntityPacket createClickPacket(IEntityIdentifier entity, IEntityClickPacket.ClickType type) {
+        EntityClickPacket p = new EntityClickPacket(entity);
+        p.setClickType(type);
+        return p;
     }
 
     @Override
@@ -66,6 +70,15 @@ public class EntityPacketFactory implements IEntityPacketFactory {
         packets[5].setItem(equipment.getBoots());
         packets[5].setSlot(EquipmentSlot.FEET);
         return packets;
+    }
+
+    @Override
+    public IEntityPacket createEquipmentPacket(IEntityIdentifier entity, EquipmentSlot slot, ItemStack item) {
+        EntityEquipmentPacket p = new EntityEquipmentPacket(entity);
+        //Better way to do this?
+        p.setItem(item);
+        p.setSlot(slot);
+        return p;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package net.blitzcube.peapi.packet;
 
 import com.comphenix.protocol.events.PacketContainer;
-import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
+import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import net.blitzcube.peapi.api.event.IEntityPacketEvent;
 import net.blitzcube.peapi.api.packet.IEntityPacket;
 import org.bukkit.entity.Player;

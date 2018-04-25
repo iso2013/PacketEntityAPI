@@ -5,7 +5,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.google.common.base.Preconditions;
 import net.blitzcube.peapi.PacketEntityAPI;
-import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
+import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import net.blitzcube.peapi.api.packet.IObjectSpawnPacket;
 import net.blitzcube.peapi.entity.EntityIdentifier;
 import org.bukkit.Location;

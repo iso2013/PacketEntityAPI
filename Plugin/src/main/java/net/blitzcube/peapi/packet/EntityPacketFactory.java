@@ -1,8 +1,8 @@
 package net.blitzcube.peapi.packet;
 
 import net.blitzcube.peapi.PacketEntityAPI;
+import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
-import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import net.blitzcube.peapi.api.packet.IEntityAnimationPacket;
 import net.blitzcube.peapi.api.packet.IEntityClickPacket;
 import net.blitzcube.peapi.api.packet.IEntityPacket;

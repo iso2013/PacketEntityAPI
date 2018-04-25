@@ -11,7 +11,11 @@ import org.bukkit.entity.EntityType;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 
 /**
  * Created by iso2013 on 4/18/2018.
@@ -64,6 +68,34 @@ public class EntityModifierRegistry implements IEntityModifierRegistry {
                         (!optional && !(genericModifier instanceof OptModifier)))
                 .filter(m -> optional ? field.equals(((OptModifier) m).getOptionalType()) :
                         field.equals(m.getFieldType())
-                ).collect(Collectors.toSet());
+                ).collect(new Collector<GenericModifier, HashSet<IEntityModifier<T>>, Set<IEntityModifier<T>>>() {
+                    @Override
+                    public Supplier<HashSet<IEntityModifier<T>>> supplier() {
+                        return HashSet::new;
+                    }
+
+                    @Override
+                    public BiConsumer<HashSet<IEntityModifier<T>>, GenericModifier> accumulator() {
+                        return Set::add;
+                    }
+
+                    @Override
+                    public BinaryOperator<HashSet<IEntityModifier<T>>> combiner() {
+                        return (left, right) -> {
+                            left.addAll(right);
+                            return left;
+                        };
+                    }
+
+                    @Override
+                    public Function<HashSet<IEntityModifier<T>>, Set<IEntityModifier<T>>> finisher() {
+                        return s -> s;
+                    }
+
+                    @Override
+                    public Set<Characteristics> characteristics() {
+                        return new HashSet<>();
+                    }
+                });
     }
 }

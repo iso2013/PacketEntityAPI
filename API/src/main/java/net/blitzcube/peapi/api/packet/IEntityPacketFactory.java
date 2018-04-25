@@ -1,6 +1,6 @@
 package net.blitzcube.peapi.api.packet;
 
-import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
+import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;

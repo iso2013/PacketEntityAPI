@@ -1,8 +1,8 @@
 package net.blitzcube.peapi.entity;
 
 import net.blitzcube.peapi.PacketEntityAPI;
+import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
-import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
 import net.blitzcube.peapi.entity.fake.FakeEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

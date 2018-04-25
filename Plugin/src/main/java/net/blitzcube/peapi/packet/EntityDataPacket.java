@@ -3,7 +3,7 @@ package net.blitzcube.peapi.packet;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
-import net.blitzcube.peapi.api.entity.modifier.IEntityIdentifier;
+import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import net.blitzcube.peapi.api.packet.IEntityDataPacket;
 import net.blitzcube.peapi.entity.EntityIdentifier;
 import org.bukkit.entity.Player;

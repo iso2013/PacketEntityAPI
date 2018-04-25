@@ -54,6 +54,11 @@ public class ModifiableEntity {
         }
 
         @Override
+        public void clear() {
+            watcher.clear();
+        }
+
+        @Override
         public boolean contains(int index) {
             return watcher.hasIndex(index);
         }
@@ -109,6 +114,11 @@ public class ModifiableEntity {
         }
 
         @Override
+        public void clear() {
+            objects.clear();
+        }
+
+        @Override
         public boolean contains(int index) {
             return objects.stream().anyMatch(wWO -> wWO.getIndex() == index);
         }
@@ -157,6 +167,11 @@ public class ModifiableEntity {
         @Override
         public void clear(int index) {
             rawObjects.remove(index);
+        }
+
+        @Override
+        public void clear() {
+            rawObjects.clear();
         }
 
         @Override

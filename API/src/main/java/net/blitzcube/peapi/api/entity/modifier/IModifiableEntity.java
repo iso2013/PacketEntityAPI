@@ -55,6 +55,11 @@ public interface IModifiableEntity {
     void clear(int index);
 
     /**
+     * Clears all data contained in this modifiable entity.
+     */
+    void clear();
+
+    /**
      * Check if this entity contains an entry for the given index
      * @param index the index to check for
      * @return whether or not the index is present

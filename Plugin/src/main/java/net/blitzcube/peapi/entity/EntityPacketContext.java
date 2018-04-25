@@ -100,7 +100,7 @@ public class EntityPacketContext implements IEntityPacketContext {
 
     private void safeSend(PacketContainer packet) {
         try {
-            manager.sendServerPacket(target, packet, false);
+            manager.sendServerPacket(target, packet, true);
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -108,7 +108,7 @@ public class EntityPacketContext implements IEntityPacketContext {
 
     private void safeReceive(PacketContainer packet) {
         try {
-            manager.recieveClientPacket(target, packet, false);
+            manager.recieveClientPacket(target, packet, true);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

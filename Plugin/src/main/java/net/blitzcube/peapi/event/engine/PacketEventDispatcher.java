@@ -1,5 +1,6 @@
 package net.blitzcube.peapi.event.engine;
 
+import com.comphenix.protocol.ProtocolManager;
 import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.event.IEntityPacketEvent;
 import net.blitzcube.peapi.api.listener.IListener;
@@ -22,12 +23,12 @@ public class PacketEventDispatcher {
     private final PacketEventEngine engine;
     private int sendingForFake = 0, requiresCollidable = 0, targetingObjects = 0, targetingEntities = 0;
 
-    public PacketEventDispatcher(PacketEntityAPI parent) {
+    public PacketEventDispatcher(PacketEntityAPI parent, ProtocolManager manager) {
         this.allListeners = new TreeSet<>(LISTENER_COMPARATOR);
         this.objectListeners = new HashSet<>();
         this.entityListeners = new HashSet<>();
         this.listenerLookup = new HashMap<>();
-        this.engine = new PacketEventEngine(parent, this);
+        this.engine = new PacketEventEngine(parent, manager, this);
     }
 
     public void add(IListener l) {

@@ -1,6 +1,5 @@
 package net.blitzcube.peapi.event.engine;
 
-import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.event.engine.listeners.EntityListener;
@@ -18,9 +17,9 @@ class PacketEventEngine {
     private GenericListener generic;
     private EntityListener entity;
 
-    PacketEventEngine(PacketEntityAPI parent, PacketEventDispatcher dispatcher) {
+    PacketEventEngine(PacketEntityAPI parent, ProtocolManager manager, PacketEventDispatcher dispatcher) {
         this.parent = parent;
-        this.manager = ProtocolLibrary.getProtocolManager();
+        this.manager = manager;
         this.dispatcher = dispatcher;
     }
 

@@ -4,6 +4,7 @@ import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntityFactory;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
 import net.blitzcube.peapi.api.listener.IListener;
+import net.blitzcube.peapi.api.packet.IEntityPacket;
 import net.blitzcube.peapi.api.packet.IEntityPacketFactory;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -85,6 +86,23 @@ public interface IPacketEntityAPI {
      * @return the packet factory
      */
     IEntityPacketFactory getPacketFactory();
+
+    /**
+     * Sends a packet to the specified player or as the specified player.
+     *
+     * @param packet the packet to send
+     * @param target the player to send it to
+     */
+    void dispatchPacket(IEntityPacket packet, Player target);
+
+    /**
+     * Sends a packet to the specified player or as the specified player at a specified delay.
+     *
+     * @param packet the packet to send
+     * @param target the player to send it to
+     * @param delay  the number of ticks to wait
+     */
+    void dispatchPacket(IEntityPacket packet, Player target, int delay);
 
     interface ProviderStub {
         String getMajorVersion();

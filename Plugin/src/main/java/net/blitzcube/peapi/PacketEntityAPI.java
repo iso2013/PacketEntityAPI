@@ -2,12 +2,16 @@ package net.blitzcube.peapi;
 
 import co.aikar.taskchain.BukkitTaskChainFactory;
 import co.aikar.taskchain.TaskChainFactory;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketContainer;
 import com.google.common.base.Preconditions;
 import net.blitzcube.peapi.api.IPacketEntityAPI;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntityFactory;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
 import net.blitzcube.peapi.api.listener.IListener;
+import net.blitzcube.peapi.api.packet.IEntityPacket;
 import net.blitzcube.peapi.api.packet.IEntityPacketFactory;
 import net.blitzcube.peapi.entity.SightDistanceRegistry;
 import net.blitzcube.peapi.entity.fake.FakeEntity;
@@ -24,6 +28,7 @@ import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.ServicesManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -88,14 +93,17 @@ public class PacketEntityAPI implements IPacketEntityAPI {
      * Begin actual API implementation:
      */
     private final EntityModifierRegistry modifierRegistry;
+    private final ProtocolManager manager;
     private FakeEntityFactory fakeEntityFactory;
     private EntityPacketFactory packetFactory;
     private PacketEventDispatcher dispatcher;
+
     private PacketEntityAPI() {
         this.modifierRegistry = new EntityModifierRegistry();
+        this.manager = ProtocolLibrary.getProtocolManager();
         this.fakeEntityFactory = new FakeEntityFactory(this);
         this.packetFactory = new EntityPacketFactory();
-        this.dispatcher = new PacketEventDispatcher(this);
+        this.dispatcher = new PacketEventDispatcher(this, manager);
 
         chainFactory = BukkitTaskChainFactory.create(parent);
     }
@@ -202,6 +210,48 @@ public class PacketEntityAPI implements IPacketEntityAPI {
 
     @Override
     public IEntityPacketFactory getPacketFactory() { return packetFactory; }
+
+    @Override
+    public void dispatchPacket(IEntityPacket packet, Player target) {
+        dispatchPacket(packet, target, packet.getDelay());
+    }
+
+    @Override
+    public void dispatchPacket(IEntityPacket packet, Player target, int delay) {
+        PacketContainer c = packet.getRawPacket();
+        if (c == null) return;
+        if (delay > 0) {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(parent, () -> {
+                if (c.getType().isClient()) {
+                    safeReceive(target, c);
+                } else {
+                    safeSend(target, c);
+                }
+            }, delay);
+        } else {
+            if (c.getType().isClient()) {
+                safeReceive(target, c);
+            } else {
+                safeSend(target, c);
+            }
+        }
+    }
+
+    private void safeSend(Player target, PacketContainer packet) {
+        try {
+            manager.sendServerPacket(target, packet, true);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void safeReceive(Player target, PacketContainer packet) {
+        try {
+            manager.recieveClientPacket(target, packet, true);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
 
     public Collection<FakeEntity> getFakeEntities() {
         return fakeEntityFactory.getFakeEntities();

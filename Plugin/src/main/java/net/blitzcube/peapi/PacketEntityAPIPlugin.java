@@ -1,10 +1,9 @@
 package net.blitzcube.peapi;
 
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @SuppressWarnings("unused")
-public final class PacketEntityAPIPlugin extends JavaPlugin implements Listener {
+public final class PacketEntityAPIPlugin extends JavaPlugin {
     @Override
     @SuppressWarnings("unchecked")
     public void onEnable() {

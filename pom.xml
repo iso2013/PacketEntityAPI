@@ -55,6 +55,7 @@
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>4.4.0-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>co.aikar</groupId>
@@ -88,15 +89,15 @@
                 <version>0.12</version>
                 <configuration>
                     <message>Maven artifacts for ${project.version}</message>
-                    <noJekyll>true</noJekyll>
                     <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
-                    <branch>refs/heads/mvn-repo</branch>
+                    <branch>refs/heads/master</branch>
                     <includes>
                         <include>**/*</include>
                     </includes>
-                    <repositoryName>PacketEntityAPI</repositoryName>
+                    <repositoryName>iso2013.github.io</repositoryName>
                     <repositoryOwner>iso2013</repositoryOwner>
                     <merge>true</merge>
+                    <path>repo</path>
                 </configuration>
                 <executions>
                     <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->

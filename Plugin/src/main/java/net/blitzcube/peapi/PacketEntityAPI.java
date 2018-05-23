@@ -108,7 +108,7 @@ public class PacketEntityAPI implements IPacketEntityAPI {
         chainFactory = BukkitTaskChainFactory.create(parent);
     }
 
-    static void initialize(JavaPlugin parent, Consumer<IPacketEntityAPI> onLoad) {
+    public static void initialize(JavaPlugin parent, Consumer<IPacketEntityAPI> onLoad) {
         ServicesManager m = Bukkit.getServicesManager();
 
         Collection<RegisteredServiceProvider<IPacketEntityAPI.ProviderStub>> r = m.getRegistrations(IPacketEntityAPI

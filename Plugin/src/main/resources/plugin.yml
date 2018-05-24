@@ -1,4 +1,4 @@
 name: PacketEntityAPI
 version: ${project.version}
-main: net.blitzcube.peapi.PacketEntityAPIPlugin
+main: net.blitzcube.peapi.PacketEntityAPI
 authors: [iso2013]

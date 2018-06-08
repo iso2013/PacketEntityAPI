@@ -13,6 +13,8 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 
@@ -292,6 +294,20 @@ public class EntityPacketFactory implements IEntityPacketFactory {
     public IEntityPacket createStatusPacket(IEntityIdentifier identifier, byte status) {
         EntityStatusPacket p = new EntityStatusPacket(identifier);
         p.setStatus(status);
+        return p;
+    }
+
+    @Override
+    public IEntityPacket createEffectAddPacket(IEntityIdentifier identifier, PotionEffect effect) {
+        EntityPotionAddPacket p = new EntityPotionAddPacket(identifier);
+        p.setEffect(effect);
+        return p;
+    }
+
+    @Override
+    public IEntityPacket createEffectRemovePacket(IEntityIdentifier identifier, PotionEffectType type) {
+        EntityPotionRemovePacket p = new EntityPotionRemovePacket(identifier);
+        p.setEffectType(type);
         return p;
     }
 }

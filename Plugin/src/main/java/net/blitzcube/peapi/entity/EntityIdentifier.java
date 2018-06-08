@@ -49,9 +49,9 @@ public class EntityIdentifier implements IEntityIdentifier {
             this.fakeEntity = new WeakReference<>(PacketEntityAPI.getFakeEntity(this.entityID));
         } else {
             if (this.near.get() == null) return;
-            Entity e = SightDistanceRegistry.getNearby(near.get(), 1.03).filter(entity ->
-                    entity.getEntityId() == entityID && (uuid == null || entity.getUniqueId().equals(uuid))).findAny()
-                    .orElse(null);
+            Entity e = SightDistanceRegistry.getNearby(near.get(), 1.03)
+                    .filter(en -> en.getEntityId() == entityID && (uuid == null || en.getUniqueId().equals(uuid)))
+                    .findAny().orElse(null);
             if (e == null) return;
             this.entity = new WeakReference<>(e);
             if (this.uuid == null) this.uuid = e.getUniqueId();

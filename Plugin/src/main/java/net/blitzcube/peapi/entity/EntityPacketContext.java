@@ -10,6 +10,9 @@ import net.blitzcube.peapi.api.packet.IEntityPacket;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Created by iso2013 on 4/23/2018.
@@ -27,6 +30,22 @@ public class EntityPacketContext implements IEntityPacketContext {
 
     @Override
     public IEntityPacketContext queueDispatch(IEntityPacket... packets) {
+        for (IEntityPacket p : packets) {
+            PacketContainer c = p.getRawPacket();
+            if (c.getType().isClient()) {
+                chain = chain.sync(() -> safeReceive(c));
+            } else {
+                chain = chain.sync(() -> safeSend(c));
+            }
+            if (p.getDelay() > 0) {
+                chain = chain.delay(p.getDelay());
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public IEntityPacketContext queueDispatch(Set<IEntityPacket> packets) {
         for (IEntityPacket p : packets) {
             PacketContainer c = p.getRawPacket();
             if (c.getType().isClient()) {
@@ -61,8 +80,37 @@ public class EntityPacketContext implements IEntityPacketContext {
     }
 
     @Override
+    public IEntityPacketContext queueDispatch(Collection<IEntityPacket> packets, int[] delays) {
+        Preconditions.checkArgument(packets.size() >= delays.length, "Too many delays have " +
+                "been specified!");
+        Iterator<IEntityPacket> it = packets.iterator();
+        int i = 0;
+        while (it.hasNext()) {
+            IEntityPacket p = it.next();
+            int delay = i < delays.length ? delays[i] : p.getDelay();
+            if (delay < 0) delay = p.getDelay();
+            PacketContainer c = p.getRawPacket();
+            if (c.getType().isClient()) {
+                chain = chain.sync(() -> safeReceive(c));
+            } else {
+                chain = chain.sync(() -> safeSend(c));
+            }
+            if (delay > 0) chain = chain.delay(delay);
+            i++;
+        }
+        return this;
+    }
+
+    @Override
     public IEntityPacketContext queueDispatch(IEntityPacket[] packets, int delay) {
         int[] delays = new int[packets.length];
+        delays[0] = delay;
+        return queueDispatch(packets, delays);
+    }
+
+    @Override
+    public IEntityPacketContext queueDispatch(Set<IEntityPacket> packets, int delay) {
+        int[] delays = new int[packets.size()];
         delays[0] = delay;
         return queueDispatch(packets, delays);
     }

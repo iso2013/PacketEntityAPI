@@ -1,13 +1,22 @@
 package net.blitzcube.peapi.api;
 
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
+import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntityFactory;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
+import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
 import net.blitzcube.peapi.api.listener.IListener;
 import net.blitzcube.peapi.api.packet.IEntityPacket;
 import net.blitzcube.peapi.api.packet.IEntityPacketFactory;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * @author iso2013
@@ -28,6 +37,38 @@ public interface IPacketEntityAPI {
      * @param eventListener the listener to remove
      */
     void removeListener(IListener eventListener);
+
+    /**
+     * Wrap a given list of watchable objects into a ModifiableEntity.
+     *
+     * @param list The list of watchable objects to wrap
+     * @return the modifiable entity
+     */
+    IModifiableEntity wrap(List<WrappedWatchableObject> list);
+
+    /**
+     * Wrap a given map of values into a ModifiableEntity.
+     *
+     * @param map The map of values to wrap
+     * @return the modifiable entity
+     */
+    IModifiableEntity wrap(Map<Integer, Object> map);
+
+    /**
+     * Wrap a given data watcher into a ModifiableEntity.
+     *
+     * @param watcher The watcher to wrap
+     * @return the modifiable entity
+     */
+    IModifiableEntity wrap(WrappedDataWatcher watcher);
+
+    /**
+     * Creates a new entity identifier object for the given entity
+     *
+     * @param e the entity that should be identified
+     * @return the new identifier
+     */
+    IEntityIdentifier wrap(Entity e);
 
     /**
      * Check if a listener has already been registered
@@ -79,6 +120,25 @@ public interface IPacketEntityAPI {
      * @return whether or not the player would be able to see an entity at that location
      */
     boolean isVisible(Location location, Player target, double err);
+
+    /**
+     * Get a stream representing all of the entities that the given player can see.
+     *
+     * @param viewer the player who is viewing the entities
+     * @param err    the error factor to include in distance calculations. Should be 1 ~ 1.03.
+     * @param fake   whether or not to include fake entities
+     * @return the stream of entity identifiers
+     */
+    Stream<IEntityIdentifier> getVisible(Player viewer, double err, boolean fake);
+
+    /**
+     * Get a stream representing all of the players that can see a given entity.
+     *
+     * @param object the entity to calculate for
+     * @param err    the error factor to include in distance calculations. Should be 1 ~ 1.03.
+     * @return the stream of players
+     */
+    Stream<Player> getViewers(IEntityIdentifier object, double err);
 
     /**
      * Gets the packet factory for this instance of the API.

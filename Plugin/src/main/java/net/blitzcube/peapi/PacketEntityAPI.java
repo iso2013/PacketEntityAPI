@@ -5,22 +5,29 @@ import co.aikar.taskchain.TaskChainFactory;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.google.common.base.Preconditions;
 import net.blitzcube.peapi.api.IPacketEntityAPI;
+import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntityFactory;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
+import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
 import net.blitzcube.peapi.api.listener.IListener;
 import net.blitzcube.peapi.api.packet.IEntityPacket;
 import net.blitzcube.peapi.api.packet.IEntityPacketFactory;
+import net.blitzcube.peapi.entity.EntityIdentifier;
 import net.blitzcube.peapi.entity.SightDistanceRegistry;
 import net.blitzcube.peapi.entity.fake.FakeEntity;
 import net.blitzcube.peapi.entity.fake.FakeEntityFactory;
 import net.blitzcube.peapi.entity.modifier.EntityModifierRegistry;
+import net.blitzcube.peapi.entity.modifier.ModifiableEntity;
 import net.blitzcube.peapi.event.engine.PacketEventDispatcher;
 import net.blitzcube.peapi.packet.EntityPacketFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,7 +35,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Created by iso2013 on 2/13/2018.
@@ -130,6 +139,26 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
         return this.dispatcher.contains(eventListener);
     }
 
+    @Override
+    public IModifiableEntity wrap(List<WrappedWatchableObject> list) {
+        return new ModifiableEntity.ListBased(list);
+    }
+
+    @Override
+    public IModifiableEntity wrap(Map<Integer, Object> map) {
+        return new ModifiableEntity.MapBased(map);
+    }
+
+    @Override
+    public IModifiableEntity wrap(WrappedDataWatcher watcher) {
+        return new ModifiableEntity.WatcherBased(watcher);
+    }
+
+    @Override
+    public IEntityIdentifier wrap(Entity e) {
+        return new EntityIdentifier(e);
+    }
+
     public static EntityType lookupObject(int read) {
         for (Map.Entry<EntityType, Integer> e : OBJECTS.entrySet()) {
             if (e.getValue() == null) continue;
@@ -156,6 +185,16 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
     @Override
     public boolean isVisible(Location location, Player target, double err) {
         return SightDistanceRegistry.isVisible(location, target, err);
+    }
+
+    @Override
+    public Stream<IEntityIdentifier> getVisible(Player viewer, double err, boolean fake) {
+        return SightDistanceRegistry.getNearby(viewer, err, fake ? fakeEntityFactory.getFakeEntities() : null);
+    }
+
+    @Override
+    public Stream<Player> getViewers(IEntityIdentifier object, double err) {
+        return SightDistanceRegistry.getViewers(object, err);
     }
 
     @Override

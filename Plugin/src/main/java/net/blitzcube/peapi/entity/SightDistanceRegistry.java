@@ -1,13 +1,17 @@
 package net.blitzcube.peapi.entity;
 
+import net.blitzcube.peapi.api.entity.IEntityIdentifier;
+import net.blitzcube.peapi.entity.fake.FakeEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -47,10 +51,45 @@ public class SightDistanceRegistry {
                 && Math.abs(l.getZ() - p.getLocation().getZ()) < max;
     }
 
-    static Stream<Entity> getNearby(Player p, double error) {
+    public static Stream<Entity> getNearby(Player p, double error) {
         double max = entityDistances.containsKey(p.getWorld().getName()) ?
                 entityDistances.get(p.getWorld().getName()) : entityDistances.get("default");
         max *= error;
-        return p.getNearbyEntities(max, max, max).stream();
+        return p.getNearbyEntities(max, 256, max).stream();
+    }
+
+    public static Stream<IEntityIdentifier> getNearby(Player p, double error, Collection<FakeEntity> fakes) {
+        double max = entityDistances.containsKey(p.getWorld().getName()) ?
+                entityDistances.get(p.getWorld().getName()) : entityDistances.get("default");
+        max *= error;
+        Stream<IEntityIdentifier> real = p.getNearbyEntities(max, 256, max).stream().map(EntityIdentifier::new);
+        if (fakes == null) {
+            return real;
+        } else {
+            double finalMax = max;
+            return Stream.concat(real, fakes.stream()
+                    .filter(fakeEntity -> isNear(finalMax, p.getLocation(), fakeEntity.getLocation(), true))
+                    .map(EntityIdentifier::new));
+        }
+    }
+
+    private static boolean isNear(double max, Location l1, Location l2, boolean ignoreY) {
+        return !(Math.abs(l1.getX() - l2.getX()) > max) && !(Math.abs(l1.getZ() - l2.getZ()) > max) && (ignoreY || !
+                (Math.abs(l1.getY() - l2.getY()) > max));
+    }
+
+    public static Stream<Player> getViewers(IEntityIdentifier object, double err) {
+        object.moreSpecific();
+        Location l;
+        if (object.isFakeEntity()) {
+            l = Objects.requireNonNull(object.getFakeEntity().get()).getLocation();
+        } else {
+            l = Objects.requireNonNull(object.getEntity().get()).getLocation();
+        }
+        double max = entityDistances.containsKey(l.getWorld().getName()) ?
+                entityDistances.get(l.getWorld().getName()) : entityDistances.get("default");
+        max *= err;
+        double finalMax = max;
+        return l.getWorld().getPlayers().stream().filter(p -> isNear(finalMax, p.getLocation(), l, true));
     }
 }

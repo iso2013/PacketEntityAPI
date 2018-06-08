@@ -4,6 +4,8 @@ import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 /**
  * @author iso2013
@@ -104,4 +106,8 @@ public interface IEntityPacketFactory {
      * @return the constructed packet
      */
     IEntityPacket createStatusPacket(IEntityIdentifier entity, byte status);
+
+    IEntityPacket createEffectAddPacket(IEntityIdentifier identifier, PotionEffect effect);
+
+    IEntityPacket createEffectRemovePacket(IEntityIdentifier identifier, PotionEffectType type);
 }

@@ -44,6 +44,10 @@ public abstract class EntityPacket implements IEntityPacket {
                 return EntityStatusPacket.unwrap(entityID, c, target);
             case OBJECT_SPAWN:
                 return ObjectSpawnPacket.unwrap(entityID, c, target);
+            case ADD_EFFECT:
+                return EntityPotionAddPacket.unwrap(entityID, c, target);
+            case REMOVE_EFFECT:
+                return EntityPotionRemovePacket.unwrap(entityID, c, target);
         }
         return null;
     }

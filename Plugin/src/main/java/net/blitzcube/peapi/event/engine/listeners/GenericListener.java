@@ -38,6 +38,8 @@ public class GenericListener implements PacketListener {
         TYPES.put(PacketType.Play.Server.ENTITY_DESTROY, IEntityPacketEvent.EntityPacketType.DESTROY);
         TYPES.put(PacketType.Play.Server.ENTITY_STATUS, IEntityPacketEvent.EntityPacketType.STATUS);
         TYPES.put(PacketType.Play.Server.ANIMATION, IEntityPacketEvent.EntityPacketType.ANIMATION);
+        TYPES.put(PacketType.Play.Server.ENTITY_EFFECT, IEntityPacketEvent.EntityPacketType.ADD_EFFECT);
+        TYPES.put(PacketType.Play.Server.REMOVE_ENTITY_EFFECT, IEntityPacketEvent.EntityPacketType.REMOVE_EFFECT);
     }
 
     public GenericListener(PacketEntityAPI parent, PacketEventDispatcher
@@ -121,7 +123,9 @@ public class GenericListener implements PacketListener {
                         PacketType.Play.Server.ENTITY_METADATA,
                         PacketType.Play.Server.ENTITY_EQUIPMENT,
                         PacketType.Play.Server.ENTITY_STATUS,
-                        PacketType.Play.Server.ANIMATION
+                        PacketType.Play.Server.ANIMATION,
+                        PacketType.Play.Server.ENTITY_EFFECT,
+                        PacketType.Play.Server.REMOVE_ENTITY_EFFECT
                 ).mergeOptions(ListenerOptions.SKIP_PLUGIN_VERIFIER).build();
     }
 

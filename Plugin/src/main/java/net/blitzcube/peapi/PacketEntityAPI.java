@@ -12,12 +12,11 @@ import net.blitzcube.peapi.api.IPacketEntityAPI;
 import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntityFactory;
-import net.blitzcube.peapi.api.entity.modifier.IEntityModifier;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
 import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
-import net.blitzcube.peapi.api.event.IEntityPacketEvent;
 import net.blitzcube.peapi.api.listener.IListener;
-import net.blitzcube.peapi.api.packet.*;
+import net.blitzcube.peapi.api.packet.IEntityPacket;
+import net.blitzcube.peapi.api.packet.IEntityPacketFactory;
 import net.blitzcube.peapi.entity.EntityIdentifier;
 import net.blitzcube.peapi.entity.SightDistanceRegistry;
 import net.blitzcube.peapi.entity.fake.FakeEntity;
@@ -27,7 +26,6 @@ import net.blitzcube.peapi.entity.modifier.ModifiableEntity;
 import net.blitzcube.peapi.event.engine.PacketEventDispatcher;
 import net.blitzcube.peapi.packet.EntityPacketFactory;
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -102,41 +100,6 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
         chainFactory = BukkitTaskChainFactory.create(this);
 
         if (instance == null) instance = this;
-
-        IEntityModifier<Color> potionColor = this.getModifierRegistry().lookup(EntityType.SHEEP, "POTION_COLOR",
-                Color.class);
-
-        this.addListener(new IListener() {
-            @Override
-            public ListenerPriority getPriority() {
-                return ListenerPriority.NORMAL;
-            }
-
-            @Override
-            public void onEvent(IEntityPacketEvent e) {
-                if (e.getPacketType() == IEntityPacketEvent.EntityPacketType.ADD_EFFECT) {
-                    e.getPlayer().sendMessage("effect added: " + ((IEntityPotionAddPacket) e.getPacket()).getEffect()
-                            .getType().getName());
-                } else if (e.getPacketType() == IEntityPacketEvent.EntityPacketType.REMOVE_EFFECT) {
-                    e.getPlayer().sendMessage("effect removed: " + ((IEntityPotionRemovePacket) e.getPacket())
-                            .getEffectType().getName());
-                } else if (e.getPacketType() == IEntityPacketEvent.EntityPacketType.DATA) {
-                    IModifiableEntity en = wrap(((IEntityDataPacket) e.getPacket()).getMetadata());
-                    e.getPlayer().sendMessage("specified: " + potionColor.specifies(en));
-                    Color c = potionColor.getValue(en);
-                    if (c != null)
-                        e.getPlayer().sendMessage("color: " + c.getRed() + ", " + c.getGreen() + ", " + c.getBlue());
-                    potionColor.setValue(en, Color.fromRGB(0, 255, 255));
-                    ((IEntityDataPacket) e.getPacket()).setMetadata(en.getWatchableObjects());
-                }
-            }
-
-            @Override
-            public EntityType[] getTargets() {
-                return EntityType.values();
-            }
-        });
-
     }
 
     @Override

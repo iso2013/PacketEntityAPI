@@ -28,7 +28,7 @@ My development activity (if this gets low poke me on Spigot IRC or shoot me a PM
 Want to donate to continue PacketEntityAPI's development? I accept donations here:
 
 <center>
-    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=blitzcubeowner%40gmail%2ecom&lc=US&item_name=iso2013&item_number=MultiLineAPI&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">
+    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=blitzcubeowner%40gmail%2ecom&lc=US&item_name=iso2013&item_number=PacketEntityAPI&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">
         <img src="docs/paypal.png"/>
     </a>
 </center>

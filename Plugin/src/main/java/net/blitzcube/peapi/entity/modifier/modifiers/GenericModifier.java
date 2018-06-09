@@ -34,6 +34,7 @@ public class GenericModifier<T> implements IEntityModifier<T> {
     @SuppressWarnings("unchecked")
     public T getValue(IModifiableEntity target) {
         Object val = target.read(index);
+        if (val == null) return null;
         if (!clazz.equals(val.getClass()))
             throw new IllegalStateException("Read inappropriate type from modifiable entity!");
         return (T) target.read(index);

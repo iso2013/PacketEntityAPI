@@ -30,7 +30,7 @@ public class EntityPotionRemovePacket extends EntityPacket implements IEntityPot
         return new EntityPotionRemovePacket(
                 new EntityIdentifier(entityID, p),
                 c,
-                PotionEffectType.getById(c.getBytes().read(0))
+                c.getEffectTypes().read(0)
         );
     }
 

@@ -45,7 +45,7 @@
         },
         {
           "index": 7,
-          "type": "Integer",
+          "type": "Color",
           "label": "COLOR",
           "def": 0
         },
@@ -94,7 +94,7 @@
           "keys": [
             {
               "index": 7,
-              "type": "Integer",
+              "type": "Color",
               "label": "COLOR",
               "def": -1
             }
@@ -1096,7 +1096,7 @@
         },
         {
           "index": 8,
-          "type": "Integer",
+          "type": "Color",
           "label": "POTION_COLOR",
           "def": 0
         },

@@ -52,6 +52,8 @@ public class Key extends Node.Attribute {
             case "Direction":
                 return ImmutableList.of(new DirectionModifier(index, label, EnumWrappers.Direction.values()[def
                         .getAsInt()]));
+            case "Color":
+                return ImmutableList.of(new ColorModifier(index, label, def.getAsInt()));
             case "EulerAngle":
                 return ImmutableList.of(new EulerAngleModifier(index, label, stringToEulerAngle(def.getAsString())));
             case "ItemStack":

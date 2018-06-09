@@ -27,6 +27,7 @@ import net.blitzcube.peapi.entity.modifier.ModifiableEntity;
 import net.blitzcube.peapi.event.engine.PacketEventDispatcher;
 import net.blitzcube.peapi.packet.EntityPacketFactory;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -102,8 +103,8 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
 
         if (instance == null) instance = this;
 
-        IEntityModifier<Integer> potionColor = this.getModifierRegistry().lookup(EntityType.SHEEP, "POTION_COLOR",
-                Integer.class);
+        IEntityModifier<Color> potionColor = this.getModifierRegistry().lookup(EntityType.SHEEP, "POTION_COLOR",
+                Color.class);
 
         this.addListener(new IListener() {
             @Override
@@ -122,7 +123,11 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
                 } else if (e.getPacketType() == IEntityPacketEvent.EntityPacketType.DATA) {
                     IModifiableEntity en = wrap(((IEntityDataPacket) e.getPacket()).getMetadata());
                     e.getPlayer().sendMessage("specified: " + potionColor.specifies(en));
-                    e.getPlayer().sendMessage("color: " + potionColor.getValue(en));
+                    Color c = potionColor.getValue(en);
+                    if (c != null)
+                        e.getPlayer().sendMessage("color: " + c.getRed() + ", " + c.getGreen() + ", " + c.getBlue());
+                    potionColor.setValue(en, Color.fromRGB(0, 255, 255));
+                    ((IEntityDataPacket) e.getPacket()).setMetadata(en.getWatchableObjects());
                 }
             }
 

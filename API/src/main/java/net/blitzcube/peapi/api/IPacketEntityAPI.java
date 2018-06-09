@@ -163,12 +163,4 @@ public interface IPacketEntityAPI {
      * @param delay  the number of ticks to wait
      */
     void dispatchPacket(IEntityPacket packet, Player target, int delay);
-
-    interface ProviderStub {
-        String getMajorVersion();
-
-        String getFullVersion();
-
-        IPacketEntityAPI getInstance();
-    }
 }

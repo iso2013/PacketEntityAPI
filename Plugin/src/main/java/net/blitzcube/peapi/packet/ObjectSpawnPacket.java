@@ -246,7 +246,7 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
                         type != EntityType.EXPERIENCE_ORB,
                 "You cannot set a velocity for a " + type.name() + "!");
         this.velocity = velocity;
-        //TODO: This is wrong.
+        //FixMe: This implementation is not correct.
         super.rawPacket.getIntegers().write(1, (int) velocity.getX());
         super.rawPacket.getIntegers().write(2, (int) velocity.getY());
         super.rawPacket.getIntegers().write(3, (int) velocity.getZ());

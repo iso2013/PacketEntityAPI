@@ -69,7 +69,8 @@ public class GenericListener implements PacketListener {
         IEntityPacketEvent e = new EntityPacketEvent(manager, w, eT, target);
         dispatcher.dispatch(e, null);
         if (e.getPacket() instanceof IEntityGroupPacket) {
-            if (((IEntityGroupPacket) e.getPacket()).getGroup().size() == 0 || e.isCancelled()) {
+            if ((e.getPacketType() == IEntityPacketEvent.EntityPacketType.DESTROY
+                    && ((IEntityGroupPacket) e.getPacket()).getGroup().size() == 0) || e.isCancelled()) {
                 packetEvent.setCancelled(true);
                 return;
             }

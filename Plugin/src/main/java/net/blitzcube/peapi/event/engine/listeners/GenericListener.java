@@ -7,6 +7,7 @@ import com.comphenix.protocol.injector.GamePhase;
 import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.event.IEntityPacketEvent;
 import net.blitzcube.peapi.api.packet.IEntityClickPacket;
+import net.blitzcube.peapi.api.packet.IEntityDestroyPacket;
 import net.blitzcube.peapi.api.packet.IEntityGroupPacket;
 import net.blitzcube.peapi.api.packet.IEntityPacket;
 import net.blitzcube.peapi.entity.fake.FakeEntity;
@@ -68,14 +69,14 @@ public class GenericListener implements PacketListener {
         if (w == null) return;
         IEntityPacketEvent e = new EntityPacketEvent(manager, w, eT, target);
         dispatcher.dispatch(e, null);
-        if (e.getPacket() instanceof IEntityGroupPacket) {
-            if ((e.getPacketType() == IEntityPacketEvent.EntityPacketType.DESTROY
-                    && ((IEntityGroupPacket) e.getPacket()).getGroup().size() == 0) || e.isCancelled()) {
+        if (w instanceof IEntityGroupPacket) {
+            if (w instanceof IEntityDestroyPacket && ((IEntityDestroyPacket) w).getGroup().size() == 0) {
                 packetEvent.setCancelled(true);
                 return;
             }
             ((IEntityGroupPacket) e.getPacket()).apply();
-        } else if (e.isCancelled()) {
+        }
+        if (e.isCancelled()) {
             packetEvent.setCancelled(true);
         }
     }

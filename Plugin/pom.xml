@@ -6,7 +6,7 @@
     <parent>
         <artifactId>PacketEntityAPI</artifactId>
         <groupId>net.blitzcube.peapi</groupId>
-        <version>0.4.1-SNAPSHOT</version>
+        <version>0.4.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>Plugin</artifactId>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>net.blitzcube.peapi</groupId>
             <artifactId>API</artifactId>
-            <version>0.4.1-SNAPSHOT</version>
+            <version>0.4.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

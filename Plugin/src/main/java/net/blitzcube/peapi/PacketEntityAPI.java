@@ -15,6 +15,7 @@ import net.blitzcube.peapi.api.entity.fake.IFakeEntityFactory;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
 import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
 import net.blitzcube.peapi.api.listener.IListener;
+import net.blitzcube.peapi.api.packet.IEntityGroupPacket;
 import net.blitzcube.peapi.api.packet.IEntityPacket;
 import net.blitzcube.peapi.api.packet.IEntityPacketFactory;
 import net.blitzcube.peapi.entity.EntityIdentifier;
@@ -209,6 +210,7 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
 
     @Override
     public void dispatchPacket(IEntityPacket packet, Player target, int delay) {
+        if (packet instanceof IEntityGroupPacket) ((IEntityGroupPacket) packet).apply();
         PacketContainer c = packet.getRawPacket();
         if (c == null) return;
         if (delay > 0) {

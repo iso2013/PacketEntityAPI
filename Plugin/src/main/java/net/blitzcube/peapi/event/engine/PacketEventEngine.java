@@ -24,9 +24,9 @@ class PacketEventEngine {
     }
 
     void setSendForFake(boolean sendForFake) {
-        entity.setSendForFake(sendForFake);
-        generic.setSendForFake(sendForFake);
-        object.setSendForFake(sendForFake);
+        if (entity != null) entity.setSendForFake(sendForFake);
+        if (generic != null) generic.setSendForFake(sendForFake);
+        if (object != null) object.setSendForFake(sendForFake);
     }
 
     void setCollidable(boolean collidable) {

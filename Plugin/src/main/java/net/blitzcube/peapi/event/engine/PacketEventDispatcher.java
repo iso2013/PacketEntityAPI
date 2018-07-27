@@ -33,14 +33,6 @@ public class PacketEventDispatcher {
 
     public void add(IListener l) {
         this.allListeners.add(l);
-        if (l.shouldFireForFake()) {
-            if (sendingForFake == 0) engine.setSendForFake(true);
-            sendingForFake++;
-        }
-        if (l.requiresCollidable()) {
-            if (requiresCollidable == 0) engine.setCollidable(true);
-            requiresCollidable++;
-        }
         boolean e = false, o = false;
         for (EntityType en : l.getTargets()) {
             listenerLookup.putIfAbsent(en, new TreeSet<>(LISTENER_COMPARATOR));
@@ -61,6 +53,14 @@ public class PacketEventDispatcher {
             if (targetingEntities == 0) engine.enableEntities();
             targetingEntities++;
             entityListeners.add(l);
+        }
+        if (l.shouldFireForFake()) {
+            if (sendingForFake == 0) engine.setSendForFake(true);
+            sendingForFake++;
+        }
+        if (l.requiresCollidable()) {
+            if (requiresCollidable == 0) engine.setCollidable(true);
+            requiresCollidable++;
         }
     }
 

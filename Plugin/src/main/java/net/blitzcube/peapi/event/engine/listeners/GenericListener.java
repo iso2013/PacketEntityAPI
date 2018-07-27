@@ -93,7 +93,6 @@ public class GenericListener implements PacketListener {
             boolean fake = parent.isFakeID(entityID);
             if (fake) {
                 if (!sendForFake) return;
-                if (!parent.getFakeByID(entityID).checkIntersect(target)) return;
             }
 
             w = EntityPacket.unwrapFromType(entityID, IEntityPacketEvent.EntityPacketType.CLICK, c, target);

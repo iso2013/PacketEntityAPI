@@ -7,6 +7,7 @@ import net.blitzcube.peapi.api.entity.hitbox.IHitbox;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifier;
 import net.blitzcube.peapi.entity.hitbox.Hitbox;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
 
@@ -61,6 +62,13 @@ public class FakeEntityFactory implements IFakeEntityFactory {
     @Override
     public IHitbox createHitboxFromType(EntityType type) {
         IHitbox h = Hitbox.getByType(type);
+        if (h == null) return null;
+        return h.deepClone();
+    }
+
+    @Override
+    public IHitbox createHitboxFromEntity(Entity entity) {
+        IHitbox h = Hitbox.getByEntity(entity);
         if (h == null) return null;
         return h.deepClone();
     }

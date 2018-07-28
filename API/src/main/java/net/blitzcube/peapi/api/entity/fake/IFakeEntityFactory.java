@@ -1,6 +1,7 @@
 package net.blitzcube.peapi.api.entity.fake;
 
 import net.blitzcube.peapi.api.entity.hitbox.IHitbox;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
 
@@ -14,10 +15,21 @@ public interface IFakeEntityFactory {
      * Create a hitbox that matches the hitbox of a given entity type. This will use reflection to pull from NMS if the
      * value has not been calculated already.
      *
+     * @deprecated Use {@link #createHitboxFromEntity(Entity)} for real entities. This method is not stable for
+     * certain types.
      * @param type the type of the entity to match the hitbox to
      * @return the generated hitbox, or null if it could not be produced.
      */
+    @Deprecated
     IHitbox createHitboxFromType(EntityType type);
+
+    /**
+     * Create a hitbox that matches the hitbox of a given entity.
+     *
+     * @param entity the entity to match the hitbox to
+     * @return the generated hitbox, or null if it could not be produced.
+     */
+    IHitbox createHitboxFromEntity(Entity entity);
 
     /**
      * Create a hitbox using a minimum and maximum {@link Vector}. The origin should be considered to be at the center

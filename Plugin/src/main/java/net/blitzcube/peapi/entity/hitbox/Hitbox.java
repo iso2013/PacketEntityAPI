@@ -2,6 +2,8 @@ package net.blitzcube.peapi.entity.hitbox;
 
 import net.blitzcube.peapi.api.entity.hitbox.IHitbox;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.util.Vector;
 
@@ -15,12 +17,13 @@ import java.util.Map;
  * Created by iso2013 on 4/21/2018.
  */
 public class Hitbox implements IHitbox {
-    //Boxen. https://youtu.be/QWzYaZDK6Is?t=122
+    //https://youtu.be/QWzYaZDK6Is?t=122
     private static final Map<EntityType, Hitbox> boxes = new HashMap<>();
 
     private static final String version;
     private static final Class<?> world;
     private static final Method getBB;
+    private static final Method getHandle;
     private static final Field[] coordinates;
 
     static {
@@ -29,6 +32,7 @@ public class Hitbox implements IHitbox {
 
         Class<?> tempWorld;
         Method tempGetBB;
+        Method tempGetHandle;
         Field[] tempCoordinates;
         try {
             tempWorld = Class.forName("net.minecraft.server." + version + ".World");
@@ -43,14 +47,18 @@ public class Hitbox implements IHitbox {
                     bbClass.getDeclaredField("e"),
                     bbClass.getDeclaredField("f"),
             };
+            tempGetHandle = Class.forName("org.bukkit.craftbukkit." + version + ".entity.CraftEntity")
+                    .getDeclaredMethod("getHandle");
         } catch (ClassNotFoundException | NoSuchMethodException | NoSuchFieldException e) {
             e.printStackTrace();
             tempWorld = null;
             tempGetBB = null;
             tempCoordinates = null;
+            tempGetHandle = null;
         }
         world = tempWorld;
         getBB = tempGetBB;
+        getHandle = tempGetHandle;
         coordinates = tempCoordinates;
     }
 
@@ -63,26 +71,58 @@ public class Hitbox implements IHitbox {
     }
 
     public static IHitbox getByType(EntityType type) {
-        if (boxes.containsKey(type)) return boxes.get(type).deepClone();
+        if (boxes.containsKey(type)) return boxes.get(type);
 
         try {
             String className = type.getEntityClass().getName();
             Class<?> mcClass = Class.forName("net.minecraft.server." + version + ".Entity" + className.substring
                     (className.lastIndexOf('.') + 1));
             Object bb = getBB.invoke(mcClass.getConstructor(world).newInstance(new Object[]{null}));
-            double[] c = new double[]{
-                    (double) coordinates[0].get(bb),
-                    (double) coordinates[1].get(bb),
-                    (double) coordinates[2].get(bb),
-                    (double) coordinates[3].get(bb),
-                    (double) coordinates[4].get(bb),
-                    (double) coordinates[5].get(bb),
-            };
-            Hitbox box = new Hitbox(new Vector(c[0], c[1], c[2]), new Vector(c[3], c[4], c[5]));
+            Hitbox box = new Hitbox(
+                    new Vector(
+                            (double) coordinates[0].get(bb),
+                            (double) coordinates[1].get(bb),
+                            (double) coordinates[2].get(bb)
+                    ),
+                    new Vector(
+                            (double) coordinates[3].get(bb),
+                            (double) coordinates[4].get(bb),
+                            (double) coordinates[5].get(bb)
+                    )
+            );
             boxes.put(type, box);
             return box;
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException
                 | IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static IHitbox getByEntity(Entity entity) {
+        if (boxes.containsKey(entity.getType())) return boxes.get(entity.getType());
+
+        try {
+            String className = entity.getType().getEntityClass().getName();
+            Class<?> cbClass = Class.forName("org.bukkit.craftbukkit." + version + ".entity.Craft" + className.substring
+                    (className.lastIndexOf('.') + 1));
+            Object bb = getBB.invoke(getHandle.invoke(cbClass.cast(entity)));
+            Location l = entity.getLocation();
+            Hitbox box = new Hitbox(
+                    new Vector(
+                            (double) coordinates[0].get(bb) - l.getX(),
+                            (double) coordinates[1].get(bb) - l.getY(),
+                            (double) coordinates[2].get(bb) - l.getZ()
+                    ),
+                    new Vector(
+                            (double) coordinates[3].get(bb) - l.getX(),
+                            (double) coordinates[4].get(bb) - l.getY(),
+                            (double) coordinates[5].get(bb) - l.getZ()
+                    )
+            );
+            boxes.put(entity.getType(), box);
+            return box;
+        } catch (ClassNotFoundException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
             return null;
         }

@@ -25,6 +25,14 @@ public interface IEntityPacket {
     int getDelay();
 
     /**
+     * Set the identifier that this packet is acting on. Null values will be ignored, and the underlying packet will
+     * not change.
+     *
+     * @param identifier the identifier of the entity being changed by this packet.
+     */
+    void setIdentifier(IEntityIdentifier identifier);
+
+    /**
      * Gets the raw ProtocolLib packet container that is used by the engine to send this packet to the client.
      *
      * @return the raw packet with modifications

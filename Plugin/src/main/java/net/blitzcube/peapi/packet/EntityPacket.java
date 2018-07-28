@@ -58,6 +58,12 @@ public abstract class EntityPacket implements IEntityPacket {
     }
 
     @Override
+    public void setIdentifier(IEntityIdentifier identifier) {
+        if (identifier != null)
+            this.rawPacket.getIntegers().write(0, identifier.getEntityID());
+    }
+
+    @Override
     public PacketContainer getRawPacket() {
         return rawPacket;
     }

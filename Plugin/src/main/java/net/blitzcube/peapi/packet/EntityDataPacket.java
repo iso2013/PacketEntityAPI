@@ -14,7 +14,6 @@ import java.util.List;
  * Created by iso2013 on 4/21/2018.
  */
 public class EntityDataPacket extends EntityPacket implements IEntityDataPacket {
-    private static final int TICK_DELAY = 1;
     private static final PacketType TYPE = PacketType.Play.Server.ENTITY_METADATA;
     private List<WrappedWatchableObject> metadata;
 
@@ -56,10 +55,5 @@ public class EntityDataPacket extends EntityPacket implements IEntityDataPacket 
     public PacketContainer getRawPacket() {
         assert metadata != null && metadata.size() > 0;
         return super.getRawPacket();
-    }
-
-    @Override
-    public int getDelay() {
-        return TICK_DELAY;
     }
 }

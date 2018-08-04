@@ -12,7 +12,6 @@ import org.bukkit.potion.PotionEffectType;
  * Created by iso2013 on 6/8/2018.
  */
 public class EntityPotionRemovePacket extends EntityPacket implements IEntityPotionRemovePacket {
-    private static final int TICK_DELAY = 1;
     private static final PacketType TYPE = PacketType.Play.Server.ENTITY_EFFECT;
     private PotionEffectType type;
 
@@ -48,10 +47,5 @@ public class EntityPotionRemovePacket extends EntityPacket implements IEntityPot
     public PacketContainer getRawPacket() {
         assert type != null;
         return super.getRawPacket();
-    }
-
-    @Override
-    public int getDelay() {
-        return TICK_DELAY;
     }
 }

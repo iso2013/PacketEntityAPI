@@ -14,7 +14,6 @@ import org.bukkit.inventory.ItemStack;
  * Created by iso2013 on 4/21/2018.
  */
 public class EntityEquipmentPacket extends EntityPacket implements IEntityEquipmentPacket {
-    private static final int TICK_DELAY = 1;
     private static final PacketType TYPE = PacketType.Play.Server.ENTITY_EQUIPMENT;
     private EquipmentSlot slot;
     private ItemStack item;
@@ -101,10 +100,5 @@ public class EntityEquipmentPacket extends EntityPacket implements IEntityEquipm
     public PacketContainer getRawPacket() {
         assert slot != null && item != null;
         return super.getRawPacket();
-    }
-
-    @Override
-    public int getDelay() {
-        return TICK_DELAY;
     }
 }

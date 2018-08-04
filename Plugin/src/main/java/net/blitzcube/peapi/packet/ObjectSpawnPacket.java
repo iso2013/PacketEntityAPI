@@ -20,7 +20,6 @@ import java.util.UUID;
  * Created by iso2013 on 4/21/2018.
  */
 public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacket {
-    private static final int TICK_DELAY = 0;
     private EntityType type;
     private Location location;
     private Vector velocity;
@@ -313,10 +312,5 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
                 break;
         }
         return super.getRawPacket();
-    }
-
-    @Override
-    public int getDelay() {
-        return TICK_DELAY;
     }
 }

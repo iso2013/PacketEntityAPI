@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
  * Created by iso2013 on 4/21/2018.
  */
 public abstract class EntityPacket implements IEntityPacket {
-    final PacketContainer rawPacket;
+    PacketContainer rawPacket;
     private final IEntityIdentifier identifier;
 
     EntityPacket(IEntityIdentifier identifier, PacketContainer rawPacket, boolean writeDefaults) {
@@ -48,6 +48,8 @@ public abstract class EntityPacket implements IEntityPacket {
                 return EntityPotionAddPacket.unwrap(entityID, c, target);
             case REMOVE_EFFECT:
                 return EntityPotionRemovePacket.unwrap(entityID, c, target);
+            case MOVE:
+                return EntityMovePacket.unwrap(entityID, c, target);
         }
         return null;
     }

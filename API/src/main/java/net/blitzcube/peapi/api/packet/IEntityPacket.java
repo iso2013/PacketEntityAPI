@@ -17,14 +17,6 @@ public interface IEntityPacket {
     IEntityIdentifier getIdentifier();
 
     /**
-     * The minimum duration that must elapse between sending this packet and the original spawn packet - for most,
-     * this is 1 tick.
-     *
-     * @return the number of ticks that should be waited in between sending the spawn packet and sending this packet.
-     */
-    int getDelay();
-
-    /**
      * Set the identifier that this packet is acting on. Null values will be ignored, and the underlying packet will
      * not change.
      *

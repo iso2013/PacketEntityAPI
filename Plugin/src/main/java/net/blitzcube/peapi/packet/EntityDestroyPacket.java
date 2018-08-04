@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
  * Created by iso2013 on 4/21/2018.
  */
 public class EntityDestroyPacket extends EntityPacket implements IEntityDestroyPacket {
-    private static final int TICK_DELAY = 1;
     private static final PacketType TYPE = PacketType.Play.Server.ENTITY_DESTROY;
     private final List<IEntityIdentifier> targets;
     private boolean changed = false;
@@ -66,10 +65,5 @@ public class EntityDestroyPacket extends EntityPacket implements IEntityDestroyP
     public PacketContainer getRawPacket() {
         assert targets.size() > 0;
         return super.getRawPacket();
-    }
-
-    @Override
-    public int getDelay() {
-        return TICK_DELAY;
     }
 }

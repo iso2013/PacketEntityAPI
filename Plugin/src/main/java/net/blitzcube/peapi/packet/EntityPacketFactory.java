@@ -3,10 +3,7 @@ package net.blitzcube.peapi.packet;
 import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
-import net.blitzcube.peapi.api.packet.IEntityAnimationPacket;
-import net.blitzcube.peapi.api.packet.IEntityClickPacket;
-import net.blitzcube.peapi.api.packet.IEntityPacket;
-import net.blitzcube.peapi.api.packet.IEntityPacketFactory;
+import net.blitzcube.peapi.api.packet.*;
 import org.bukkit.Art;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
@@ -23,31 +20,32 @@ import org.bukkit.util.Vector;
  */
 public class EntityPacketFactory implements IEntityPacketFactory {
     @Override
-    public IEntityPacket createAnimationPacket(IEntityIdentifier entity, IEntityAnimationPacket.AnimationType type) {
-        EntityPacket p = new EntityAnimationPacket(entity);
-        ((EntityAnimationPacket) p).setAnimation(type);
+    public IEntityAnimationPacket createAnimationPacket(IEntityIdentifier entity, IEntityAnimationPacket
+            .AnimationType type) {
+        EntityAnimationPacket p = new EntityAnimationPacket(entity);
+        p.setAnimation(type);
         return p;
     }
 
     @Override
-    public IEntityPacket createClickPacket(IEntityIdentifier entity, IEntityClickPacket.ClickType type) {
+    public IEntityClickPacket createClickPacket(IEntityIdentifier entity, IEntityClickPacket.ClickType type) {
         EntityClickPacket p = new EntityClickPacket(entity);
         p.setClickType(type);
         return p;
     }
 
     @Override
-    public IEntityPacket createDataPacket(IEntityIdentifier entity) {
-        EntityPacket p = new EntityDataPacket(entity);
+    public IEntityDataPacket createDataPacket(IEntityIdentifier entity) {
+        EntityDataPacket p = new EntityDataPacket(entity);
         IFakeEntity f;
         if (entity.isFakeEntity() && (f = entity.getFakeEntity().get()) != null) {
-            ((EntityDataPacket) p).setMetadata(f.getModifiableEntity().getWatchableObjects());
+            p.setMetadata(f.getModifiableEntity().getWatchableObjects());
         }
         return p;
     }
 
     @Override
-    public IEntityPacket createDestroyPacket(IEntityIdentifier... entities) {
+    public IEntityDestroyPacket createDestroyPacket(IEntityIdentifier... entities) {
         EntityDestroyPacket p = new EntityDestroyPacket();
         for (IEntityIdentifier i : entities) p.addToGroup(i);
         p.apply();
@@ -55,7 +53,7 @@ public class EntityPacketFactory implements IEntityPacketFactory {
     }
 
     @Override
-    public IEntityPacket[] createEquipmentPacket(IEntityIdentifier entity, EntityEquipment equipment) {
+    public IEntityEquipmentPacket[] createEquipmentPacket(IEntityIdentifier entity, EntityEquipment equipment) {
         EntityEquipmentPacket[] packets = new EntityEquipmentPacket[6];
         for (int i = 0; i < 6; i++) packets[i] = new EntityEquipmentPacket(entity);
         //Better way to do this?
@@ -75,7 +73,7 @@ public class EntityPacketFactory implements IEntityPacketFactory {
     }
 
     @Override
-    public IEntityPacket createEquipmentPacket(IEntityIdentifier entity, EquipmentSlot slot, ItemStack item) {
+    public IEntityEquipmentPacket createEquipmentPacket(IEntityIdentifier entity, EquipmentSlot slot, ItemStack item) {
         EntityEquipmentPacket p = new EntityEquipmentPacket(entity);
         //Better way to do this?
         p.setItem(item);
@@ -84,7 +82,7 @@ public class EntityPacketFactory implements IEntityPacketFactory {
     }
 
     @Override
-    public IEntityPacket createMountPacket(IEntityIdentifier vehicle, IEntityIdentifier... passengers) {
+    public IEntityMountPacket createMountPacket(IEntityIdentifier vehicle, IEntityIdentifier... passengers) {
         EntityMountPacket p = new EntityMountPacket(vehicle);
         for (IEntityIdentifier passenger : passengers) p.addToGroup(passenger);
         p.apply();
@@ -92,7 +90,7 @@ public class EntityPacketFactory implements IEntityPacketFactory {
     }
 
     @Override
-    public IEntityPacket createEntitySpawnPacket(IEntityIdentifier i) {
+    public IEntitySpawnPacket createEntitySpawnPacket(IEntityIdentifier i) {
         if (i.isFakeEntity()) {
             IFakeEntity f;
             if ((f = i.getFakeEntity().get()) == null) return null;
@@ -291,23 +289,34 @@ public class EntityPacketFactory implements IEntityPacketFactory {
     }
 
     @Override
-    public IEntityPacket createStatusPacket(IEntityIdentifier identifier, byte status) {
+    public IEntityStatusPacket createStatusPacket(IEntityIdentifier identifier, byte status) {
         EntityStatusPacket p = new EntityStatusPacket(identifier);
         p.setStatus(status);
         return p;
     }
 
     @Override
-    public IEntityPacket createEffectAddPacket(IEntityIdentifier identifier, PotionEffect effect) {
+    public IEntityPotionAddPacket createEffectAddPacket(IEntityIdentifier identifier, PotionEffect effect) {
         EntityPotionAddPacket p = new EntityPotionAddPacket(identifier);
         p.setEffect(effect);
         return p;
     }
 
     @Override
-    public IEntityPacket createEffectRemovePacket(IEntityIdentifier identifier, PotionEffectType type) {
+    public IEntityPotionRemovePacket createEffectRemovePacket(IEntityIdentifier identifier, PotionEffectType type) {
         EntityPotionRemovePacket p = new EntityPotionRemovePacket(identifier);
         p.setEffectType(type);
+        return p;
+    }
+
+    @Override
+    public IEntityMovePacket createMovePacket(IEntityIdentifier identifier, Vector location, Vector direction,
+                                              boolean onGround, IEntityMovePacket.MoveType type) {
+        EntityMovePacket p = new EntityMovePacket(identifier, type);
+        if (location != null && type != IEntityMovePacket.MoveType.LOOK)
+            p.setNewPosition(location, type == IEntityMovePacket.MoveType.TELEPORT);
+        if (direction != null && type != IEntityMovePacket.MoveType.LOOK) p.setNewDirection(direction);
+        p.setOnGround(onGround);
         return p;
     }
 }

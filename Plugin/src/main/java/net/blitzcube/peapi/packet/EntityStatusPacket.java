@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
  * Created by iso2013 on 4/21/2018.
  */
 public class EntityStatusPacket extends EntityPacket implements IEntityStatusPacket {
-    private static final int TICK_DELAY = 1;
     private static final PacketType TYPE = PacketType.Play.Server.ENTITY_STATUS;
     private byte status;
 
@@ -44,10 +43,5 @@ public class EntityStatusPacket extends EntityPacket implements IEntityStatusPac
     public PacketContainer getRawPacket() {
         assert status > 0;
         return super.getRawPacket();
-    }
-
-    @Override
-    public int getDelay() {
-        return TICK_DELAY;
     }
 }

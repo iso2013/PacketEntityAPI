@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
  * Created by iso2013 on 4/21/2018.
  */
 public class EntityMountPacket extends EntityPacket implements IEntityMountPacket {
-    private static final int TICK_DELAY = 1;
     private static final PacketType TYPE = PacketType.Play.Server.MOUNT;
     private final List<IEntityIdentifier> targets;
     private boolean changed = false;
@@ -62,10 +61,5 @@ public class EntityMountPacket extends EntityPacket implements IEntityMountPacke
         if (!changed) return;
         super.rawPacket.getIntegerArrays().write(0, targets.stream().mapToInt(IEntityIdentifier::getEntityID)
                 .toArray());
-    }
-
-    @Override
-    public int getDelay() {
-        return TICK_DELAY;
     }
 }

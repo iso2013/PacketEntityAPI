@@ -61,6 +61,7 @@ public interface IEntityPacketEvent {
         OBJECT_SPAWN,
         STATUS,
         ADD_EFFECT,
-        REMOVE_EFFECT
+        REMOVE_EFFECT,
+        MOVE
     }
 }

@@ -14,8 +14,10 @@ import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntityFactory;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
 import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
+import net.blitzcube.peapi.api.event.IEntityPacketEvent;
 import net.blitzcube.peapi.api.listener.IListener;
 import net.blitzcube.peapi.api.packet.IEntityGroupPacket;
+import net.blitzcube.peapi.api.packet.IEntityMovePacket;
 import net.blitzcube.peapi.api.packet.IEntityPacket;
 import net.blitzcube.peapi.api.packet.IEntityPacketFactory;
 import net.blitzcube.peapi.entity.EntityIdentifier;
@@ -26,18 +28,17 @@ import net.blitzcube.peapi.entity.modifier.EntityModifierRegistry;
 import net.blitzcube.peapi.entity.modifier.ModifiableEntity;
 import net.blitzcube.peapi.event.engine.PacketEventDispatcher;
 import net.blitzcube.peapi.packet.EntityPacketFactory;
+import net.blitzcube.peapi.packet.EntitySpawnPacket;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Vector;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -89,6 +90,7 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
     private FakeEntityFactory fakeEntityFactory;
     private EntityPacketFactory packetFactory;
     private PacketEventDispatcher dispatcher;
+    private Set<IFakeEntity> debugEntities = new HashSet<>();
 
     @Override
     public void onEnable() {
@@ -101,6 +103,41 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
         chainFactory = BukkitTaskChainFactory.create(this);
 
         if (instance == null) instance = this;
+
+        addListener(new IListener() {
+            @Override
+            public ListenerPriority getPriority() {
+                return ListenerPriority.NORMAL;
+            }
+
+            @Override
+            public void onEvent(IEntityPacketEvent e) {
+                if (e.getPacket() instanceof EntitySpawnPacket) {
+                    IFakeEntity fe = fakeEntityFactory.createFakeEntity(EntityType.SHEEP);
+                    fe.setLocation(((EntitySpawnPacket) e.getPacket()).getLocation());
+                    IEntityPacket pe = packetFactory.createEntitySpawnPacket(fe.getIdentifier());
+                    for (Player p : Bukkit.getOnlinePlayers()) {
+                        dispatchPacket(pe, p);
+                    }
+                    debugEntities.add(fe);
+                }
+            }
+
+            @Override
+            public EntityType[] getTargets() {
+                return EntityType.values();
+            }
+        });
+
+        Bukkit.getScheduler().runTaskTimer(this, () -> {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                for (IFakeEntity fe : debugEntities) {
+                    IEntityPacket pa = packetFactory.createMovePacket(fe.getIdentifier(), new Vector(0, 0.1, 0),
+                            null, false, IEntityMovePacket.MoveType.REL_MOVE);
+                    dispatchPacket(pa, p);
+                }
+            }
+        }, 1L, 1L);
     }
 
     @Override
@@ -205,7 +242,7 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
 
     @Override
     public void dispatchPacket(IEntityPacket packet, Player target) {
-        dispatchPacket(packet, target, packet.getDelay());
+        dispatchPacket(packet, target, 0);
     }
 
     @Override

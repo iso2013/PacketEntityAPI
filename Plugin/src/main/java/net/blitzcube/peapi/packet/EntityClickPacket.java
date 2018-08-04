@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
  * Created by iso2013 on 4/21/2018.
  */
 public class EntityClickPacket extends EntityPacket implements IEntityClickPacket {
-    private static final int TICK_DELAY = 0;
     private static final PacketType TYPE = PacketType.Play.Client.USE_ENTITY;
     private ClickType type;
 
@@ -47,10 +46,5 @@ public class EntityClickPacket extends EntityPacket implements IEntityClickPacke
     public PacketContainer getRawPacket() {
         assert type != null;
         return super.getRawPacket();
-    }
-
-    @Override
-    public int getDelay() {
-        return TICK_DELAY;
     }
 }

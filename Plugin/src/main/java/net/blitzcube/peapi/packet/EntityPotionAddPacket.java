@@ -13,7 +13,6 @@ import org.bukkit.potion.PotionEffectType;
  * Created by iso2013 on 6/8/2018.
  */
 public class EntityPotionAddPacket extends EntityPacket implements IEntityPotionAddPacket {
-    private static final int TICK_DELAY = 1;
     private static final PacketType TYPE = PacketType.Play.Server.ENTITY_EFFECT;
     private PotionEffect effect;
 
@@ -63,10 +62,5 @@ public class EntityPotionAddPacket extends EntityPacket implements IEntityPotion
     public PacketContainer getRawPacket() {
         assert effect != null;
         return super.getRawPacket();
-    }
-
-    @Override
-    public int getDelay() {
-        return TICK_DELAY;
     }
 }

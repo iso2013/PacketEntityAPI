@@ -41,6 +41,10 @@ public class GenericListener implements PacketListener {
         TYPES.put(PacketType.Play.Server.ANIMATION, IEntityPacketEvent.EntityPacketType.ANIMATION);
         TYPES.put(PacketType.Play.Server.ENTITY_EFFECT, IEntityPacketEvent.EntityPacketType.ADD_EFFECT);
         TYPES.put(PacketType.Play.Server.REMOVE_ENTITY_EFFECT, IEntityPacketEvent.EntityPacketType.REMOVE_EFFECT);
+        TYPES.put(PacketType.Play.Server.REL_ENTITY_MOVE, IEntityPacketEvent.EntityPacketType.MOVE);
+        TYPES.put(PacketType.Play.Server.REL_ENTITY_MOVE_LOOK, IEntityPacketEvent.EntityPacketType.MOVE);
+        TYPES.put(PacketType.Play.Server.ENTITY_LOOK, IEntityPacketEvent.EntityPacketType.MOVE);
+        TYPES.put(PacketType.Play.Server.ENTITY_TELEPORT, IEntityPacketEvent.EntityPacketType.MOVE);
     }
 
     public GenericListener(PacketEntityAPI parent, PacketEventDispatcher
@@ -126,7 +130,11 @@ public class GenericListener implements PacketListener {
                         PacketType.Play.Server.ENTITY_STATUS,
                         PacketType.Play.Server.ANIMATION,
                         PacketType.Play.Server.ENTITY_EFFECT,
-                        PacketType.Play.Server.REMOVE_ENTITY_EFFECT
+                        PacketType.Play.Server.REMOVE_ENTITY_EFFECT,
+                        PacketType.Play.Server.ENTITY_TELEPORT,
+                        PacketType.Play.Server.REL_ENTITY_MOVE,
+                        PacketType.Play.Server.REL_ENTITY_MOVE_LOOK,
+                        PacketType.Play.Server.ENTITY_LOOK
                 ).mergeOptions(ListenerOptions.SKIP_PLUGIN_VERIFIER).build();
     }
 

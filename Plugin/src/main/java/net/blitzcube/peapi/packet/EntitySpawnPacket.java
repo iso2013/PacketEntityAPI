@@ -21,7 +21,6 @@ import java.util.UUID;
  * Created by iso2013 on 4/21/2018.
  */
 public class EntitySpawnPacket extends EntityPacket implements IEntitySpawnPacket {
-    private static final int TICK_DELAY = 0;
     private static final PacketType TYPE = PacketType.Play.Server.SPAWN_ENTITY_LIVING;
     private EntityType type;
     private Location location;
@@ -171,10 +170,5 @@ public class EntitySpawnPacket extends EntityPacket implements IEntitySpawnPacke
         assert type != null && location != null;
         super.rawPacket.getDataWatcherModifier().write(0, new WrappedDataWatcher(metadata));
         return super.getRawPacket();
-    }
-
-    @Override
-    public int getDelay() {
-        return TICK_DELAY;
     }
 }

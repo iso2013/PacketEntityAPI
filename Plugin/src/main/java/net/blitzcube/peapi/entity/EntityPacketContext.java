@@ -37,9 +37,6 @@ public class EntityPacketContext implements IEntityPacketContext {
             } else {
                 chain = chain.sync(() -> safeSend(c));
             }
-            if (p.getDelay() > 0) {
-                chain = chain.delay(p.getDelay());
-            }
         }
         return this;
     }
@@ -53,9 +50,6 @@ public class EntityPacketContext implements IEntityPacketContext {
             } else {
                 chain = chain.sync(() -> safeSend(c));
             }
-            if (p.getDelay() > 0) {
-                chain = chain.delay(p.getDelay());
-            }
         }
         return this;
     }
@@ -66,8 +60,8 @@ public class EntityPacketContext implements IEntityPacketContext {
                 "been specified!");
         for (int i = 0; i < packets.length; i++) {
             IEntityPacket p = packets[i];
-            int delay = i < delays.length ? delays[i] : p.getDelay();
-            if (delay < 0) delay = p.getDelay();
+            int delay = i < delays.length ? delays[i] : 0;
+            if (delay < 0) delay = 0;
             PacketContainer c = p.getRawPacket();
             if (c.getType().isClient()) {
                 chain = chain.sync(() -> safeReceive(c));
@@ -87,8 +81,8 @@ public class EntityPacketContext implements IEntityPacketContext {
         int i = 0;
         while (it.hasNext()) {
             IEntityPacket p = it.next();
-            int delay = i < delays.length ? delays[i] : p.getDelay();
-            if (delay < 0) delay = p.getDelay();
+            int delay = i < delays.length ? delays[i] : 0;
+            if (delay < 0) delay = 0;
             PacketContainer c = p.getRawPacket();
             if (c.getType().isClient()) {
                 chain = chain.sync(() -> safeReceive(c));
@@ -123,7 +117,6 @@ public class EntityPacketContext implements IEntityPacketContext {
         } else {
             chain = chain.sync(() -> safeSend(c));
         }
-        if (delay < 0) delay = packet.getDelay();
         if (delay > 0) chain = chain.delay(delay);
         return this;
     }
@@ -136,8 +129,6 @@ public class EntityPacketContext implements IEntityPacketContext {
         } else {
             chain = chain.sync(() -> safeSend(c));
         }
-        int delay = packet.getDelay();
-        if (delay > 0) chain = chain.delay(delay);
         return this;
     }
 

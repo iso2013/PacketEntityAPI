@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
  * Created by iso2013 on 4/21/2018.
  */
 public class EntityAnimationPacket extends EntityPacket implements IEntityAnimationPacket {
-    private static final int TICK_DELAY = 1;
     private static final PacketType TYPE = PacketType.Play.Server.ANIMATION;
     private AnimationType type;
 
@@ -47,10 +46,5 @@ public class EntityAnimationPacket extends EntityPacket implements IEntityAnimat
     public PacketContainer getRawPacket() {
         assert type != null;
         return super.getRawPacket();
-    }
-
-    @Override
-    public int getDelay() {
-        return TICK_DELAY;
     }
 }

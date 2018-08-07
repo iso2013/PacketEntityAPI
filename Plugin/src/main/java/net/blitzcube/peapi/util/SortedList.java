@@ -18,8 +18,10 @@ public class SortedList<T> extends ArrayList<T> {
     public boolean add(T t) {
         int idx = size();
         for (int i = 0; i < size(); i++)
-            if (comparator.compare(t, get(i)) > 0)
-                idx = i + 1;
+            if (comparator.compare(t, get(i)) <= 0) {
+                idx = i;
+                break;
+            }
         super.add(idx, t);
         return true;
     }

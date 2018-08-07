@@ -5,6 +5,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import net.blitzcube.peapi.api.packet.IEntityMovePacket;
 import net.blitzcube.peapi.entity.EntityIdentifier;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -15,7 +16,6 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
     private boolean onGround;
     private MoveType type;
     private Vector position;
-    private Vector direction;
     private double pitch, yaw;
 
     EntityMovePacket(IEntityIdentifier identifier, MoveType type) {
@@ -23,24 +23,22 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
         this.type = type;
     }
 
-    private EntityMovePacket(IEntityIdentifier identifier, PacketContainer rawPacket, Vector newAngle, Vector
+    private EntityMovePacket(IEntityIdentifier identifier, PacketContainer rawPacket, Byte newPitch, Byte newYaw, Vector
             newLocation, boolean onGround, boolean teleport) {
         super(identifier, rawPacket, true);
         if (teleport) {
             type = MoveType.TELEPORT;
-        } else if (newAngle == null && newLocation != null) {
+        } else if (newPitch == null && newLocation != null) {
             type = MoveType.REL_MOVE;
-        } else if (newAngle != null && newLocation == null) {
+        } else if (newPitch != null && newLocation == null) {
             type = MoveType.LOOK;
-        } else if (newAngle != null) {
+        } else if (newPitch != null) {
             type = MoveType.LOOK_AND_REL_MOVE;
         }
-        this.direction = newAngle != null ? newAngle : new Vector();
+        this.pitch = newPitch != null ? newPitch : 0;
+        this.yaw = newYaw != null ? newYaw : 0;
         this.position = newLocation != null ? newLocation : new Vector();
         this.onGround = onGround;
-        double[] angles = vectorToAngles(this.direction);
-        pitch = angles[0];
-        yaw = angles[1];
     }
 
     public static EntityPacket unwrap(int entityID, PacketContainer c, Player p) {
@@ -50,7 +48,7 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
             return new EntityMovePacket(
                     new EntityIdentifier(entityID, p),
                     c,
-                    vectorFromAngles(c.getBytes().read(1), c.getBytes().read(0)),
+                    c.getBytes().read(1), c.getBytes().read(0),
                     new Vector(c.getDoubles().read(0), c.getDoubles().read(1), c.getDoubles().read(2)),
                     c.getBooleans().read(0),
                     true
@@ -59,7 +57,7 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
             return new EntityMovePacket(
                     new EntityIdentifier(entityID, p),
                     c,
-                    null,
+                    null, null,
                     new Vector(
                             ((double) c.getIntegers().read(1)) / 4096.0,
                             ((double) c.getIntegers().read(2)) / 4096.0,
@@ -72,7 +70,7 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
             return new EntityMovePacket(
                     new EntityIdentifier(entityID, p),
                     c,
-                    vectorFromAngles(c.getBytes().read(1), c.getBytes().read(0)),
+                    c.getBytes().read(1), c.getBytes().read(0),
                     new Vector(
                             ((double) c.getIntegers().read(1)) / 4096.0,
                             ((double) c.getIntegers().read(2)) / 4096.0,
@@ -85,7 +83,7 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
             return new EntityMovePacket(
                     new EntityIdentifier(entityID, p),
                     c,
-                    vectorFromAngles(c.getBytes().read(1), c.getBytes().read(0)),
+                    c.getBytes().read(1), c.getBytes().read(0),
                     null,
                     c.getBooleans().read(0),
                     false
@@ -120,25 +118,13 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
 
     @Override
     public Vector getNewDirection() {
-        return direction;
+        return vectorFromAngles(pitch, yaw);
     }
 
     @Override
     public void setNewDirection(Vector direction) {
-        this.direction = direction;
         double[] angles = vectorToAngles(direction);
-        switch (type) {
-            case REL_MOVE:
-                setType(MoveType.LOOK_AND_REL_MOVE);
-            case LOOK_AND_REL_MOVE:
-            case LOOK:
-            case TELEPORT:
-                super.rawPacket.getBytes().write(1, (byte) angles[0]);
-                super.rawPacket.getBytes().write(0, (byte) angles[1]);
-                break;
-        }
-        this.pitch = angles[0];
-        this.yaw = angles[1];
+        setPitchYaw(angles[0], angles[1]);
     }
 
     @Override
@@ -149,6 +135,7 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
     @Override
     public void setNewPosition(Vector position, boolean teleport) {
         this.position = position;
+        if (position == null) position = new Vector();
         switch (type) {
             case REL_MOVE:
             case LOOK_AND_REL_MOVE:
@@ -180,7 +167,7 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
         super.rawPacket = new PacketContainer(type.getPacketType());
         super.rawPacket.getModifier().writeDefaults();
         setNewPosition(position, newType == MoveType.TELEPORT);
-        setNewDirection(direction);
+        setPitchYaw(pitch, yaw);
         setOnGround(onGround);
     }
 
@@ -201,24 +188,75 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
     }
 
     @Override
-    public double[] getPitchYaw() {
-        return new double[]{pitch, yaw};
+    public double getPitch() {
+        return pitch;
     }
 
     @Override
+    public double getYaw() { return yaw; }
+
+    @Override
     public void setPitchYaw(double pitch, double yaw) {
-        setNewDirection(vectorFromAngles(pitch, yaw));
+        switch (type) {
+            case REL_MOVE:
+                setType(MoveType.LOOK_AND_REL_MOVE);
+            case LOOK_AND_REL_MOVE:
+            case LOOK:
+            case TELEPORT:
+                super.rawPacket.getBytes().write(1, (byte) pitch);
+                super.rawPacket.getBytes().write(0, (byte) yaw);
+                break;
+        }
+        this.pitch = pitch;
+        this.yaw = yaw;
+    }
+
+    @Override
+    public Location getLocation(Location currentLocation) {
+        if (type != MoveType.TELEPORT && position != null) {
+            return new Location(
+                    currentLocation.getWorld(),
+                    currentLocation.getX() + position.getX(),
+                    currentLocation.getY() + position.getY(),
+                    currentLocation.getZ() + position.getZ(),
+                    (float) yaw, (float) pitch
+            );
+        } else if (position == null) {
+            return new Location(
+                    currentLocation.getWorld(),
+                    currentLocation.getX(),
+                    currentLocation.getY(),
+                    currentLocation.getZ(),
+                    (float) yaw, (float) pitch
+            );
+        } else {
+            return new Location(
+                    currentLocation.getWorld(),
+                    position.getX(),
+                    position.getY(),
+                    position.getZ(),
+                    (float) yaw, (float) pitch
+            );
+        }
+    }
+
+    @Override
+    public void setLocation(Location newLocation, Location currentLocation) {
+        if (newLocation.distanceSquared(currentLocation) > 64) {
+            setNewPosition(newLocation.toVector(), true);
+        } else {
+            setNewPosition(newLocation.toVector().subtract(currentLocation.toVector()), false);
+        }
+        setNewDirection(newLocation.getDirection());
     }
 
     @Override
     public PacketContainer getRawPacket() {
         switch (type) {
             case LOOK:
-                assert direction != null;
                 break;
             case TELEPORT:
             case LOOK_AND_REL_MOVE:
-                assert direction != null;
             case REL_MOVE:
                 assert position != null;
         }
@@ -229,7 +267,7 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
     public EntityPacket clone() {
         EntityMovePacket p = new EntityMovePacket(getIdentifier(), type);
         p.setNewPosition(position, type == MoveType.TELEPORT);
-        p.setNewDirection(direction);
+        p.setPitchYaw(pitch, yaw);
         p.setOnGround(onGround);
         return p;
     }

@@ -1,6 +1,7 @@
 package net.blitzcube.peapi.api.packet;
 
 import com.comphenix.protocol.PacketType;
+import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
 /**
@@ -53,11 +54,14 @@ public interface IEntityMovePacket extends IEntityPacket {
     void setOnGround(boolean onGround);
 
     /**
-     * Get the pitch and yaw associated with the new direction, in the order pitch, yaw.
-     *
-     * @return a double array containing the pitch and yaw
+     * @return the pitch for the new direction
      */
-    double[] getPitchYaw();
+    double getPitch();
+
+    /**
+     * @return the yaw for the new direction
+     */
+    double getYaw();
 
     /**
      * Set the pitch and yaw for the new direction.
@@ -66,6 +70,22 @@ public interface IEntityMovePacket extends IEntityPacket {
      * @param yaw   the yaw to set
      */
     void setPitchYaw(double pitch, double yaw);
+
+    /**
+     * @param currentLocation the location that the entity is currently at
+     * @return the new location the entity will be moved to, including direction and position
+     */
+    Location getLocation(Location currentLocation);
+
+
+    /**
+     * A utility method to set the new location based on the current location and determine automatically if it should
+     * be a teleport packet. Both the position and direction will be read from the given location.
+     *
+     * @param newLocation     the new location that the entity should be moved to
+     * @param currentLocation the location that the entity is currently at
+     */
+    void setLocation(Location newLocation, Location currentLocation);
 
     enum MoveType {
         REL_MOVE(PacketType.Play.Server.REL_ENTITY_MOVE),

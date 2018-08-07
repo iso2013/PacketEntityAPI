@@ -85,6 +85,9 @@ public class GenericListener implements PacketListener {
         if (e.isCancelled()) {
             packetEvent.setCancelled(true);
         }
+        if (w.getRawPacket() != c) {
+            packetEvent.setPacket(w.getRawPacket());
+        }
     }
 
     @Override

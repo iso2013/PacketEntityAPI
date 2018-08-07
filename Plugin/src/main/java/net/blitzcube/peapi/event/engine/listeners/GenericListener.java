@@ -127,20 +127,8 @@ public class GenericListener implements PacketListener {
     @Override
     public ListeningWhitelist getSendingWhitelist() {
         return ListeningWhitelist.newBuilder()
-                .gamePhase(GamePhase.PLAYING).normal().types(
-                        PacketType.Play.Server.MOUNT,
-                        PacketType.Play.Server.ENTITY_DESTROY,
-                        PacketType.Play.Server.ENTITY_METADATA,
-                        PacketType.Play.Server.ENTITY_EQUIPMENT,
-                        PacketType.Play.Server.ENTITY_STATUS,
-                        PacketType.Play.Server.ANIMATION,
-                        PacketType.Play.Server.ENTITY_EFFECT,
-                        PacketType.Play.Server.REMOVE_ENTITY_EFFECT,
-                        PacketType.Play.Server.ENTITY_TELEPORT,
-                        PacketType.Play.Server.REL_ENTITY_MOVE,
-                        PacketType.Play.Server.REL_ENTITY_MOVE_LOOK,
-                        PacketType.Play.Server.ENTITY_LOOK
-                ).mergeOptions(ListenerOptions.SKIP_PLUGIN_VERIFIER).build();
+                .gamePhase(GamePhase.PLAYING).normal().types(TYPES.keySet())
+                .mergeOptions(ListenerOptions.SKIP_PLUGIN_VERIFIER).build();
     }
 
     @Override

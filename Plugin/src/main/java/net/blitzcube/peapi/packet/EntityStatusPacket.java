@@ -44,4 +44,11 @@ public class EntityStatusPacket extends EntityPacket implements IEntityStatusPac
         assert status > 0;
         return super.getRawPacket();
     }
+
+    @Override
+    public EntityPacket clone() {
+        EntityStatusPacket p = new EntityStatusPacket(getIdentifier());
+        p.setStatus(status);
+        return p;
+    }
 }

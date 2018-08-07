@@ -47,4 +47,11 @@ public class EntityAnimationPacket extends EntityPacket implements IEntityAnimat
         assert type != null;
         return super.getRawPacket();
     }
+
+    @Override
+    public EntityPacket clone() {
+        EntityAnimationPacket p = new EntityAnimationPacket(getIdentifier());
+        p.setAnimation(type);
+        return p;
+    }
 }

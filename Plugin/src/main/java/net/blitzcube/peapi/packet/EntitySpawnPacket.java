@@ -171,4 +171,10 @@ public class EntitySpawnPacket extends EntityPacket implements IEntitySpawnPacke
         super.rawPacket.getDataWatcherModifier().write(0, new WrappedDataWatcher(metadata));
         return super.getRawPacket();
     }
+
+    @Override
+    public EntityPacket clone() {
+        return new EntitySpawnPacket(getIdentifier(), new PacketContainer(TYPE), type, location, velocity, headPitch,
+                metadata);
+    }
 }

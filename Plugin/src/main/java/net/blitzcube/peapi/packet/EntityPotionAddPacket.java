@@ -63,4 +63,11 @@ public class EntityPotionAddPacket extends EntityPacket implements IEntityPotion
         assert effect != null;
         return super.getRawPacket();
     }
+
+    @Override
+    public EntityPacket clone() {
+        EntityPotionAddPacket p = new EntityPotionAddPacket(getIdentifier());
+        p.setEffect(effect);
+        return p;
+    }
 }

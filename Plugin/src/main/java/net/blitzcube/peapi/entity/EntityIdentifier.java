@@ -8,6 +8,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.lang.ref.WeakReference;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -45,6 +46,7 @@ public class EntityIdentifier implements IEntityIdentifier {
     @Override
     public void moreSpecific() {
         if (this.near == null) return;
+        if (this.entity != null || this.fakeEntity != null) return;
         if (PacketEntityAPI.isFakeEntity(this.entityID)) {
             this.fakeEntity = new WeakReference<>(PacketEntityAPI.getFakeEntity(this.entityID));
         } else {
@@ -86,5 +88,37 @@ public class EntityIdentifier implements IEntityIdentifier {
     @Override
     public boolean isFakeEntity() {
         return fakeEntity != null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EntityIdentifier that = (EntityIdentifier) o;
+
+        if (entityID != that.entityID) return false;
+
+        //If they both have the UUID and they aren't equal, return false.
+        if ((uuid != null && that.uuid != null) && !uuid.equals(that.uuid)) return false;
+
+        //If they both have specified nearby players and they are
+        if ((near != null && that.near != null)
+                && near.get() != that.near.get()) return false;
+
+        //If they both have specified entity objects and they aren't equal
+        if ((entity != null && that.entity != null) && !Objects.equals(entity.get(), that.entity.get())) return false;
+
+        return fakeEntity == null || that.fakeEntity == null || Objects.equals(fakeEntity.get(), that.fakeEntity.get());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = entityID;
+        result = 31 * result + (uuid != null ? uuid.hashCode() : 0);
+        result = 31 * result + (near != null ? near.hashCode() : 0);
+        result = 31 * result + (entity != null ? entity.hashCode() : 0);
+        result = 31 * result + (fakeEntity != null ? fakeEntity.hashCode() : 0);
+        return result;
     }
 }

@@ -69,4 +69,7 @@ public abstract class EntityPacket implements IEntityPacket {
     public PacketContainer getRawPacket() {
         return rawPacket;
     }
+
+    @Override
+    public abstract EntityPacket clone();
 }

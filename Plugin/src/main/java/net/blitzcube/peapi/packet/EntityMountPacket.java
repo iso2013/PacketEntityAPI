@@ -62,4 +62,17 @@ public class EntityMountPacket extends EntityPacket implements IEntityMountPacke
         super.rawPacket.getIntegerArrays().write(0, targets.stream().mapToInt(IEntityIdentifier::getEntityID)
                 .toArray());
     }
+
+    @Override
+    public PacketContainer getRawPacket() {
+        assert targets.size() > 0;
+        return super.getRawPacket();
+    }
+
+    @Override
+    public EntityPacket clone() {
+        EntityMountPacket p = new EntityMountPacket(getIdentifier());
+        for (IEntityIdentifier e : targets) p.addToGroup(e);
+        return p;
+    }
 }

@@ -47,4 +47,11 @@ public class EntityClickPacket extends EntityPacket implements IEntityClickPacke
         assert type != null;
         return super.getRawPacket();
     }
+
+    @Override
+    public EntityPacket clone() {
+        EntityClickPacket p = new EntityClickPacket(getIdentifier());
+        p.setClickType(type);
+        return p;
+    }
 }

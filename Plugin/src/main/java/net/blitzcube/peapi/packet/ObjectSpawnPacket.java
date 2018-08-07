@@ -9,6 +9,7 @@ import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import net.blitzcube.peapi.api.packet.IObjectSpawnPacket;
 import net.blitzcube.peapi.entity.EntityIdentifier;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -37,21 +38,25 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
     }
 
     private ObjectSpawnPacket(IEntityIdentifier identifier, PacketContainer packet, EntityType type, Location location,
-                              Vector velocity, int data) {
+                              Vector velocity, int data, UUID uuid) {
         super(identifier, packet, false);
         this.type = type;
         this.location = location;
         this.velocity = velocity;
         this.data = data;
+
+        super.rawPacket.getUUIDs().write(0, uuid);
     }
 
     private ObjectSpawnPacket(IEntityIdentifier identifier, PacketContainer packet, EntityType type, Location location,
-                              String title, BlockFace direction) {
+                              String title, BlockFace direction, UUID uuid) {
         super(identifier, packet, false);
         this.type = type;
         this.location = location;
         this.title = title;
         this.direction = direction;
+
+        super.rawPacket.getUUIDs().write(0, uuid);
     }
 
     private ObjectSpawnPacket(IEntityIdentifier identifier, PacketContainer packet, EntityType type, Location location,
@@ -70,6 +75,10 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
     }
 
     public static ObjectSpawnPacket unwrap(int entityID, PacketContainer c, Player p) {
+        return unwrap(new EntityIdentifier(entityID, p), c, p.getWorld());
+    }
+
+    public static ObjectSpawnPacket unwrap(IEntityIdentifier i, PacketContainer c, World w) {
         EntityType t = packetTypeToEntity(c.getType());
         float pitch = 0.0F, yaw = 0.0F;
         Vector velocity = new Vector();
@@ -91,12 +100,12 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
             case PAINTING:
                 uuid = c.getUUIDs().read(0);
                 if (EntityType.PAINTING.equals(t)) {
-                    location = c.getBlockPositionModifier().read(0).toLocation(p.getWorld());
+                    location = c.getBlockPositionModifier().read(0).toLocation(w);
                     break;
                 }
             default:
                 location = new Location(
-                        p.getWorld(),
+                        w,
                         c.getDoubles().read(0),
                         c.getDoubles().read(1),
                         c.getDoubles().read(2),
@@ -107,16 +116,15 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
         if (t == null) return null;
         switch (t) {
             case PAINTING:
-                return new ObjectSpawnPacket(new EntityIdentifier(entityID, uuid, p), c, t, location, c
-                        .getStrings().read(0), directionToBlockFace(c.getDirections().read(0)));
+                return new ObjectSpawnPacket(i, c, t, location, c
+                        .getStrings().read(0), directionToBlockFace(c.getDirections().read(0)), uuid);
             case EXPERIENCE_ORB:
-                return new ObjectSpawnPacket(new EntityIdentifier(entityID, p), c, t, location, c.getIntegers
+                return new ObjectSpawnPacket(i, c, t, location, c.getIntegers
                         ().read(1));
             case LIGHTNING:
-                return new ObjectSpawnPacket(new EntityIdentifier(entityID, p), c, t, location);
+                return new ObjectSpawnPacket(i, c, t, location);
             default:
-                return new ObjectSpawnPacket(new EntityIdentifier(entityID, uuid, p), c, t, location,
-                        velocity, data);
+                return new ObjectSpawnPacket(i, c, t, location, velocity, data, uuid);
         }
     }
 
@@ -312,5 +320,10 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
                 break;
         }
         return super.getRawPacket();
+    }
+
+    @Override
+    public EntityPacket clone() {
+        return unwrap(getIdentifier(), super.getRawPacket(), location != null ? location.getWorld() : null);
     }
 }

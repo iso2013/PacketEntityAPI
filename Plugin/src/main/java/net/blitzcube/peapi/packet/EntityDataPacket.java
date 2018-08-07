@@ -8,6 +8,7 @@ import net.blitzcube.peapi.api.packet.IEntityDataPacket;
 import net.blitzcube.peapi.entity.EntityIdentifier;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,5 +56,12 @@ public class EntityDataPacket extends EntityPacket implements IEntityDataPacket 
     public PacketContainer getRawPacket() {
         assert metadata != null && metadata.size() > 0;
         return super.getRawPacket();
+    }
+
+    @Override
+    public EntityPacket clone() {
+        EntityDataPacket p = new EntityDataPacket(getIdentifier());
+        p.setMetadata(new ArrayList<>(metadata));
+        return p;
     }
 }

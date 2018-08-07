@@ -66,4 +66,11 @@ public class EntityDestroyPacket extends EntityPacket implements IEntityDestroyP
         assert targets.size() > 0;
         return super.getRawPacket();
     }
+
+    @Override
+    public EntityPacket clone() {
+        EntityDestroyPacket p = new EntityDestroyPacket();
+        for (IEntityIdentifier e : targets) p.addToGroup(e);
+        return p;
+    }
 }

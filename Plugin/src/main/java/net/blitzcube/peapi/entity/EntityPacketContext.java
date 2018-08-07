@@ -32,7 +32,7 @@ public class EntityPacketContext implements IEntityPacketContext {
     public IEntityPacketContext queueDispatch(IEntityPacket... packets) {
         for (IEntityPacket p : packets) {
             PacketContainer c = p.getRawPacket();
-            if (c.getType().isClient()) {
+            if (c != null && c.getType().isClient()) {
                 chain = chain.sync(() -> safeReceive(c));
             } else {
                 chain = chain.sync(() -> safeSend(c));
@@ -45,7 +45,7 @@ public class EntityPacketContext implements IEntityPacketContext {
     public IEntityPacketContext queueDispatch(Set<IEntityPacket> packets) {
         for (IEntityPacket p : packets) {
             PacketContainer c = p.getRawPacket();
-            if (c.getType().isClient()) {
+            if (c != null && c.getType().isClient()) {
                 chain = chain.sync(() -> safeReceive(c));
             } else {
                 chain = chain.sync(() -> safeSend(c));
@@ -63,7 +63,7 @@ public class EntityPacketContext implements IEntityPacketContext {
             int delay = i < delays.length ? delays[i] : 0;
             if (delay < 0) delay = 0;
             PacketContainer c = p.getRawPacket();
-            if (c.getType().isClient()) {
+            if (c != null && c.getType().isClient()) {
                 chain = chain.sync(() -> safeReceive(c));
             } else {
                 chain = chain.sync(() -> safeSend(c));
@@ -84,7 +84,7 @@ public class EntityPacketContext implements IEntityPacketContext {
             int delay = i < delays.length ? delays[i] : 0;
             if (delay < 0) delay = 0;
             PacketContainer c = p.getRawPacket();
-            if (c.getType().isClient()) {
+            if (c != null && c.getType().isClient()) {
                 chain = chain.sync(() -> safeReceive(c));
             } else {
                 chain = chain.sync(() -> safeSend(c));
@@ -112,7 +112,7 @@ public class EntityPacketContext implements IEntityPacketContext {
     @Override
     public IEntityPacketContext queueDispatch(IEntityPacket packet, int delay) {
         PacketContainer c = packet.getRawPacket();
-        if (c.getType().isClient()) {
+        if (c != null && c.getType().isClient()) {
             chain = chain.sync(() -> safeReceive(c));
         } else {
             chain = chain.sync(() -> safeSend(c));
@@ -138,6 +138,7 @@ public class EntityPacketContext implements IEntityPacketContext {
     }
 
     private void safeSend(PacketContainer packet) {
+        if (packet == null) return;
         try {
             manager.sendServerPacket(target, packet, true);
         } catch (InvocationTargetException e) {
@@ -146,6 +147,7 @@ public class EntityPacketContext implements IEntityPacketContext {
     }
 
     private void safeReceive(PacketContainer packet) {
+        if (packet == null) return;
         try {
             manager.recieveClientPacket(target, packet, true);
         } catch (IllegalAccessException | InvocationTargetException e) {

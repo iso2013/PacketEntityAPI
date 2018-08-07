@@ -61,9 +61,9 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
                     c,
                     null,
                     new Vector(
-                            c.getIntegers().read(1) / 4096,
-                            c.getIntegers().read(2) / 4096,
-                            c.getIntegers().read(3) / 4096
+                            ((double) c.getIntegers().read(1)) / 4096.0,
+                            ((double) c.getIntegers().read(2)) / 4096.0,
+                            ((double) c.getIntegers().read(3)) / 4096.0
                     ),
                     c.getBooleans().read(0),
                     false
@@ -74,9 +74,9 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
                     c,
                     vectorFromAngles(c.getBytes().read(1), c.getBytes().read(0)),
                     new Vector(
-                            c.getIntegers().read(1) / 4096,
-                            c.getIntegers().read(2) / 4096,
-                            c.getIntegers().read(3) / 4096
+                            ((double) c.getIntegers().read(1)) / 4096.0,
+                            ((double) c.getIntegers().read(2)) / 4096.0,
+                            ((double) c.getIntegers().read(3)) / 4096.0
                     ),
                     c.getBooleans().read(0),
                     false
@@ -107,6 +107,7 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
 
     private static double[] vectorToAngles(Vector v) {
         double[] angles = new double[2];
+        if (v == null) return angles;
         if (v.getX() == 0 && v.getZ() == 0) {
             angles[0] = (byte) (v.getY() > 0 ? -90 : 90);
         }
@@ -175,6 +176,7 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
 
     private void setType(MoveType newType) {
         if (newType == type) return;
+        type = newType;
         super.rawPacket = new PacketContainer(type.getPacketType());
         super.rawPacket.getModifier().writeDefaults();
         setNewPosition(position, newType == MoveType.TELEPORT);
@@ -206,5 +208,29 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
     @Override
     public void setPitchYaw(double pitch, double yaw) {
         setNewDirection(vectorFromAngles(pitch, yaw));
+    }
+
+    @Override
+    public PacketContainer getRawPacket() {
+        switch (type) {
+            case LOOK:
+                assert direction != null;
+                break;
+            case TELEPORT:
+            case LOOK_AND_REL_MOVE:
+                assert direction != null;
+            case REL_MOVE:
+                assert position != null;
+        }
+        return super.getRawPacket();
+    }
+
+    @Override
+    public EntityPacket clone() {
+        EntityMovePacket p = new EntityMovePacket(getIdentifier(), type);
+        p.setNewPosition(position, type == MoveType.TELEPORT);
+        p.setNewDirection(direction);
+        p.setOnGround(onGround);
+        return p;
     }
 }

@@ -12,6 +12,7 @@ import net.blitzcube.peapi.api.IPacketEntityAPI;
 import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntityFactory;
+import net.blitzcube.peapi.api.entity.modifier.IEntityModifier;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
 import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
 import net.blitzcube.peapi.api.event.IEntityPacketEvent;
@@ -27,9 +28,12 @@ import net.blitzcube.peapi.entity.fake.FakeEntityFactory;
 import net.blitzcube.peapi.entity.modifier.EntityModifierRegistry;
 import net.blitzcube.peapi.entity.modifier.ModifiableEntity;
 import net.blitzcube.peapi.event.engine.PacketEventDispatcher;
+import net.blitzcube.peapi.packet.EntityDataPacket;
+import net.blitzcube.peapi.packet.EntityMovePacket;
 import net.blitzcube.peapi.packet.EntityPacketFactory;
-import net.blitzcube.peapi.packet.EntitySpawnPacket;
+import net.blitzcube.peapi.packet.ObjectSpawnPacket;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -38,7 +42,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 /**
@@ -90,7 +97,10 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
     private FakeEntityFactory fakeEntityFactory;
     private EntityPacketFactory packetFactory;
     private PacketEventDispatcher dispatcher;
-    private Set<IFakeEntity> debugEntities = new HashSet<>();
+
+    //FIXME: This is debug stuffs.
+    private IEntityIdentifier targetID;
+    private IEntityIdentifier[] movedIDs;
 
     @Override
     public void onEnable() {
@@ -104,6 +114,14 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
 
         if (instance == null) instance = this;
 
+
+        IEntityModifier<Boolean> armorStandInvisible = modifierRegistry.lookup(EntityType.ARMOR_STAND, "INVISIBLE",
+                Boolean.class);
+        IEntityModifier<Boolean> marker = modifierRegistry.lookup(EntityType.ARMOR_STAND, "MARKER", Boolean.class);
+        IEntityModifier<String> name = modifierRegistry.lookup(EntityType.ARMOR_STAND, "CUSTOM_NAME", String.class);
+        IEntityModifier<Boolean> nameVisible = modifierRegistry.lookup(EntityType.ARMOR_STAND, "CUSTOM_NAME_VISIBLE",
+                Boolean.class);
+
         addListener(new IListener() {
             @Override
             public ListenerPriority getPriority() {
@@ -112,14 +130,57 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
 
             @Override
             public void onEvent(IEntityPacketEvent e) {
-                if (e.getPacket() instanceof EntitySpawnPacket) {
-                    IFakeEntity fe = fakeEntityFactory.createFakeEntity(EntityType.SHEEP);
-                    fe.setLocation(((EntitySpawnPacket) e.getPacket()).getLocation());
-                    IEntityPacket pe = packetFactory.createEntitySpawnPacket(fe.getIdentifier());
-                    for (Player p : Bukkit.getOnlinePlayers()) {
-                        dispatchPacket(pe, p);
+                if (e.getPacket() instanceof ObjectSpawnPacket) {
+                    ObjectSpawnPacket p = (ObjectSpawnPacket) e.getPacket();
+                    targetID = p.getIdentifier();
+                    targetID.moreSpecific();
+                    if (targetID.isFakeEntity()) return;
+
+                    double y = 2.25;
+                    movedIDs = new IEntityIdentifier[3];
+                    for (int i = 0; i < 3; i++) {
+                        IFakeEntity fe = fakeEntityFactory.createFakeEntity(EntityType.ARMOR_STAND);
+                        IModifiableEntity me = fe.getModifiableEntity();
+                        armorStandInvisible.setValue(me, true);
+                        marker.setValue(me, true);
+                        name.setValue(me, ChatColor.BOLD + ":" + ChatColor.RESET + "O #" + (i + 1));
+                        nameVisible.setValue(me, true);
+                        fe.setLocation(p.getLocation().clone().add(new Vector(0, y, 0)));
+                        IEntityPacket[] pe = packetFactory.createObjectSpawnPacket(fe.getIdentifier());
+                        for (Player pl : Bukkit.getOnlinePlayers()) {
+                            dispatchPacket(pe[0], pl);
+                            dispatchPacket(pe[1], pl);
+                        }
+                        movedIDs[i] = fe.getIdentifier();
+                        y = 2.25 + ((i + 1) * 0.25);
                     }
-                    debugEntities.add(fe);
+                } else if (e.getPacket() instanceof EntityMovePacket) {
+                    EntityMovePacket p = (EntityMovePacket) e.getPacket();
+                    if (!p.getIdentifier().equals(targetID)) return;
+                    double y = 2.25;
+                    for (int i = 0; i < 3; i++) {
+                        EntityMovePacket nP = (EntityMovePacket) p.clone();
+                        nP.setIdentifier(movedIDs[i]);
+                        if (nP.getMoveType() == IEntityMovePacket.MoveType.TELEPORT) {
+                            nP.setNewPosition(nP.getNewPosition().clone().add(new Vector(0, y, 0)), true);
+                        } else if (nP.getMoveType() == IEntityMovePacket.MoveType.LOOK) {
+                            return;
+                        }
+                        e.context().queueDispatch(nP, 0);
+                        y = 2.25 + ((i + 1) * 0.25);
+                    }
+                } else if (e.getPacket() instanceof EntityDataPacket) {
+                    EntityDataPacket p = (EntityDataPacket) e.getPacket();
+                    p.getIdentifier().moreSpecific();
+                    if (p.getIdentifier().isFakeEntity() || p.getIdentifier().getEntity() == null || p.getIdentifier
+                            ().getEntity().get() == null || p.getIdentifier().getEntity().get().getType() !=
+                            EntityType.ARMOR_STAND)
+                        return;
+                    IModifiableEntity me = wrap(p.getMetadata());
+                    marker.setValue(me, true);
+                    name.setValue(me, ChatColor.BOLD + ":" + ChatColor.RESET + "D");
+                    nameVisible.setValue(me, true);
+                    p.setMetadata(me.getWatchableObjects());
                 }
             }
 
@@ -128,16 +189,6 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
                 return EntityType.values();
             }
         });
-
-        Bukkit.getScheduler().runTaskTimer(this, () -> {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                for (IFakeEntity fe : debugEntities) {
-                    IEntityPacket pa = packetFactory.createMovePacket(fe.getIdentifier(), new Vector(0, 0.1, 0),
-                            null, false, IEntityMovePacket.MoveType.REL_MOVE);
-                    dispatchPacket(pa, p);
-                }
-            }
-        }, 1L, 1L);
     }
 
     @Override

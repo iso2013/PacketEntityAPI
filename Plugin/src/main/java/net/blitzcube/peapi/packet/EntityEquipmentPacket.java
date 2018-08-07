@@ -101,4 +101,12 @@ public class EntityEquipmentPacket extends EntityPacket implements IEntityEquipm
         assert slot != null && item != null;
         return super.getRawPacket();
     }
+
+    @Override
+    public EntityPacket clone() {
+        EntityEquipmentPacket p = new EntityEquipmentPacket(getIdentifier());
+        p.setSlot(slot);
+        p.setItem(item);
+        return p;
+    }
 }

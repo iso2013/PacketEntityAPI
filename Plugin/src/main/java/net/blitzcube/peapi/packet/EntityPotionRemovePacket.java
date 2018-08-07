@@ -48,4 +48,11 @@ public class EntityPotionRemovePacket extends EntityPacket implements IEntityPot
         assert type != null;
         return super.getRawPacket();
     }
+
+    @Override
+    public EntityPacket clone() {
+        EntityPotionRemovePacket p = new EntityPotionRemovePacket(getIdentifier());
+        p.setEffectType(type);
+        return p;
+    }
 }

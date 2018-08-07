@@ -16,25 +16,26 @@ public interface IEntityPacketContext {
      * each packet type.
      *
      * @param packets the packets to queue
-     * @return this to allow for chaining
+     * @return This, to allow for chaining
      */
     IEntityPacketContext queueDispatch(IEntityPacket... packets);
 
     /**
      * See {@link #queueDispatch(IEntityPacket...)} for documentation.
      *
-     * @param packets
-     * @return
+     * @param packets the packets to be dispatched
+     * @return This, to allow for chaining
      */
     IEntityPacketContext queueDispatch(Set<IEntityPacket> packets);
 
     /**
      * Queue a set of entity packets for sending after the event. Delays for each packet will be taken from the array
-     * at the same index; however, if the delays array is not big enough, the default delay will be used. If the delay
-     * given by the array is negative, the default delay will also be used.
+     * at the same index; however, if the delays array is not big enough, no delay will be used. If the delay
+     * given by the array is negative, no delay will be used.
+     * 
      * @param packets the packets to queue
      * @param delays the delays to use for these packets
-     * @return this to allow for chaining
+     * @return This, to allow for chaining
      */
     IEntityPacketContext queueDispatch(IEntityPacket[] packets, int[] delays);
 
@@ -43,15 +44,16 @@ public interface IEntityPacketContext {
      *
      * @param packets the packets to queue
      * @param delays  the delays to use for these packets
-     * @return this to allow for chaining
+     * @return This, to allow for chaining
      */
     IEntityPacketContext queueDispatch(Collection<IEntityPacket> packets, int[] delays);
 
     /**
      * Queue a set of entity packets for sending after the event. No delays for any packets beside the first.
+     * 
      * @param packets the packets to queue
      * @param delay the delay to use before the first packet
-     * @return this to allow for chaining
+     * @return This, to allow for chaining
      */
     IEntityPacketContext queueDispatch(IEntityPacket[] packets, int delay);
 
@@ -60,22 +62,23 @@ public interface IEntityPacketContext {
      *
      * @param packets the packets to queue
      * @param delay   the delay to use before the first packet
-     * @return this to allow for chaining
+     * @return This, to allow for chaining
      */
     IEntityPacketContext queueDispatch(Set<IEntityPacket> packets, int delay);
 
     /**
-     * Queue a packet for sending after the event. The delay for the packet will be taken from the parameter
+     * Queue a packet for sending after the event.
+     * 
      * @param packet the packet to queue
      * @param delay the delay to use
-     * @return
+     * @return This, to allow for chaining
      */
     IEntityPacketContext queueDispatch(IEntityPacket packet, int delay);
 
     /**
      * Queue a packet for sending after the event. The delay for the packet will be the default one.
      * @param packet the packet to queue
-     * @return
+     * @return This, to allow for chaining
      */
     IEntityPacketContext queueDispatch(IEntityPacket packet);
 

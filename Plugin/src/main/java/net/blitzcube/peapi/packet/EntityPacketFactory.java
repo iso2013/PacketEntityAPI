@@ -150,9 +150,9 @@ public class EntityPacketFactory implements IEntityPacketFactory {
             if (!fake) throw new IllegalStateException("Do not use the #createObjectSpawnPacket for lightning or " +
                     "experience orb entities!");
             if (t.equals(EntityType.EXPERIENCE_ORB)) {
-                if (!f.hasField("orbcount")) throw new IllegalStateException("Cannot create an experience orb " +
+                if (!f.hasField("orbCount")) throw new IllegalStateException("Cannot create an experience orb " +
                         "summon packet without an orbcount specified!");
-                p.setOrbCount((Integer) f.getField("orbcount"));
+                p.setOrbCount((Integer) f.getField("orbCount"));
             }
         } else {
             p.setVelocity(fake ?

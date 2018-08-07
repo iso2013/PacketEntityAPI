@@ -61,7 +61,7 @@ public interface IObjectSpawnPacket extends IEntityPacket {
      * <br>
      * This cannot be done for some object types, such as paintings or lightning.
      *
-     * @return the velociity
+     * @return the velocity
      */
     Vector getVelocity();
 

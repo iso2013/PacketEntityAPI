@@ -55,7 +55,7 @@ public interface IEntityModifierRegistry {
 
     /**
      * Look up all of the possible modifiers for the given entity type that have a specific field type. Optionally get
-     * modifers that are wrapped with an Optional&lt;&gt;.
+     * modifiers that are wrapped with an Optional&lt;&gt;.
      * @param type the entity type to search for
      * @param field the class representing the type of the field to search for
      * @param optional whether or not to return Optional-wrapped fields
@@ -68,7 +68,7 @@ public interface IEntityModifierRegistry {
     /**
      * Look up a modifier for a given entity type by using its label ({@link IEntityModifier#getLabel()}) and the field
      * type. Optionally get
-     * modifers that are wrapped with an Optional&lt;&gt;.
+     * modifiers that are wrapped with an Optional&lt;&gt;.
      * @param type the entity type to search for
      * @param label the label of the modifier to be returned
      * @param field the class representing the type of the field to be returned

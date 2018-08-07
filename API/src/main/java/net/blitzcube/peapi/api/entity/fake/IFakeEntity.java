@@ -84,7 +84,7 @@ public interface IFakeEntity {
      * the {@link net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry}, which is obtained from the
      * {@link net.blitzcube.peapi.api.IPacketEntityAPI} root instance. <b>Note: these modifiers should be CACHED.</b>
      * <br>
-     * Modifers can also be obtained from {@link #getModifiers()}.
+     * Modifiers can also be obtained from {@link #getModifiers()}.
      * @return the modifiable entity reference that is tied to this entity
      */
     IModifiableEntity getModifiableEntity();
@@ -128,7 +128,7 @@ public interface IFakeEntity {
      * <br>
      * "direction" - A {@link org.bukkit.block.BlockFace} that provides the direction of a painting or item frame.
      * <br>
-     * "orbcount" - The integer number of experience that an orb is worth.
+     * "orbCount" - The integer number of experience that an orb is worth.
      * <br>
      * "velocity" - The velocity to spawn the object with.
      * <br>

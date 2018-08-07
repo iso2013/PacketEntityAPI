@@ -27,6 +27,7 @@ public interface IEntityPacketFactory {
      * Create an inbound click packet using an entity identifier.
      *
      * @param entity the entity to control in the packet
+     * @param type the click type of the packet to be constructed
      * @return the constructed packet
      */
     IEntityClickPacket createClickPacket(IEntityIdentifier entity, IEntityClickPacket.ClickType type);
@@ -41,7 +42,7 @@ public interface IEntityPacketFactory {
     IEntityDataPacket createDataPacket(IEntityIdentifier entity);
 
     /**
-     * Creates a packet that destroys all of the entites given by the entity identifiers.
+     * Creates a packet that destroys all of the entities given by the entity identifiers.
      *
      * @param entities the entities to be removed
      * @return the constructed packet

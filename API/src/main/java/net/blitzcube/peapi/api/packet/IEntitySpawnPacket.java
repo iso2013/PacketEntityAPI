@@ -58,7 +58,7 @@ public interface IEntitySpawnPacket extends IEntityPacket {
     /**
      * Get the entity's velocity
      *
-     * @return the velociity
+     * @return the velocity
      */
     Vector getVelocity();
 

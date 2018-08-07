@@ -5,6 +5,7 @@ import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.event.IEntityPacketEvent;
 import net.blitzcube.peapi.api.listener.IListener;
 import net.blitzcube.peapi.packet.EntitySpawnPacket;
+import net.blitzcube.peapi.util.SortedList;
 import org.bukkit.entity.EntityType;
 
 import java.util.*;
@@ -16,7 +17,7 @@ public class PacketEventDispatcher {
     private static final Comparator<IListener> LISTENER_COMPARATOR = (o1, o2) ->
             IListener.ListenerPriority.getComparator().compare(o1.getPriority(), o2.getPriority());
 
-    private final SortedSet<IListener> allListeners;
+    private final SortedList<IListener> allListeners;
     private final Set<IListener> objectListeners;
     private final Set<IListener> entityListeners;
     private final Map<EntityType, SortedSet<IListener>> listenerLookup;
@@ -24,7 +25,7 @@ public class PacketEventDispatcher {
     private int sendingForFake = 0, requiresCollidable = 0, targetingObjects = 0, targetingEntities = 0;
 
     public PacketEventDispatcher(PacketEntityAPI parent, ProtocolManager manager) {
-        this.allListeners = new TreeSet<>(LISTENER_COMPARATOR);
+        this.allListeners = new SortedList<>(LISTENER_COMPARATOR);
         this.objectListeners = new HashSet<>();
         this.entityListeners = new HashSet<>();
         this.listenerLookup = new HashMap<>();

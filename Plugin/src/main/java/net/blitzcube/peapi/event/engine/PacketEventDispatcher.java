@@ -20,7 +20,7 @@ public class PacketEventDispatcher {
     private final SortedList<IListener> allListeners;
     private final Set<IListener> objectListeners;
     private final Set<IListener> entityListeners;
-    private final Map<EntityType, SortedSet<IListener>> listenerLookup;
+    private final Map<EntityType, SortedList<IListener>> listenerLookup;
     private final PacketEventEngine engine;
     private int sendingForFake = 0, requiresCollidable = 0, targetingObjects = 0, targetingEntities = 0;
 
@@ -36,7 +36,7 @@ public class PacketEventDispatcher {
         this.allListeners.add(l);
         boolean e = false, o = false;
         for (EntityType en : l.getTargets()) {
-            listenerLookup.putIfAbsent(en, new TreeSet<>(LISTENER_COMPARATOR));
+            listenerLookup.putIfAbsent(en, new SortedList<>(LISTENER_COMPARATOR));
             listenerLookup.get(en).add(l);
             if (o && e) continue;
             if (PacketEntityAPI.OBJECTS.containsKey(en)) {

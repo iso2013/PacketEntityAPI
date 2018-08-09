@@ -179,7 +179,7 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
 
     @Override
     public boolean isVisible(Location location, Player target, double err) {
-        return SightDistanceRegistry.isVisible(location, target, err);
+        return SightDistanceRegistry.isVisible(location, target, err, EntityType.UNKNOWN);
     }
 
     @Override

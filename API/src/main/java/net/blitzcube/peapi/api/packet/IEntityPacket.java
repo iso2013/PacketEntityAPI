@@ -30,4 +30,11 @@ public interface IEntityPacket {
      * @return the raw packet with modifications
      */
     PacketContainer getRawPacket();
+
+    /**
+     * Creates a copy of this packet
+     *
+     * @return The new copy of this packet
+     */
+    IEntityPacket clone();
 }

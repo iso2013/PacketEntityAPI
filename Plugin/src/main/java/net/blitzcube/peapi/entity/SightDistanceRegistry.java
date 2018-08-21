@@ -154,23 +154,29 @@ public class SightDistanceRegistry {
         max *= error;
         return p.getNearbyEntities(max, 256, max).stream()
                 .filter(entity ->
-                        isVisible(entity.getLocation(), p, error, entity.getType())
+                        isNear(distances.get(categories.get(entity.getType())), p.getLocation(), entity.getLocation()
+                                , true)
                 );
     }
 
     public static Stream<IEntityIdentifier> getNearby(Player p, double error, Collection<FakeEntity> fakes) {
-        Stream<IEntityIdentifier> real = getNearby(p, error).map(EntityIdentifier::new);
+        double max = entityDistances.containsKey(p.getWorld().getName()) ?
+                entityDistances.get(p.getWorld().getName()).get("max") : entityDistances.get("default").get("max");
+        max *= error;
+        Stream<IEntityIdentifier> real = p.getNearbyEntities(max, 256, max).stream().map(EntityIdentifier::new);
         if (fakes == null) {
             return real;
         } else {
-            return Stream.concat(real, fakes.stream().filter(
-                    fakeEntity -> isVisible(fakeEntity.getLocation(), p, error, fakeEntity.getType())
-            ).map(FakeEntity::getIdentifier));
+            double finalMax = max;
+            return Stream.concat(real, fakes.stream()
+                    .filter(fakeEntity -> isNear(finalMax, p.getLocation(), fakeEntity.getLocation(), true))
+                    .map(EntityIdentifier::new));
         }
     }
 
-    private static boolean isNear(double max, Location l1, Location l2) {
-        return !(Math.abs(l1.getX() - l2.getX()) > max) && !(Math.abs(l1.getZ() - l2.getZ()) > max);
+    private static boolean isNear(double max, Location l1, Location l2, boolean ignoreY) {
+        return !(Math.abs(l1.getX() - l2.getX()) > max) && !(Math.abs(l1.getZ() - l2.getZ()) > max) && (ignoreY || !
+                (Math.abs(l1.getY() - l2.getY()) > max));
     }
 
     public static Stream<Player> getViewers(IEntityIdentifier object, double err) {
@@ -185,9 +191,10 @@ public class SightDistanceRegistry {
             t = Objects.requireNonNull(object.getEntity().get()).getType();
         }
         double max = entityDistances.containsKey(l.getWorld().getName()) ?
-                entityDistances.get(l.getWorld().getName()).get(categories.get(t)) : entityDistances.get("default").get(categories.get(t));
+                entityDistances.get(l.getWorld().getName()).get(categories.get(t)) :
+                entityDistances.get("default").get(categories.get(t));
         max *= err;
         double finalMax = max;
-        return l.getWorld().getPlayers().stream().filter(p -> isNear(finalMax, p.getLocation(), l));
+        return l.getWorld().getPlayers().stream().filter(p -> isNear(finalMax, p.getLocation(), l, true));
     }
 }

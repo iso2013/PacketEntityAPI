@@ -6,12 +6,11 @@ import net.blitzcube.peapi.api.entity.modifier.IEntityModifier;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
 import net.blitzcube.peapi.entity.modifier.loader.EntityModifierLoader;
 import net.blitzcube.peapi.entity.modifier.modifiers.GenericModifier;
-import net.blitzcube.peapi.entity.modifier.modifiers.OptChatModifier;
 import net.blitzcube.peapi.entity.modifier.modifiers.OptModifier;
-import net.blitzcube.peapi.entity.modifier.modifiers.PseudoStringModifier;
 import org.bukkit.entity.EntityType;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
@@ -42,35 +41,13 @@ public class EntityModifierRegistry implements IEntityModifierRegistry {
     }
 
     @Override
-    public <T> Set<IEntityModifier<T>> lookup(EntityType type, Class<? extends T> field) {
-        return lookup(type, field, false);
-    }
-
-    @Override
-    public <T> IEntityModifier<T> lookup(EntityType type, String label, Class<? extends T> field) {
-        return lookup(type, label, field, false);
-    }
-
-    @Override
     @SuppressWarnings("unchecked")
-    public <T> IEntityModifier<T> lookup(EntityType type, String label, Class<? extends T> field, boolean optional) {
+    public <T> IEntityModifier<T> lookup(EntityType type, String label, Class<? extends T> field) {
         return modifiers.get(type).stream()
                 .filter(modifier -> {
-                    boolean instOfOptional = modifier instanceof OptModifier;
-                    boolean stringException = field == String.class && modifier instanceof OptChatModifier;
-                    if (!((optional == instOfOptional) || stringException)) return false;
+                    if ((modifier instanceof OptModifier)) return false;
                     if (!modifier.getLabel().equalsIgnoreCase(label)) return false;
-                    if (field != String.class) {
-                        return modifier.getFieldType() == field;
-                    } else {
-                        return modifier.getFieldType() == field || modifier instanceof OptChatModifier;
-                    }
-                })
-                .map(genericModifier -> {
-                    if (genericModifier instanceof OptChatModifier && field == String.class) {
-                        return new PseudoStringModifier((OptChatModifier) genericModifier);
-                    }
-                    return genericModifier;
+                    return modifier.getFieldType() == field;
                 })
                 .findFirst()
                 .orElse(null);
@@ -78,12 +55,23 @@ public class EntityModifierRegistry implements IEntityModifierRegistry {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Set<IEntityModifier<T>> lookup(EntityType type, Class<? extends T> field, boolean optional) {
+    public <T> IEntityModifier<Optional<T>> lookupOptional(EntityType type, String label, Class<? extends T> field) {
         return modifiers.get(type).stream()
-                .filter(genericModifier -> (optional && genericModifier instanceof OptModifier) ||
-                        (!optional && !(genericModifier instanceof OptModifier)))
-                .filter(m -> optional ? field.equals(((OptModifier) m).getOptionalType()) :
-                        field.equals(m.getFieldType())
+                .filter(modifier -> {
+                    if (!(modifier instanceof OptModifier)) return false;
+                    if (!modifier.getLabel().equalsIgnoreCase(label)) return false;
+                    return modifier.getFieldType() == field;
+                })
+                .findFirst()
+                .orElse(null);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> Set<IEntityModifier<T>> lookup(EntityType type, Class<? extends T> field) {
+        return modifiers.get(type).stream()
+                .filter(genericModifier -> !(genericModifier instanceof OptModifier))
+                .filter(m -> field.equals(m.getFieldType())
                 ).collect(new Collector<GenericModifier, HashSet<IEntityModifier<T>>, Set<IEntityModifier<T>>>() {
                     @Override
                     public Supplier<HashSet<IEntityModifier<T>>> supplier() {
@@ -105,6 +93,44 @@ public class EntityModifierRegistry implements IEntityModifierRegistry {
 
                     @Override
                     public Function<HashSet<IEntityModifier<T>>, Set<IEntityModifier<T>>> finisher() {
+                        return s -> s;
+                    }
+
+                    @Override
+                    public Set<Characteristics> characteristics() {
+                        return new HashSet<>();
+                    }
+                });
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> Set<IEntityModifier<Optional<T>>> lookupOptional(EntityType type, Class<? extends T> field) {
+        return modifiers.get(type).stream()
+                .filter(genericModifier -> (genericModifier instanceof OptModifier))
+                .filter(m -> field.equals(((OptModifier) m).getOptionalType())
+                ).collect(new Collector<GenericModifier, HashSet<IEntityModifier<Optional<T>>>,
+                        Set<IEntityModifier<Optional<T>>>>() {
+                    @Override
+                    public Supplier<HashSet<IEntityModifier<Optional<T>>>> supplier() {
+                        return HashSet::new;
+                    }
+
+                    @Override
+                    public BiConsumer<HashSet<IEntityModifier<Optional<T>>>, GenericModifier> accumulator() {
+                        return Set::add;
+                    }
+
+                    @Override
+                    public BinaryOperator<HashSet<IEntityModifier<Optional<T>>>> combiner() {
+                        return (left, right) -> {
+                            left.addAll(right);
+                            return left;
+                        };
+                    }
+
+                    @Override
+                    public Function<HashSet<IEntityModifier<Optional<T>>>, Set<IEntityModifier<Optional<T>>>> finisher() {
                         return s -> s;
                     }
 

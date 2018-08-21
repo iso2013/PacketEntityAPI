@@ -1,9 +1,7 @@
 package net.blitzcube.peapi.entity.modifier.loader.tree;
 
 import com.comphenix.protocol.wrappers.EnumWrappers;
-import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import com.comphenix.protocol.wrappers.nbt.NbtFactory;
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import net.blitzcube.peapi.entity.modifier.modifiers.*;
@@ -12,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by iso2013 on 4/20/2018.
@@ -41,7 +40,7 @@ public class Key extends Node.Attribute {
             case "Integer":
                 return ImmutableList.of(new GenericModifier<>(Integer.class, index, label, def.getAsInt()));
             case "NBTCompound":
-                return ImmutableList.of(new GenericModifier<>(NbtCompound.class, index, label,
+                return ImmutableList.of(new NbtCompoundModifier(index, label,
                         def.isJsonNull() ? null : NbtFactory.ofCompound(def.getAsString())));
             case "String":
                 return ImmutableList.of(new GenericModifier<>(String.class, index, label, def.getAsString()));
@@ -59,11 +58,15 @@ public class Key extends Node.Attribute {
             case "ItemStack":
                 return ImmutableList.of(new ItemModifier(index, label, new ItemStack(Material.AIR)));
             case "Optional[Block]":
-                return ImmutableList.of(new OptPositionModifier(index, label, Optional.absent()));
+                return ImmutableList.of(new OptPositionModifier(index, label, Optional.empty()));
             case "Optional[BlockData]":
-                return ImmutableList.of(new OptBlockModifier(index, label, Optional.absent()));
+                return ImmutableList.of(new OptBlockModifier(index, label, Optional.empty()));
+            case "Optional[Chat]":
+                return ImmutableList.of(new OptChatModifier(index, label, Optional.empty()));
             case "Optional[UUID]":
-                return ImmutableList.of(new OptUUIDModifier(index, label, Optional.absent()));
+                return ImmutableList.of(new OptUUIDModifier(index, label, Optional.empty()));
+            case "Particle":
+                return ImmutableList.of(new ParticleModifier(index, label, def.getAsInt()));
             default:
                 throw new IllegalStateException("Could not find a structured type for " + type + "!");
         }

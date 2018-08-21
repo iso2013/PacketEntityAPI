@@ -6,7 +6,9 @@ import net.blitzcube.peapi.api.entity.modifier.IEntityModifier;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
 import net.blitzcube.peapi.entity.modifier.loader.EntityModifierLoader;
 import net.blitzcube.peapi.entity.modifier.modifiers.GenericModifier;
+import net.blitzcube.peapi.entity.modifier.modifiers.OptChatModifier;
 import net.blitzcube.peapi.entity.modifier.modifiers.OptModifier;
+import net.blitzcube.peapi.entity.modifier.modifiers.PseudoStringModifier;
 import org.bukkit.entity.EntityType;
 
 import java.util.HashSet;
@@ -24,7 +26,7 @@ public class EntityModifierRegistry implements IEntityModifierRegistry {
     private final ImmutableMap<EntityType, ImmutableSet<GenericModifier>> modifiers;
 
     public EntityModifierRegistry() {
-        this.modifiers = EntityModifierLoader.getModifiers(this.getClass().getResourceAsStream("/EntityDataJSON.json"));
+        this.modifiers = EntityModifierLoader.getModifiers(this.getClass().getResourceAsStream("/structure.json"));
     }
 
     public Set<IEntityModifier> lookup(EntityType type) {
@@ -53,9 +55,23 @@ public class EntityModifierRegistry implements IEntityModifierRegistry {
     @SuppressWarnings("unchecked")
     public <T> IEntityModifier<T> lookup(EntityType type, String label, Class<? extends T> field, boolean optional) {
         return modifiers.get(type).stream()
-                .filter(genericModifier -> (optional && genericModifier instanceof OptModifier) ||
-                        (!optional && !(genericModifier instanceof OptModifier)))
-                .filter(m -> m.getLabel().equalsIgnoreCase(label))
+                .filter(modifier -> {
+                    boolean instOfOptional = modifier instanceof OptModifier;
+                    boolean stringException = field == String.class && modifier instanceof OptChatModifier;
+                    if (!((optional == instOfOptional) || stringException)) return false;
+                    if (!modifier.getLabel().equalsIgnoreCase(label)) return false;
+                    if (field != String.class) {
+                        return modifier.getFieldType() == field;
+                    } else {
+                        return modifier.getFieldType() == field || modifier instanceof OptChatModifier;
+                    }
+                })
+                .map(genericModifier -> {
+                    if (genericModifier instanceof OptChatModifier && field == String.class) {
+                        return new PseudoStringModifier((OptChatModifier) genericModifier);
+                    }
+                    return genericModifier;
+                })
                 .findFirst()
                 .orElse(null);
     }

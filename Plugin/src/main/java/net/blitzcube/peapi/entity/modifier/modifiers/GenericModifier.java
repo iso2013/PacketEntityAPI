@@ -10,11 +10,11 @@ import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
 public class GenericModifier<T> implements IEntityModifier<T> {
     private final WrappedDataWatcher.Serializer serializer;
     final int index;
-    private final Class<T> clazz;
-    private final String label;
-    private final T def;
+    final String label;
+    final T def;
+    private final Class<?> clazz;
 
-    public GenericModifier(Class<T> clazz, int index, String label, T def) {
+    public GenericModifier(Class<?> clazz, int index, String label, T def) {
         this.clazz = clazz;
         this.serializer = clazz != null ? WrappedDataWatcher.Registry.get(clazz) : null;
         this.index = index;
@@ -22,7 +22,7 @@ public class GenericModifier<T> implements IEntityModifier<T> {
         this.def = def;
     }
 
-    public Class<T> getFieldType() {
+    public Class<?> getFieldType() {
         return clazz;
     }
 

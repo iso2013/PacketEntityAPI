@@ -1,6 +1,6 @@
 package net.blitzcube.peapi.entity.modifier.modifiers;
 
-import com.google.common.base.Optional;
+import java.util.Optional;
 
 /**
  * Created by iso2013 on 4/20/2018.

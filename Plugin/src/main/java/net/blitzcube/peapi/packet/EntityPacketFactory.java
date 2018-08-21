@@ -190,9 +190,11 @@ public class EntityPacketFactory implements IEntityPacketFactory {
                     return ((Entity) s).getEntityId();
                 }
             case FALLING_BLOCK:
-                int type = fake ? (int) f.getField("id") : ((FallingBlock) e).getBlockId();
-                int data = fake ? (int) f.getField("data") : ((FallingBlock) e).getBlockData();
-                return type | (data << 12);
+                //FIXME
+                //int type = fake ? (int) f.getField("id") : ((FallingBlock) e).getBlockId();
+                //int data = fake ? (int) f.getField("data") : ((FallingBlock) e).getBlockData();
+                //return type | (data << 12);
+                return 0;
             case DROPPED_ITEM:
                 return 1;
             case LLAMA_SPIT:
@@ -278,11 +280,11 @@ public class EntityPacketFactory implements IEntityPacketFactory {
                 return "Pointer";
             case PIGSCENE:
                 return "Pigscene";
-            case BURNINGSKULL:
+            case BURNING_SKULL:
                 return "BurningSkull";
             case SKELETON:
                 return "Skeleton";
-            case DONKEYKONG:
+            case DONKEY_KONG:
                 return "DonkeyKong";
         }
         return null;

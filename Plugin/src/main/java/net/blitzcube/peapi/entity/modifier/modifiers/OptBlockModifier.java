@@ -2,9 +2,10 @@ package net.blitzcube.peapi.entity.modifier.modifiers;
 
 import com.comphenix.protocol.wrappers.WrappedBlockData;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.google.common.base.Optional;
 import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
 import org.bukkit.material.MaterialData;
+
+import java.util.Optional;
 
 /**
  * Created by iso2013 on 4/20/2018.
@@ -25,7 +26,7 @@ public class OptBlockModifier extends OptModifier<MaterialData> {
         if (!(val instanceof Optional))
             throw new IllegalStateException("Read inappropriate type from modifiable entity!");
         Optional<WrappedBlockData> bp = (Optional<WrappedBlockData>) val;
-        if (!bp.isPresent()) return Optional.absent();
+        if (!bp.isPresent()) return Optional.empty();
         return Optional.of(new MaterialData(bp.get().getType(), (byte) bp.get().getData()));
     }
 
@@ -42,7 +43,7 @@ public class OptBlockModifier extends OptModifier<MaterialData> {
                         serializer
                 );
             } else {
-                target.write(super.index, Optional.absent(), serializer);
+                target.write(super.index, Optional.empty(), serializer);
             }
         } else super.unsetValue(target);
     }

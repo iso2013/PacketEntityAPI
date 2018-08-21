@@ -1,9 +1,9 @@
 package net.blitzcube.peapi.entity.modifier.modifiers;
 
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.google.common.base.Optional;
 import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -28,7 +28,7 @@ public class OptUUIDModifier extends OptModifier<UUID> {
         if (!(val instanceof Optional))
             throw new IllegalStateException("Read inappropriate type from modifiable entity!");
         Optional<UUID> bp = (Optional<UUID>) val;
-        if (!bp.isPresent()) return Optional.absent();
+        if (!bp.isPresent()) return Optional.empty();
         return bp;
     }
 

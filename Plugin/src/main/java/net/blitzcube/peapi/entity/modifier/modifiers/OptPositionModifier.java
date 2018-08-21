@@ -2,9 +2,10 @@ package net.blitzcube.peapi.entity.modifier.modifiers;
 
 import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.google.common.base.Optional;
 import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
 import org.bukkit.util.Vector;
+
+import java.util.Optional;
 
 /**
  * Created by iso2013 on 4/20/2018.
@@ -29,7 +30,7 @@ public class OptPositionModifier extends OptModifier<Vector> {
         if (!(val instanceof Optional))
             throw new IllegalStateException("Read inappropriate type from modifiable entity!");
         Optional<BlockPosition> bp = (Optional<BlockPosition>) val;
-        if (!bp.isPresent()) return Optional.absent();
+        if (!bp.isPresent()) return Optional.empty();
         return Optional.of(bp.get().toVector());
     }
 
@@ -45,7 +46,7 @@ public class OptPositionModifier extends OptModifier<Vector> {
                         serializer
                 );
             } else {
-                target.write(super.index, Optional.absent(), serializer);
+                target.write(super.index, Optional.empty(), serializer);
             }
         } else super.unsetValue(target);
     }

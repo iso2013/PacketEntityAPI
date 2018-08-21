@@ -6,6 +6,7 @@ import net.blitzcube.peapi.api.entity.modifier.IEntityModifier;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
 import net.blitzcube.peapi.entity.modifier.loader.EntityModifierLoader;
 import net.blitzcube.peapi.entity.modifier.modifiers.GenericModifier;
+import net.blitzcube.peapi.entity.modifier.modifiers.OptChatModifier;
 import net.blitzcube.peapi.entity.modifier.modifiers.OptModifier;
 import org.bukkit.entity.EntityType;
 
@@ -44,6 +45,12 @@ public class EntityModifierRegistry implements IEntityModifierRegistry {
     @SuppressWarnings("unchecked")
     public <T> IEntityModifier<T> lookup(EntityType type, String label, Class<? extends T> field) {
         return modifiers.get(type).stream()
+                .map(genericModifier -> {
+                    if (field == String.class && genericModifier instanceof OptChatModifier) {
+                        return ((OptChatModifier) genericModifier).asPseudoStringModifier();
+                    }
+                    return genericModifier;
+                })
                 .filter(modifier -> {
                     if ((modifier instanceof OptModifier)) return false;
                     if (!modifier.getLabel().equalsIgnoreCase(label)) return false;
@@ -57,6 +64,12 @@ public class EntityModifierRegistry implements IEntityModifierRegistry {
     @SuppressWarnings("unchecked")
     public <T> IEntityModifier<Optional<T>> lookupOptional(EntityType type, String label, Class<? extends T> field) {
         return modifiers.get(type).stream()
+                .map(genericModifier -> {
+                    if (field == String.class && genericModifier instanceof OptChatModifier) {
+                        return ((OptChatModifier) genericModifier).asPseudoStringModifier();
+                    }
+                    return genericModifier;
+                })
                 .filter(modifier -> {
                     if (!(modifier instanceof OptModifier)) return false;
                     if (!modifier.getLabel().equalsIgnoreCase(label)) return false;
@@ -70,6 +83,12 @@ public class EntityModifierRegistry implements IEntityModifierRegistry {
     @SuppressWarnings("unchecked")
     public <T> Set<IEntityModifier<T>> lookup(EntityType type, Class<? extends T> field) {
         return modifiers.get(type).stream()
+                .map(genericModifier -> {
+                    if (field == String.class && genericModifier instanceof OptChatModifier) {
+                        return ((OptChatModifier) genericModifier).asPseudoStringModifier();
+                    }
+                    return genericModifier;
+                })
                 .filter(genericModifier -> !(genericModifier instanceof OptModifier))
                 .filter(m -> field.equals(m.getFieldType())
                 ).collect(new Collector<GenericModifier, HashSet<IEntityModifier<T>>, Set<IEntityModifier<T>>>() {
@@ -107,6 +126,12 @@ public class EntityModifierRegistry implements IEntityModifierRegistry {
     @SuppressWarnings("unchecked")
     public <T> Set<IEntityModifier<Optional<T>>> lookupOptional(EntityType type, Class<? extends T> field) {
         return modifiers.get(type).stream()
+                .map(genericModifier -> {
+                    if (field == String.class && genericModifier instanceof OptChatModifier) {
+                        return ((OptChatModifier) genericModifier).asPseudoStringModifier();
+                    }
+                    return genericModifier;
+                })
                 .filter(genericModifier -> (genericModifier instanceof OptModifier))
                 .filter(m -> field.equals(((OptModifier) m).getOptionalType())
                 ).collect(new Collector<GenericModifier, HashSet<IEntityModifier<Optional<T>>>,

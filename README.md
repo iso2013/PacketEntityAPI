@@ -15,7 +15,7 @@ You may report issues [here](https://github.com/iso2013/PacketEntityAPI/issues).
 * Steps to reproduce
 * Expected behaviour
 * Actual outcome
-* Minecraft version - **Only 1.12.2 is officially supported**
+* Minecraft version - **Only 1.13+ is officially supported**
 
 ## Source Code
 Source code is available [here](https://github.com/iso2013/PacketEntityAPI)!

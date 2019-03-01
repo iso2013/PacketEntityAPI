@@ -1,7 +1,6 @@
 package net.blitzcube.peapi.entity.modifier.loader.tree;
 
 import com.comphenix.protocol.wrappers.EnumWrappers;
-import com.comphenix.protocol.wrappers.nbt.NbtCompound;
 import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
@@ -41,7 +40,7 @@ public class Key extends Node.Attribute {
             case "Integer":
                 return ImmutableList.of(new GenericModifier<>(Integer.class, index, label, def.getAsInt()));
             case "NBTCompound":
-                return ImmutableList.of(new GenericModifier<>(NbtCompound.class, index, label,
+                return ImmutableList.of(new NbtCompoundModifier(index, label,
                         def.isJsonNull() ? null : NbtFactory.ofCompound(def.getAsString())));
             case "String":
                 return ImmutableList.of(new GenericModifier<>(String.class, index, label, def.getAsString()));

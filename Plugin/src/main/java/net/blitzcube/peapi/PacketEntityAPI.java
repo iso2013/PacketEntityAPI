@@ -35,7 +35,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -44,7 +44,7 @@ import java.util.stream.Stream;
  * Created by iso2013 on 2/13/2018.
  */
 public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
-    public static final Map<EntityType, Integer> OBJECTS = new HashMap<>();
+    public static final Map<EntityType, Integer> OBJECTS = new EnumMap<>(EntityType.class);
 
     static {
         OBJECTS.put(EntityType.BOAT, 1);

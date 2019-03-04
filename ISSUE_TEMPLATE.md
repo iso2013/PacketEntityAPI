@@ -10,4 +10,4 @@
 * Minecraft version *(Only 1.13 is officially supported)*
 
 
-* Plugin list *
+* Plugin list

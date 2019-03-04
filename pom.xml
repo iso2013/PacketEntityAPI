@@ -7,7 +7,7 @@
     <groupId>net.blitzcube.peapi</groupId>
     <artifactId>PacketEntityAPI</artifactId>
     <packaging>pom</packaging>
-    <version>0.7.1-SNAPSHOT</version>
+    <version>0.7.2-SNAPSHOT</version>
     <modules>
         <module>API</module>
         <module>Plugin</module>

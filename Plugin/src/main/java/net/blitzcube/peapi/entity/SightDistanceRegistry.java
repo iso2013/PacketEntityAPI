@@ -36,6 +36,7 @@ public class SightDistanceRegistry {
         EnumMap<EntityType, Integer> map = distances.get(key);
         for (EntityType t : EntityType.values()) {
             Class<? extends Entity> clazz = t.getEntityClass();
+            if(clazz == null) continue;
 
             if (Player.class.isAssignableFrom(clazz)) {
                 map.put(t, getWithDefaults(sec, defSec, "entity-tracking-range.players", 48));

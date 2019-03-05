@@ -7,5 +7,7 @@
 * Actual outcome
 
 
-* Minecraft version *(Only 1.12 is officially supported)*
+* Minecraft version *(Only 1.13 is officially supported)*
 
+
+* Plugin list

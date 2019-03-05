@@ -80,13 +80,6 @@ public class EntitySpawnPacket extends EntityPacket implements IEntitySpawnPacke
         ENTITY_TYPE_IDS.put(EntityType.ZOMBIE_HORSE, 88);
         ENTITY_TYPE_IDS.put(EntityType.ZOMBIE_VILLAGER, 89);
         ENTITY_TYPE_IDS.put(EntityType.PHANTOM, 90);
-
-        boolean allMatch = true;
-        for(Map.Entry<EntityType, Integer> e : ENTITY_TYPE_IDS.entrySet()){
-            System.out.println(e.getKey().name() + " - Mapped value was " + e.getValue() + ". Ordinal is " + e.getKey().ordinal());
-            if(e.getKey().ordinal() != e.getValue()) allMatch = false;
-        }
-        System.out.println(allMatch ? "They all matched" : "Something didn't match.");
     }
 
     private EntityType type;

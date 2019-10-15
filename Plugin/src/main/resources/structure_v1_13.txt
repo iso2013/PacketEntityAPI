@@ -1,0 +1,192 @@
+BOAT 1
+DROPPED_ITEM 2
+AREA_EFFECT_CLOUD 3
+MINECART 10
+PRIMED_TNT 50
+ENDER_CRYSTAL 51
+ARROW 60
+SNOWBALL 61
+EGG 62
+FIREBALL 63
+SMALL_FIREBALL 64
+ENDER_PEARL 65
+WITHER_SKULL 66
+SHULKER_BULLET 67
+LLAMA_SPIT 68
+FALLING_BLOCK 70
+ITEM_FRAME 71
+ENDER_SIGNAL 72
+SPLASH_POTION 73
+THROWN_EXP_BOTTLE 75
+FIREWORK 76
+LEASH_HITCH 77
+ARMOR_STAND 78
+EVOKER_FANGS 79
+FISHING_HOOK 90
+SPECTRAL_ARROW 91
+DRAGON_FIREBALL 93
+TRIDENT 94
+
+Entity      	0	ON_FIRE					Mask1					0
+Entity	        0	CROUCHED				Mask2					0
+Entity	        0	UNUSED_1				Mask4					0
+Entity	        0	SPRINTING				Mask8					0
+Entity	        0	SWIMMING				Mask16					0
+Entity	        0	INVISIBLE				Mask32					0
+Entity	        0	GLOWING					Mask64					0
+Entity	        0	FLYING					Mask128					0
+Entity	        1	AIR						Integer					300
+Entity	        2	CUSTOM_NAME				OptChat             	Absent
+Entity      	3	CUSTOM_NAME_VISIBLE		Boolean					false
+Entity      	4	SILENT					Boolean					false
+Entity      	5	NO_GRAVITY				Boolean					false
+Potion         	6	POTION_THROWN			ItemStack				null
+FallingBlock	6	SPAWN_POSITION			Location				(0.0,0.0,0.0)
+AreaEffectCloud	6	RADIUS					Float					0.5
+AreaEffectCloud	7	COLOR					Integer					0
+AreaEffectCloud	8	SHOW_POINT				Boolean					false
+AreaEffectCloud	9	PARTICLE				Particle				SPELL
+FishHook	    6	HOOKED_ID				Integer					0
+Arrow	        6	IS_CRITICAL				Mask1					0
+Arrow	        6	NO_CLIP					Mask2					0
+Arrow	        7	SHOOTER_UUID			OptUUID     			Absent
+TippedArrow 	8	COLOR					Integer					-1
+Trident        	8	LOYALTY_LEVEL			Integer					0
+Boat	        6	TIME_SINCE_LAST_HIT		Integer					0
+Boat			7	FORWARD_DIRECTION		Integer					1
+Boat			8	DAMAGE_TAKEN			Float					0.0
+Boat			9	TYPE					Integer					0
+Boat			10	LEFT_PADDLE_TURNING		Boolean					false
+Boat			11	RIGHT_PADDLE_TURNING	Boolean					false
+Boat			12	SPLASH_TIMER			Integer					0
+EnderCrystal	6	BEAM_TARGET				OptLocation     		Absent
+EnderCrystal	7	SHOW_BOTTOM				Boolean					true
+WitherSkull		6	INVULNERABLE			Boolean					false
+Firework		6	FIREWORK_LAUNCHED		ItemStack				null
+Firework		7	LAUNCHED_BY				Integer					0
+ItemFrame		6	ITEM					ItemStack				null
+ItemFrame		7	ROTATION				Integer					0
+Item			6	ITEM					ItemStack				null
+LivingEntity	6	HAND_ACTIVE				Mask1					0
+LivingEntity	6	ACTIVE_HAND				Mask2					0
+LivingEntity	6	IN_RIPTIDE_SPIN_ATTACK	Mask4					0
+LivingEntity	7	HEALTH					Float					1.0
+LivingEntity	8	POTION_COLOR			Integer					0
+LivingEntity	9	POTION_AMBIENT			Boolean					false
+LivingEntity	10	NUMBER_OF_ARROWS		Integer					0
+Player			11	ADDITIONAL_HEARTS		Float					0.0
+Player			12	SCORE					Integer					0
+Player			13	CAPE_ENABLED			Mask1					0
+Player			13	JACKET_ENABLED			Mask2					0
+Player			13	LEFT_SLEEVE_ENABLED		Mask4					0
+Player			13	RIGHT_SLEEVE_ENABLED	Mask8					0
+Player			13	LEFT_PANTS_LEG_ENABLED	Mask16					0
+Player			13	RIGHT_PANTS_LEG_ENABLED	Mask32					0
+Player			13	HAT_ENABLED				Mask64					0
+Player			13	UNUSED					Mask128					0
+Player			14	MAIN_HAND				Byte					1
+Player			15	LEFT_SHOULDER_PARROT	NBTTag      			{}
+Player			16	RIGHT_SHOULDER_PARROT	NBTTag      			{}
+ArmorStand		11	IS_SMALL				Mask1					0
+ArmorStand		11	HAS_ARMS				Mask4					0
+ArmorStand		11	NO_BASEPLATE			Mask8					0
+ArmorStand		11	SET_MARKER				Mask16					0
+ArmorStand		12	HEAD_ROTATION			EulerAngle			    (0.0,0.0,0.0)
+ArmorStand		13	BODY_ROTATION			EulerAngle				(0.0,0.0,0.0)
+ArmorStand		14	LEFT_ARM_ROTATION		EulerAngle				(-10.0,0.0,-10.0)
+ArmorStand		15	RIGHT_ARM_ROTATION		EulerAngle				(-15.0,0.0,10.0)
+ArmorStand		16	LEFT_LEG_ROTATION		EulerAngle				(-1.0,0.0,-1.0)
+ArmorStand		17	RIGHT_LEG_ROTATION		EulerAngle				(1.0,0.0,1.0)
+LivingEntity	11	NO_AI					Mask1					0
+LivingEntity	11	LEFT_HANDED				Mask2					0
+Bat				12	IS_HANGING				Mask1					0
+Dolphin			12	TREASURE_POSITION		Location				(0.0,0.0,0.0)
+Dolphin			13	CAN_FIND_TREASURE		Boolean					false
+Dolphin			14	HAS_FISH				Boolean					false
+Fish			12	FROM_BUCKET				Boolean					false
+PufferFish		13	PUFF_STATE				Integer					0
+TropicalFish	13	VARIANT					Integer					0
+Ageable			12	BABY					Boolean					false
+AbstractHorse	13	UNUSED					Mask1					0
+AbstractHorse	13	TAMED					Mask2					0
+AbstractHorse	13	SADDLED					Mask4					0
+AbstractHorse	13	HAS_BRED				Mask8					0
+AbstractHorse	13	EATING					Mask16					0
+AbstractHorse	13	REARING					Mask32					0
+AbstractHorse	13	MOUTH_OPEN				Mask64					0
+AbstractHorse	13	UNUSED_2				Mask128					0
+AbstractHorse	14	OWNER					OptUUID     			Absent
+Horse			15	VARIANT					Integer					0
+Horse			16	ARMOR					Integer					0
+Horse			17	ARMOR_ITEM				ItemStack				null
+ChestedHorse	15	HAS_CHEST				Boolean					false
+Llama			16	STRENGTH				Integer					0
+Llama			17	CARPET_COLOR			Integer					-1
+Llama			18	VARIANT					Integer					0
+Pig				13	SADDLED					Boolean					false
+Pig				14	BOOST_TIME				Integer					0
+Rabbit			13	TYPE					Integer					0
+Turtle			13	HOME_POSITION			Location	    		(0.0,0.0,0.0)
+Turtle			14	HAS_EGG					Boolean					false
+Turtle			15	LAYING_EGG				Boolean					false
+Turtle			16	TRAVEL_POSITION			Location	    		(0.0,0.0,0.0)
+Turtle			17	GOING_HOME				Boolean					false
+Turtle			18	TRAVELING				Boolean					false
+PolarBear		13	STANDING_UP				Boolean					false
+Sheep			13	DYE_COLOR				ByteMask				0
+Sheep			13	SHEARED					Mask16					0
+Tameable		13	SITTING					Mask1					0
+Tameable		13	ANGRY					Mask2					0
+Tameable		13	TAMED					Mask4					0
+Tameable		14	OWNER					OptUUID     			Absent
+Ocelot			15	TYPE					Integer					0
+Wolf			15	DAMAGE_TAKEN			Float					1.0
+Wolf			16	BEGGING					Boolean					false
+Wolf			17	COLLAR_COLOR			Integer					14
+Parrot			15	VARIANT					Integer					0
+Villager		13	PROFESSION				Integer					0
+IronGolem		12	PLAYER_CREATED			Mask1					0
+Snowman			12	HAS_PUMPKIN_HAT			Mask16					16
+Snowman			12	HAS_NO_PUMPKIN_HAT		Mask0					16
+Shulker			12	FACING_DIRECTION		Direction				DOWN
+Shulker			13	ATTACHMENT_POSITION		OptLocation		        Absent
+Shulker			14	SHIELD_HEIGHT			Byte					0
+Shulker			15	DYE_COLOR				Byte					10
+Blaze			12	BLAZE_BURNING			Mask1					0
+Creeper			12	STATE					Integer					-1
+Creeper			13	CHARGED					Boolean					false
+Creeper			14	IGNITED					Boolean					false
+Guardian		12	RETRACTING_SPIKES		Boolean					false
+Guardian		13	TARGET_ID				Integer					0
+Illager			12	HAS_TARGET				Mask1					0
+Spellcaster		13	SPELL					Byte					0
+Vex				12	ATTACKING				Mask1					0
+Skeleton		12	SWINGING_ARMS			Boolean					false
+Spider			12	CLIMBING				Mask1					0
+Witch			12	DRINKING_POTION			Boolean					false
+Wither			12	CENTER_HEAD_TARGET		Integer					0
+Wither			13	LEFT_HEAD_TARGET		Integer					0
+Wither			14	RIGHT_HEAD_TARGET		Integer					0
+Wither			15	INVULNERABLE_TIME		Integer					0
+Zombie			12	BABY					Boolean					false
+Zombie			13	UNUSED					Integer					0
+Zombie			14	HANDS_UP				Boolean					false
+Zombie			15	DROWNING				Boolean					false
+ZombieVillager	16	CONVERTING				Boolean					false
+ZombieVillager	17	PROFESSION				Integer					0
+Enderman		12	CARRIED_BLOCK			OptBlockData	    	Absent
+Enderman		13	SCREAMING				Boolean					false
+EnderDragon		12	DRAGON_PHASE			Integer					10
+Ghast			12	ATTACKING				Boolean					false
+Phantom			12	SIZE					Integer					0
+Slime			12	SIZE					Integer					1
+Minecart		6	SHAKING_POWER			Integer					0
+Minecart		7	SHAKING_DIRECTION		Integer					1
+Minecart		8	SHAKING_MULTIPLIER		Float					0.0
+Minecart		9	CUSTOM_BLOCK			Integer					0
+Minecart		10	BLOCK_HEIGHT			Integer					6
+Minecart		11	SHOW_CUSTOM_BLOCK		Boolean					false
+PoweredMinecart	12	POWERED					Boolean					false
+CommandMinecart	12	COMMAND					String					
+CommandMinecart	13	LAST_OUTPUT				Chat		        	{"text":""}
+TNTPrimed		6	FUSE_TIME				Integer					80

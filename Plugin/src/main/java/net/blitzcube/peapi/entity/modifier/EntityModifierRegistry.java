@@ -1,168 +1,202 @@
 package net.blitzcube.peapi.entity.modifier;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifier;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
-import net.blitzcube.peapi.entity.modifier.loader.EntityModifierLoader;
-import net.blitzcube.peapi.entity.modifier.modifiers.GenericModifier;
-import net.blitzcube.peapi.entity.modifier.modifiers.OptChatModifier;
-import net.blitzcube.peapi.entity.modifier.modifiers.OptModifier;
+import net.blitzcube.peapi.database.EntityModifierEntry;
+import net.blitzcube.peapi.entity.modifier.modifiers.*;
+import net.md_5.bungee.api.chat.BaseComponent;
+import org.bukkit.DyeColor;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.BinaryOperator;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collector;
+import java.util.*;
 
 /**
  * Created by iso2013 on 4/18/2018.
  */
+@SuppressWarnings("unchecked")
 public class EntityModifierRegistry implements IEntityModifierRegistry {
-    private final ImmutableMap<EntityType, ImmutableSet<GenericModifier>> modifiers;
+    private final List<EntityModifierEntry<?>> modifiers;
 
-    public EntityModifierRegistry() {
-        this.modifiers = EntityModifierLoader.getModifiers(this.getClass().getResourceAsStream("/structure.json"));
-    }
-
-    public Set<IEntityModifier> lookup(EntityType type) {
-        return new HashSet<>((modifiers.get(type)));
+    public EntityModifierRegistry(List<EntityModifierEntry<?>> modifiers) {
+        this.modifiers = modifiers;
+        Collections.reverse(modifiers);
     }
 
     @Override
-    public IEntityModifier lookup(EntityType type, String label) {
-        return modifiers.get(type).stream()
-                .filter(m -> m.getLabel().equalsIgnoreCase(label))
-                .findFirst()
-                .orElse(null);
+    public List<IEntityModifier<?>> lookup(EntityType type) {
+        if (type == null) return new ArrayList<>();
+        return lookup(type.getEntityClass());
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> IEntityModifier<T> lookup(EntityType type, String label, Class<? extends T> field) {
-        return modifiers.get(type).stream()
-                .map(genericModifier -> {
-                    if (field == String.class && genericModifier instanceof OptChatModifier) {
-                        return ((OptChatModifier) genericModifier).asPseudoStringModifier();
-                    }
-                    return genericModifier;
-                })
-                .filter(modifier -> {
-                    if ((modifier instanceof OptModifier)) return false;
-                    if (!modifier.getLabel().equalsIgnoreCase(label)) return false;
-                    return modifier.getFieldType() == field;
-                })
-                .findFirst()
-                .orElse(null);
+    public List<IEntityModifier<?>> lookup(Class<? extends Entity> type) {
+        if (type == null) return new ArrayList<>();
+
+        List<IEntityModifier<?>> out = new ArrayList<>();
+        Map<Integer, Class<? extends Entity>> contained = new HashMap<>();
+
+        for(EntityModifierEntry<?> e : modifiers) {
+            if(!e.getEntityClass().isAssignableFrom(type)) continue;
+
+            if(contained.containsKey(e.getIndex()) && contained.get(e.getIndex()) != e.getEntityClass()) continue;
+            contained.put(e.getIndex(), e.getEntityClass());
+
+            out.add(e.getModifier());
+        }
+
+        Collections.reverse(out);
+        return out;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> IEntityModifier<Optional<T>> lookupOptional(EntityType type, String label, Class<? extends T> field) {
-        return modifiers.get(type).stream()
-                .map(genericModifier -> {
-                    if (field == String.class && genericModifier instanceof OptChatModifier) {
-                        return ((OptChatModifier) genericModifier).asPseudoStringModifier();
-                    }
-                    return genericModifier;
-                })
-                .filter(modifier -> {
-                    if (!(modifier instanceof OptModifier)) return false;
-                    if (!modifier.getLabel().equalsIgnoreCase(label)) return false;
-                    return modifier.getFieldType() == field;
-                })
-                .findFirst()
-                .orElse(null);
+    public IEntityModifier<?> lookup(EntityType type, String label) {
+        if (type == null) return null;
+        return lookup(type.getEntityClass(), label);
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> Set<IEntityModifier<T>> lookup(EntityType type, Class<? extends T> field) {
-        return modifiers.get(type).stream()
-                .map(genericModifier -> {
-                    if (field == String.class && genericModifier instanceof OptChatModifier) {
-                        return ((OptChatModifier) genericModifier).asPseudoStringModifier();
-                    }
-                    return genericModifier;
-                })
-                .filter(genericModifier -> !(genericModifier instanceof OptModifier))
-                .filter(m -> field.equals(m.getFieldType())
-                ).collect(new Collector<GenericModifier, HashSet<IEntityModifier<T>>, Set<IEntityModifier<T>>>() {
-                    @Override
-                    public Supplier<HashSet<IEntityModifier<T>>> supplier() {
-                        return HashSet::new;
-                    }
+    public IEntityModifier<?> lookup(Class<? extends Entity> type, String label) {
+        if (type == null) return null;
 
-                    @Override
-                    public BiConsumer<HashSet<IEntityModifier<T>>, GenericModifier> accumulator() {
-                        return Set::add;
-                    }
-
-                    @Override
-                    public BinaryOperator<HashSet<IEntityModifier<T>>> combiner() {
-                        return (left, right) -> {
-                            left.addAll(right);
-                            return left;
-                        };
-                    }
-
-                    @Override
-                    public Function<HashSet<IEntityModifier<T>>, Set<IEntityModifier<T>>> finisher() {
-                        return s -> s;
-                    }
-
-                    @Override
-                    public Set<Characteristics> characteristics() {
-                        return new HashSet<>();
-                    }
-                });
+        for (EntityModifierEntry<?> e : modifiers) {
+            if (e.getEntityClass().isAssignableFrom(type) && e.getLabel().equalsIgnoreCase(label))
+                return e.getModifier();
+        }
+        return null;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <T> Set<IEntityModifier<Optional<T>>> lookupOptional(EntityType type, Class<? extends T> field) {
-        return modifiers.get(type).stream()
-                .map(genericModifier -> {
-                    if (field == String.class && genericModifier instanceof OptChatModifier) {
-                        return ((OptChatModifier) genericModifier).asPseudoStringModifier();
-                    }
-                    return genericModifier;
-                })
-                .filter(genericModifier -> (genericModifier instanceof OptModifier))
-                .filter(m -> field.equals(((OptModifier) m).getOptionalType())
-                ).collect(new Collector<GenericModifier, HashSet<IEntityModifier<Optional<T>>>,
-                        Set<IEntityModifier<Optional<T>>>>() {
-                    @Override
-                    public Supplier<HashSet<IEntityModifier<Optional<T>>>> supplier() {
-                        return HashSet::new;
-                    }
+    public <T> IEntityModifier<T> lookup(EntityType type, String label, Class<T> field) {
+        if (type == null) return null;
+        return lookup(type.getEntityClass(), label, field);
+    }
 
-                    @Override
-                    public BiConsumer<HashSet<IEntityModifier<Optional<T>>>, GenericModifier> accumulator() {
-                        return Set::add;
-                    }
+    @Override
+    public <T> IEntityModifier<T> lookup(Class<? extends Entity> type, String label, Class<T> field) {
+        if (type == null) return null;
 
-                    @Override
-                    public BinaryOperator<HashSet<IEntityModifier<Optional<T>>>> combiner() {
-                        return (left, right) -> {
-                            left.addAll(right);
-                            return left;
-                        };
-                    }
+        for (EntityModifierEntry<?> e : modifiers) {
+            if (e.getEntityClass().isAssignableFrom(type) && e.getLabel().equalsIgnoreCase(label)) {
+                IEntityModifier<?> compatible = produceCompatible(e.getModifier(), field, false);
+                if (compatible != null) return (IEntityModifier<T>) compatible;
+            }
+        }
+        return null;
+    }
 
-                    @Override
-                    public Function<HashSet<IEntityModifier<Optional<T>>>, Set<IEntityModifier<Optional<T>>>> finisher() {
-                        return s -> s;
-                    }
+    @Override
+    public <T> IEntityModifier<Optional<T>> lookupOptional(EntityType type, String label, Class<T> field) {
+        if (type == null) return null;
+        return lookupOptional(type.getEntityClass(), label, field);
+    }
 
-                    @Override
-                    public Set<Characteristics> characteristics() {
-                        return new HashSet<>();
-                    }
-                });
+    @Override
+    public <T> IEntityModifier<Optional<T>> lookupOptional(Class<? extends Entity> type, String label, Class<T> field) {
+        if (type == null) return null;
+
+        for (EntityModifierEntry<?> e : modifiers) {
+            if (e.getEntityClass().isAssignableFrom(type) && e.getLabel().equalsIgnoreCase(label)) {
+                IEntityModifier<?> compatible = produceCompatible(e.getModifier(), field, true);
+                if (compatible != null) return (IEntityModifier<Optional<T>>) compatible;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public <T> List<IEntityModifier<T>> lookup(EntityType type, Class<T> field) {
+        if(type == null) return new ArrayList<>();
+        return lookup(type.getEntityClass(), field);
+    }
+
+    @Override
+    public <T> List<IEntityModifier<T>> lookup(Class<? extends Entity> type, Class<T> field) {
+        if(type == null) return new ArrayList<>();
+
+        List<IEntityModifier<T>> out = new ArrayList<>();
+        Map<Integer, Class<? extends Entity>> contained = new HashMap<>();
+
+        for(EntityModifierEntry<?> e : modifiers){
+            if(!e.getEntityClass().isAssignableFrom(type)) continue;
+
+            if(contained.containsKey(e.getIndex()) && contained.get(e.getIndex()) != e.getEntityClass()) continue;
+            contained.put(e.getIndex(), e.getEntityClass());
+
+            IEntityModifier<?> produced = produceCompatible(e.getModifier(), field, false);
+            if(produced == null) continue;
+
+            out.add((IEntityModifier<T>) produced);
+        }
+
+        Collections.reverse(out);
+        return out;
+    }
+
+    @Override
+    public <T> List<IEntityModifier<Optional<T>>> lookupOptional(EntityType type, Class<T> field) {
+        if(type == null) return new ArrayList<>();
+        return lookupOptional(type.getEntityClass(), field);
+    }
+
+    @Override
+    public <T> List<IEntityModifier<Optional<T>>> lookupOptional(Class<? extends Entity> type, Class<T> field) {
+        if(type == null) return new ArrayList<>();
+
+        List<IEntityModifier<Optional<T>>> out = new ArrayList<>();
+        Map<Integer, Class<? extends Entity>> contained = new HashMap<>();
+
+        for(EntityModifierEntry<?> e : modifiers){
+            if(!e.getEntityClass().isAssignableFrom(type)) continue;
+
+            if(contained.containsKey(e.getIndex()) && contained.get(e.getIndex()) != e.getEntityClass()) continue;
+            contained.put(e.getIndex(), e.getEntityClass());
+
+            IEntityModifier<?> produced = produceCompatible(e.getModifier(), field, true);
+            if(produced == null) continue;
+
+            out.add((IEntityModifier<Optional<T>>) produced);
+        }
+
+        Collections.reverse(out);
+        return out;
+    }
+
+    private <T> IEntityModifier<?> produceCompatible(GenericModifier<?> input, Class<T> required, boolean optional) {
+        Class<?> modifierType = input.getFieldType();
+        if(optional && input instanceof OptModifier<?>) {
+            if(required.isAssignableFrom(((OptModifier) input).getOptionalType())) {
+                return input;
+            }
+        } else {
+            if (required.isAssignableFrom(modifierType) && modifierType != Optional.class) return input;
+
+            if (isStringType(input) && required.isAssignableFrom(String.class)) {
+                if (input instanceof OptModifier<?>) {
+                    return new PseudoStringModifierOpt((OptChatModifier) input);
+                } else {
+                    return new PseudoStringModifier((ChatModifier) input);
+                }
+            } else if (isColorType(input) && required.isAssignableFrom(DyeColor.class)) {
+                if (modifierType == Byte.class) {
+                    return new PseudoDyeColorModifier.ForByte((GenericModifier<Byte>) input);
+                } else if (modifierType == Integer.class) {
+                    return new PseudoDyeColorModifier.ForInt((GenericModifier<Integer>) input);
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean isStringType(GenericModifier<?> input) {
+        if (input.getFieldType() == BaseComponent[].class) return true;
+        if (input.getFieldType() == Optional.class) {
+            return ((OptModifier<?>) input).getOptionalType() == BaseComponent[].class;
+        }
+        return false;
+    }
+
+    private boolean isColorType(GenericModifier<?> input) {
+        return input.getFieldType() == Byte.class || input.getFieldType() == Integer.class;
     }
 }

@@ -20,7 +20,7 @@ public class OptChatModifier extends OptModifier<BaseComponent[]> {
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "deprecation"})
+    @SuppressWarnings({"unchecked"})
     public Optional<BaseComponent[]> getValue(IModifiableEntity target) {
         Object val = target.read(super.index);
         if (val == null) return null;

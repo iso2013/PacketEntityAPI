@@ -27,7 +27,7 @@ public interface IEntityPacketFactory {
      * Create an inbound click packet using an entity identifier.
      *
      * @param entity the entity to control in the packet
-     * @param type the click type of the packet to be constructed
+     * @param type   the click type of the packet to be constructed
      * @return the constructed packet
      */
     IEntityClickPacket createClickPacket(IEntityIdentifier entity, IEntityClickPacket.ClickType type);

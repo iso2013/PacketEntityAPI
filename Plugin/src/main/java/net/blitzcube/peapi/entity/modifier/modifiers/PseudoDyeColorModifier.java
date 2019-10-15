@@ -17,11 +17,13 @@ public class PseudoDyeColorModifier {
 
         @Override
         public DyeColor getValue(IModifiableEntity target) {
+            //noinspection deprecation
             return DyeColor.getByDyeData(internal.getValue(target).byteValue());
         }
 
         @Override
         public void setValue(IModifiableEntity target, DyeColor newValue) {
+            //noinspection deprecation
             internal.setValue(target, (int) newValue.getDyeData());
         }
 
@@ -41,11 +43,13 @@ public class PseudoDyeColorModifier {
 
         @Override
         public DyeColor getValue(IModifiableEntity target) {
+            //noinspection deprecation
             return DyeColor.getByDyeData(internal.getValue(target));
         }
 
         @Override
         public void setValue(IModifiableEntity target, DyeColor newValue) {
+            //noinspection deprecation
             internal.setValue(target, newValue.getDyeData());
         }
 

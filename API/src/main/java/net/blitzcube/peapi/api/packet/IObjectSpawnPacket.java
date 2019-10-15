@@ -96,18 +96,21 @@ public interface IObjectSpawnPacket extends IEntityPacket {
 
     /**
      * Set the art of the painting being spawned by this packet, or null if it is not spawning a painting
+     *
      * @param art the new art piece
      */
     void setArt(Art art);
 
     /**
      * Get the direction that the item frame or painting is facing, or null if it is not an item frame or painting.
+     *
      * @return the direction
      */
     BlockFace getDirection();
 
     /**
      * Set the direction that the item frame or painting is facing, or null if it is not an item frame or painting.
+     *
      * @param direction the new direction
      */
     void setDirection(BlockFace direction);

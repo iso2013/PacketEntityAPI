@@ -30,8 +30,7 @@ public class OptPositionModifier extends OptModifier<Vector> {
         if (!(val instanceof Optional))
             throw new IllegalStateException("Read inappropriate type from modifiable entity!");
         Optional<BlockPosition> bp = (Optional<BlockPosition>) val;
-        if (!bp.isPresent()) return Optional.empty();
-        return Optional.of(bp.get().toVector());
+        return bp.map(BlockPosition::toVector);
     }
 
     @Override

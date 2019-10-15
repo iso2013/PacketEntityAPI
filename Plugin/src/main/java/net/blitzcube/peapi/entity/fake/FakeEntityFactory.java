@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
  * Created by iso2013 on 4/21/2018.
  */
 public class FakeEntityFactory implements IFakeEntityFactory {
-    private PacketEntityAPI parent;
-    private Map<Integer, FakeEntity> fakeEntities;
+    private final PacketEntityAPI parent;
+    private final Map<Integer, FakeEntity> fakeEntities;
 
     private Field entityID;
     private int fallbackId = -1;

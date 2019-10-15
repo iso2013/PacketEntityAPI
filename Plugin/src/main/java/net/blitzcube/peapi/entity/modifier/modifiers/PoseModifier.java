@@ -21,7 +21,7 @@ public class PoseModifier extends GenericModifier<Pose> {
 
     @Override
     public void setValue(IModifiableEntity target, Pose newValue) {
-        if(newValue != null) {
+        if (newValue != null) {
             target.write(super.index, newValue.ordinal(), serializer);
         } else super.unsetValue(target);
     }

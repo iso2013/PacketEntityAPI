@@ -15,8 +15,8 @@ public class EntityPacketEvent implements IEntityPacketEvent {
     private final IEntityPacket packet;
     private final EntityPacketType packetType;
     private final Player target;
+    private final IEntityPacketContext context;
     private boolean cancelled;
-    private IEntityPacketContext context;
 
     public EntityPacketEvent(ProtocolManager manager, IEntityPacket packet, EntityPacketType packetType, Player
             target) {

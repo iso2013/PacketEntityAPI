@@ -8,10 +8,10 @@ import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
  * Created by iso2013 on 4/18/2018.
  */
 public class GenericModifier<T> implements IEntityModifier<T> {
-    private final WrappedDataWatcher.Serializer serializer;
     final int index;
     final String label;
     final T def;
+    private final WrappedDataWatcher.Serializer serializer;
     private final Class<?> clazz;
 
     public GenericModifier(Class<?> clazz, int index, String label, T def) {

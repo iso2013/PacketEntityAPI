@@ -19,30 +19,35 @@ public interface IEntityPacketEvent {
     /**
      * Sets whether or not this event has been cancelled. If the event is cancelled, it will still be sent to other
      * plugins, but not the client - unless another plugin un-cancels it.
+     *
      * @param cancelled the cancellation state
      */
     void setCancelled(boolean cancelled);
 
     /**
      * Gets the player that this event is firing for
+     *
      * @return the player involved in this event
      */
     Player getPlayer();
 
     /**
      * Gets the packet that this event is firing for.
+     *
      * @return the packet
      */
     IEntityPacket getPacket();
 
     /**
      * Gets the packet type that this event is firing for.
+     *
      * @return the packet type
      */
     EntityPacketType getPacketType();
 
     /**
      * Gets the packet context of this event. Use this to queue packets to be sent afterwards.
+     *
      * @return the packet context
      */
     IEntityPacketContext context();

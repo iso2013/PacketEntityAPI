@@ -129,7 +129,7 @@ public class EntitySpawnPacket extends EntityPacket implements IEntitySpawnPacke
                     c.getIntegers().read(3).floatValue() * (360.0F / 256.0F)
             );
         }
-        IEntityIdentifier identifier = EntityIdentifier.produce(entityID, uuid, p);
+        IEntityIdentifier identifier = EntityIdentifier.produce(entityID, uuid);
         if (PacketType.Play.Server.NAMED_ENTITY_SPAWN.equals(t)) {
             return new EntitySpawnPacket(identifier, c, EntityType.PLAYER, location, new Vector(0, 0,
                     0), 0.0f, c.getWatchableCollectionModifier().read(0));
@@ -147,10 +147,10 @@ public class EntitySpawnPacket extends EntityPacket implements IEntitySpawnPacke
         return null;
     }
 
-    private static EntityType typeFromID(int id){
-        for(Map.Entry<EntityType, Integer> e : ENTITY_TYPE_IDS.entrySet()){
-            if(e.getValue() == null) continue;
-            if(e.getValue() == id) return e.getKey();
+    private static EntityType typeFromID(int id) {
+        for (Map.Entry<EntityType, Integer> e : ENTITY_TYPE_IDS.entrySet()) {
+            if (e.getValue() == null) continue;
+            if (e.getValue() == id) return e.getKey();
         }
         return EntityType.UNKNOWN;
     }

@@ -36,10 +36,10 @@ public class EntityModifierRegistry implements IEntityModifierRegistry {
         List<IEntityModifier<?>> out = new ArrayList<>();
         Map<Integer, Class<? extends Entity>> contained = new HashMap<>();
 
-        for(EntityModifierEntry<?> e : modifiers) {
-            if(!e.getEntityClass().isAssignableFrom(type)) continue;
+        for (EntityModifierEntry<?> e : modifiers) {
+            if (!e.getEntityClass().isAssignableFrom(type)) continue;
 
-            if(contained.containsKey(e.getIndex()) && contained.get(e.getIndex()) != e.getEntityClass()) continue;
+            if (contained.containsKey(e.getIndex()) && contained.get(e.getIndex()) != e.getEntityClass()) continue;
             contained.put(e.getIndex(), e.getEntityClass());
 
             out.add(e.getModifier());
@@ -106,25 +106,25 @@ public class EntityModifierRegistry implements IEntityModifierRegistry {
 
     @Override
     public <T> List<IEntityModifier<T>> lookup(EntityType type, Class<T> field) {
-        if(type == null) return new ArrayList<>();
+        if (type == null) return new ArrayList<>();
         return lookup(type.getEntityClass(), field);
     }
 
     @Override
     public <T> List<IEntityModifier<T>> lookup(Class<? extends Entity> type, Class<T> field) {
-        if(type == null) return new ArrayList<>();
+        if (type == null) return new ArrayList<>();
 
         List<IEntityModifier<T>> out = new ArrayList<>();
         Map<Integer, Class<? extends Entity>> contained = new HashMap<>();
 
-        for(EntityModifierEntry<?> e : modifiers){
-            if(!e.getEntityClass().isAssignableFrom(type)) continue;
+        for (EntityModifierEntry<?> e : modifiers) {
+            if (!e.getEntityClass().isAssignableFrom(type)) continue;
 
-            if(contained.containsKey(e.getIndex()) && contained.get(e.getIndex()) != e.getEntityClass()) continue;
+            if (contained.containsKey(e.getIndex()) && contained.get(e.getIndex()) != e.getEntityClass()) continue;
             contained.put(e.getIndex(), e.getEntityClass());
 
             IEntityModifier<?> produced = produceCompatible(e.getModifier(), field, false);
-            if(produced == null) continue;
+            if (produced == null) continue;
 
             out.add((IEntityModifier<T>) produced);
         }
@@ -135,25 +135,25 @@ public class EntityModifierRegistry implements IEntityModifierRegistry {
 
     @Override
     public <T> List<IEntityModifier<Optional<T>>> lookupOptional(EntityType type, Class<T> field) {
-        if(type == null) return new ArrayList<>();
+        if (type == null) return new ArrayList<>();
         return lookupOptional(type.getEntityClass(), field);
     }
 
     @Override
     public <T> List<IEntityModifier<Optional<T>>> lookupOptional(Class<? extends Entity> type, Class<T> field) {
-        if(type == null) return new ArrayList<>();
+        if (type == null) return new ArrayList<>();
 
         List<IEntityModifier<Optional<T>>> out = new ArrayList<>();
         Map<Integer, Class<? extends Entity>> contained = new HashMap<>();
 
-        for(EntityModifierEntry<?> e : modifiers){
-            if(!e.getEntityClass().isAssignableFrom(type)) continue;
+        for (EntityModifierEntry<?> e : modifiers) {
+            if (!e.getEntityClass().isAssignableFrom(type)) continue;
 
-            if(contained.containsKey(e.getIndex()) && contained.get(e.getIndex()) != e.getEntityClass()) continue;
+            if (contained.containsKey(e.getIndex()) && contained.get(e.getIndex()) != e.getEntityClass()) continue;
             contained.put(e.getIndex(), e.getEntityClass());
 
             IEntityModifier<?> produced = produceCompatible(e.getModifier(), field, true);
-            if(produced == null) continue;
+            if (produced == null) continue;
 
             out.add((IEntityModifier<Optional<T>>) produced);
         }
@@ -164,8 +164,8 @@ public class EntityModifierRegistry implements IEntityModifierRegistry {
 
     private <T> IEntityModifier<?> produceCompatible(GenericModifier<?> input, Class<T> required, boolean optional) {
         Class<?> modifierType = input.getFieldType();
-        if(optional && input instanceof OptModifier<?>) {
-            if(required.isAssignableFrom(((OptModifier) input).getOptionalType())) {
+        if (optional && input instanceof OptModifier<?>) {
+            if (required.isAssignableFrom(((OptModifier) input).getOptionalType())) {
                 return input;
             }
         } else {

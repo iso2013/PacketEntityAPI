@@ -22,11 +22,6 @@ import java.util.Map;
  * Created by iso2013 on 2/24/2018.
  */
 public class GenericListener implements PacketListener {
-    private final PacketEntityAPI parent;
-    private final PacketEventDispatcher dispatcher;
-    private final ProtocolManager manager;
-    private boolean sendForFake;
-    private boolean collidable;
     private static final Map<PacketType, IEntityPacketEvent.EntityPacketType> TYPES = new HashMap<>();
 
     static {
@@ -43,6 +38,12 @@ public class GenericListener implements PacketListener {
         TYPES.put(PacketType.Play.Server.ENTITY_LOOK, IEntityPacketEvent.EntityPacketType.MOVE);
         TYPES.put(PacketType.Play.Server.ENTITY_TELEPORT, IEntityPacketEvent.EntityPacketType.MOVE);
     }
+
+    private final PacketEntityAPI parent;
+    private final PacketEventDispatcher dispatcher;
+    private final ProtocolManager manager;
+    private boolean sendForFake;
+    private boolean collidable;
 
     public GenericListener(PacketEntityAPI parent, PacketEventDispatcher
             dispatcher, ProtocolManager manager) {

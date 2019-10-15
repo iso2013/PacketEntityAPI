@@ -22,6 +22,7 @@ public interface IModifiableEntity {
 
     /**
      * Get a {@link WrappedDataWatcher} containing the metadata contained by this modifiable entity object.
+     *
      * @return a wrapped data watcher containing the metadata, or null if the implementation does not support getting a
      * watcher
      */
@@ -29,12 +30,14 @@ public interface IModifiableEntity {
 
     /**
      * Get an index-keyed map of the metadata and the values contained by the metadata at each index.
+     *
      * @return an map where the key is the index and the value is the metadata
      */
     Map<Integer, Object> getRawObjects();
 
     /**
      * Read an object at the given index
+     *
      * @param index the index to read
      * @return the object contained
      */
@@ -42,14 +45,16 @@ public interface IModifiableEntity {
 
     /**
      * Write an object at the given index, using a provided serializer
-     * @param index the index to write at
-     * @param newValue the object to write
+     *
+     * @param index      the index to write at
+     * @param newValue   the object to write
      * @param serializer the serializer to use
      */
     void write(int index, Object newValue, WrappedDataWatcher.Serializer serializer);
 
     /**
      * Remove an object stored at the given index.
+     *
      * @param index the index to remove
      */
     void clear(int index);
@@ -61,6 +66,7 @@ public interface IModifiableEntity {
 
     /**
      * Check if this entity contains an entry for the given index
+     *
      * @param index the index to check for
      * @return whether or not the index is present
      */

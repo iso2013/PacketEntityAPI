@@ -79,7 +79,7 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
         return unwrap(EntityIdentifier.produce(entityID, p), c, p.getWorld());
     }
 
-    public static ObjectSpawnPacket unwrap(IEntityIdentifier i, PacketContainer c, World w) {
+    private static ObjectSpawnPacket unwrap(IEntityIdentifier i, PacketContainer c, World w) {
         EntityType t = packetTypeToEntity(c.getType());
         float pitch = 0.0F, yaw = 0.0F;
         Vector velocity = new Vector();

@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
  * Created by iso2013 on 4/21/2018.
  */
 public abstract class EntityPacket implements IEntityPacket {
-    PacketContainer rawPacket;
     private final IEntityIdentifier identifier;
+    PacketContainer rawPacket;
 
     EntityPacket(IEntityIdentifier identifier, PacketContainer rawPacket, boolean writeDefaults) {
         this.identifier = identifier;

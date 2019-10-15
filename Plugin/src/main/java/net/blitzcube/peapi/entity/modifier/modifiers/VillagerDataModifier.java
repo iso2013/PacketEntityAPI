@@ -59,6 +59,12 @@ public class VillagerDataModifier extends GenericModifier<VillagerData> {
         }
     }
 
+    private final WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.get(mcvd);
+
+    public VillagerDataModifier(int index, String label, VillagerData villagerData) {
+        super(null, index, label, villagerData);
+    }
+
     private static Object toNMS(VillagerData data) {
         try {
             return mcvdCtor.newInstance(
@@ -85,12 +91,6 @@ public class VillagerDataModifier extends GenericModifier<VillagerData> {
         } catch (IllegalAccessException | InvocationTargetException e) {
             return null;
         }
-    }
-
-    private final WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.get(mcvd);
-
-    public VillagerDataModifier(int index, String label, VillagerData villagerData) {
-        super(null, index, label, villagerData);
     }
 
     @Override

@@ -28,11 +28,15 @@ public class EntityPotionAddPacket extends EntityPacket implements IEntityPotion
 
     public static EntityPacket unwrap(int entityID, PacketContainer c, Player p) {
         byte flags = c.getBytes().read(2);
+        //noinspection deprecation
+        PotionEffectType type = PotionEffectType.getById(c.getBytes().read(0));
+        if (type == null) return null;
+
         return new EntityPotionAddPacket(
                 EntityIdentifier.produce(entityID, p),
                 c,
                 new PotionEffect(
-                        PotionEffectType.getById(c.getBytes().read(0)),
+                        type,
                         c.getIntegers().read(1),
                         c.getBytes().read(1),
                         (flags & 0x01) > 0,
@@ -49,6 +53,7 @@ public class EntityPotionAddPacket extends EntityPacket implements IEntityPotion
     @Override
     public void setEffect(PotionEffect value) {
         this.effect = value;
+        //noinspection deprecation
         super.rawPacket.getBytes().write(0, (byte) value.getType().getId());
         super.rawPacket.getBytes().write(1, (byte) value.getAmplifier());
         super.rawPacket.getIntegers().write(1, value.getDuration());

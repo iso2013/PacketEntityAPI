@@ -41,46 +41,6 @@ public class EntityIdentifier implements IEntityIdentifier {
         }
     }
 
-    public static EntityIdentifier produce(int entityID, UUID uuid, Player near) {
-        IFakeEntity fakeEntity = PacketEntityAPI.getFakeEntity(entityID);
-        Entity realEntity = Bukkit.getEntity(uuid);
-
-        if(realEntity != null) {
-            return new EntityIdentifier(entityID, uuid, realEntity);
-        } else if (fakeEntity != null) {
-            return new EntityIdentifier(entityID, uuid, fakeEntity);
-        }
-
-        return null;
-    }
-
-    public static EntityIdentifier produce(int entityID, Player near) {
-        IFakeEntity fakeEntity = PacketEntityAPI.getFakeEntity(entityID);
-        Entity realEntity = getEntityByID(near.getWorld(), entityID);
-
-        if(realEntity != null) {
-            return new EntityIdentifier(entityID, realEntity.getUniqueId(), realEntity);
-        } else if (fakeEntity != null) {
-            return new EntityIdentifier(entityID, fakeEntity.getUUID(), fakeEntity);
-        }
-
-        return null;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static Entity getEntityByID(World world, int entityID) {
-        try {
-            Object o = ((Map<Integer, Object>) entityMap.get(getHandle.invoke(cbWorld.cast(world)))).get(entityID);
-
-            if(o == null) return null;
-
-            return (Entity) getBukkit.invoke(o);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     private final int entityID;
     private final UUID uuid;
     private final Entity entity;
@@ -112,6 +72,46 @@ public class EntityIdentifier implements IEntityIdentifier {
         this.uuid = uuid;
         this.entity = null;
         this.fakeEntity = fakeEntity;
+    }
+
+    public static EntityIdentifier produce(int entityID, UUID uuid) {
+        IFakeEntity fakeEntity = PacketEntityAPI.getFakeEntity(entityID);
+        Entity realEntity = Bukkit.getEntity(uuid);
+
+        if (realEntity != null) {
+            return new EntityIdentifier(entityID, uuid, realEntity);
+        } else if (fakeEntity != null) {
+            return new EntityIdentifier(entityID, uuid, fakeEntity);
+        }
+
+        return null;
+    }
+
+    public static EntityIdentifier produce(int entityID, Player near) {
+        IFakeEntity fakeEntity = PacketEntityAPI.getFakeEntity(entityID);
+        Entity realEntity = getEntityByID(near.getWorld(), entityID);
+
+        if (realEntity != null) {
+            return new EntityIdentifier(entityID, realEntity.getUniqueId(), realEntity);
+        } else if (fakeEntity != null) {
+            return new EntityIdentifier(entityID, fakeEntity.getUUID(), fakeEntity);
+        }
+
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Entity getEntityByID(World world, int entityID) {
+        try {
+            Object o = ((Map<Integer, Object>) entityMap.get(getHandle.invoke(cbWorld.cast(world)))).get(entityID);
+
+            if (o == null) return null;
+
+            return (Entity) getBukkit.invoke(o);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

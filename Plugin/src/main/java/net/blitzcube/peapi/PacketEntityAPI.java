@@ -45,7 +45,7 @@ import java.util.stream.Stream;
  * Created by iso2013 on 2/13/2018.
  */
 public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
-    public static Map<EntityType, Integer> OBJECTS = new EnumMap<>(EntityType.class);
+    public static final Map<EntityType, Integer> OBJECTS = new EnumMap<>(EntityType.class);
 
     private static IPacketEntityAPI instance;
 
@@ -59,6 +59,22 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
     private FakeEntityFactory fakeEntityFactory;
     private EntityPacketFactory packetFactory;
     private PacketEventDispatcher dispatcher;
+
+    public static TaskChainFactory getChainFactory() {
+        return chainFactory;
+    }
+
+    public static IFakeEntity getFakeEntity(int entityID) {
+        return instance.getFakeByID(entityID);
+    }
+
+    public static EntityType lookupObject(int read) {
+        for (Map.Entry<EntityType, Integer> e : OBJECTS.entrySet()) {
+            if (e.getValue() == null) continue;
+            if (e.getValue() == read) return e.getKey();
+        }
+        return null;
+    }
 
     @Override
     public void onEnable() {
@@ -74,18 +90,6 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
         chainFactory = BukkitTaskChainFactory.create(this);
 
         if (instance == null) instance = this;
-    }
-
-    public static TaskChainFactory getChainFactory() {
-        return chainFactory;
-    }
-
-    public static IFakeEntity getFakeEntity(int entityID) {
-        return instance.getFakeByID(entityID);
-    }
-
-    public static boolean isFakeEntity(int entityID) {
-        return instance.isFakeID(entityID);
     }
 
     @Override
@@ -125,14 +129,6 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
     @Override
     public IEntityIdentifier wrap(Entity e) {
         return new EntityIdentifier(e);
-    }
-
-    public static EntityType lookupObject(int read) {
-        for (Map.Entry<EntityType, Integer> e : OBJECTS.entrySet()) {
-            if (e.getValue() == null) continue;
-            if (e.getValue() == read) return e.getKey();
-        }
-        return null;
     }
 
     @Override

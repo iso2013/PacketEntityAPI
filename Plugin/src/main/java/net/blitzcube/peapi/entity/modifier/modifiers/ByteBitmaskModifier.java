@@ -17,10 +17,6 @@ public class ByteBitmaskModifier extends GenericModifier<Byte> {
         this.mask = mask;
     }
 
-    public void clear(IModifiableEntity target) {
-        target.clear(super.index);
-    }
-
     @Override
     public Byte getValue(IModifiableEntity target) {
         return (byte) (getOrDef(target) & mask);

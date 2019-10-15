@@ -26,11 +26,11 @@ public class FakeEntity implements IFakeEntity {
     private final UUID uuid;
     private final EntityType type;
     private final EntityIdentifier identifier;
+    private final IModifiableEntity modifiableEntity;
+    private final Map<String, IEntityModifier> modifiers;
+    private final Map<String, Object> fields;
     private Location location;
     private IHitbox hitbox;
-    private IModifiableEntity modifiableEntity;
-    private Map<String, IEntityModifier> modifiers;
-    private Map<String, Object> fields;
     private BiFunction<Player, IFakeEntity, Boolean> checkIntersect;
 
     FakeEntity(int id, UUID uuid, EntityType type, Map<String, IEntityModifier> modifiers) {

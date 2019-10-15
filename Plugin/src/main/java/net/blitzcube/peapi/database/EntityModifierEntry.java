@@ -25,10 +25,10 @@ public class EntityModifierEntry<T> {
     private final String label;
     private final GenericModifier<T> modifier;
     private final Class<T> fieldType;
-    private int index;
+    private final int index;
 
-    public EntityModifierEntry(Class<? extends Entity> entityClass, String label, GenericModifier<T> modifier,
-                               Class<T> fieldType, int index) {
+    private EntityModifierEntry(Class<? extends Entity> entityClass, String label, GenericModifier<T> modifier,
+                                Class<T> fieldType, int index) {
         this.entityClass = entityClass;
         this.label = label;
         this.modifier = modifier;
@@ -36,31 +36,15 @@ public class EntityModifierEntry<T> {
         this.index = index;
     }
 
-    public Class<? extends Entity> getEntityClass() {
-        return entityClass;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public GenericModifier<T> getModifier() {
-        return modifier;
-    }
-
-    public Class<?> getFieldType() {
-        return fieldType;
-    }
-
     @SuppressWarnings("unchecked")
-    public static EntityModifierEntry create(String[] data, Logger logger) {
+    static EntityModifierEntry create(String[] data, Logger logger) {
         Class<? extends Entity> entityClass;
         try {
-             entityClass = (Class<? extends Entity>) Class.forName("org.bukkit.entity." + data[0]);
-        } catch (ClassNotFoundException e){
+            entityClass = (Class<? extends Entity>) Class.forName("org.bukkit.entity." + data[0]);
+        } catch (ClassNotFoundException e) {
             try {
                 entityClass = (Class<? extends Entity>) Class.forName("org.bukkit.entity.minecart." + data[0]);
-            } catch (ClassNotFoundException e1){
+            } catch (ClassNotFoundException e1) {
                 logger.severe("Failed to locate class " + data[0] + " - skipping modifier entry!");
                 return null;
             }
@@ -69,17 +53,17 @@ public class EntityModifierEntry<T> {
         int index = Integer.valueOf(data[1]);
 
         GenericModifier modifier = getModifier(data[3], index, data[2], data[4], logger);
-        if(modifier == null) return null;
+        if (modifier == null) return null;
         return new EntityModifierEntry(entityClass, data[2], modifier, modifier.getFieldType(), index);
     }
 
-    private static GenericModifier getModifier(String type, int index, String label, String def, Logger logger){
-        switch(type){
+    private static GenericModifier getModifier(String type, int index, String label, String def, Logger logger) {
+        switch (type) {
             case "Integer":
                 return new GenericModifier<>(Integer.class, index, label, Integer.valueOf(def));
             case "OptChat":
                 Optional<BaseComponent[]> realDef;
-                if(def.equalsIgnoreCase("Absent")) {
+                if (def.equalsIgnoreCase("Absent")) {
                     realDef = Optional.empty();
                 } else {
                     realDef = Optional.of(ComponentSerializer.parse(def));
@@ -105,7 +89,7 @@ public class EntityModifierEntry<T> {
                 return new GenericModifier<>(Byte.class, index, label, Byte.valueOf(def));
             case "OptLocation":
                 Optional<Vector> realLocDef;
-                if(def.equalsIgnoreCase("Absent")) {
+                if (def.equalsIgnoreCase("Absent")) {
                     realLocDef = Optional.empty();
                 } else {
                     def = def.substring(1, def.length() - 1);
@@ -118,7 +102,7 @@ public class EntityModifierEntry<T> {
                 return new OptPositionModifier(index, label, realLocDef);
             case "NBTTag":
                 NbtCompound realNbtDef;
-                if(def.equalsIgnoreCase("null")){
+                if (def.equalsIgnoreCase("null")) {
                     realNbtDef = null;
                 } else {
                     realNbtDef = NbtFactory.ofCompound(def);
@@ -135,7 +119,7 @@ public class EntityModifierEntry<T> {
                 return new VillagerDataModifier(index, label, new VillagerData());
             case "Direction":
                 break;
-                //return new DirectionModifier(index, label, EnumWrappers.Direction.DOWN);
+            //return new DirectionModifier(index, label, EnumWrappers.Direction.DOWN);
             case "ByteMask":
                 return new ByteBitmaskModifier(index, (byte) 15, label, (byte) 0);
             case "OptBlockData":
@@ -145,13 +129,29 @@ public class EntityModifierEntry<T> {
             case "Color":
                 return new ColorModifier(index, label, -1);
         }
-        if(type.startsWith("Mask")){
+        if (type.startsWith("Mask")) {
             int mask = Integer.valueOf(type.substring(4));
             return new BitmaskModifier(index, (byte) mask, label, Byte.valueOf(def));
         }
 
         logger.severe("Warning: failed to find suitable modifier for " + type + ".");
         return null;
+    }
+
+    public Class<? extends Entity> getEntityClass() {
+        return entityClass;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public GenericModifier<T> getModifier() {
+        return modifier;
+    }
+
+    public Class<?> getFieldType() {
+        return fieldType;
     }
 
     public int getIndex() {

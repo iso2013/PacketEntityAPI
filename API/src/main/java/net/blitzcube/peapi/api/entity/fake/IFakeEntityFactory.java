@@ -17,6 +17,7 @@ public interface IFakeEntityFactory {
      *
      * <b>Use {@link #createHitboxFromEntity(Entity)} for real entities. This method is not stable for
      * certain types.</b>
+     *
      * @param type the type of the entity to match the hitbox to
      * @return the generated hitbox, or null if it could not be produced.
      */
@@ -65,6 +66,7 @@ public interface IFakeEntityFactory {
 
     /**
      * Returns true if the entity ID given belongs to a fake entity produced by this factory.
+     *
      * @param entityID the entity ID to check
      * @return whether or not the entity is fake
      */
@@ -72,6 +74,7 @@ public interface IFakeEntityFactory {
 
     /**
      * Gets a {@link IFakeEntity} object by its entity ID.
+     *
      * @param entityID the entity ID to retrieve
      * @return the retrieved fake entity object.
      */

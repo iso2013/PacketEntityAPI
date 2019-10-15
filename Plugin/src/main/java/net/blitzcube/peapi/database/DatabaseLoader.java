@@ -29,13 +29,14 @@ public class DatabaseLoader {
             s = s.substring(s.lastIndexOf('.') + 1);
             s = s.substring(0, 5);
             is = this.getClass().getResourceAsStream("/structure_" + s + ".txt");
-            if(is == null){
-                logger.severe("WARNING: Failed to find a suitable structure file for version " + s + ". Defaulting to v1_14.");
+            if (is == null) {
+                logger.severe("WARNING: Failed to find a suitable structure file for version " + s + ". Defaulting to" +
+                        " v1_14.");
                 is = this.getClass().getResourceAsStream("/structure_v1_14.txt");
             }
         }
 
-        if(is == null) {
+        if (is == null) {
             logger.severe("Something went wrong while retrieving structure information. Plugin will now disable.");
             Bukkit.getPluginManager().disablePlugin(parent);
         }
@@ -52,7 +53,7 @@ public class DatabaseLoader {
                 String[] contents = line.split(" ");
                 try {
                     result.put(EntityType.valueOf(contents[0]), Integer.valueOf(contents[1]));
-                } catch (IllegalArgumentException e){
+                } catch (IllegalArgumentException e) {
                     logger.warning("Lookup failed for line `" + line + "`.");
                 }
             }
@@ -70,9 +71,9 @@ public class DatabaseLoader {
         String line;
         try {
             while ((line = reader.readLine()) != null) {
-                if(line.isEmpty()) continue;
+                if (line.isEmpty()) continue;
                 EntityModifierEntry<?> created = EntityModifierEntry.create(line.split("\\s+"), logger);
-                if(created != null)
+                if (created != null)
                     result.add(created);
             }
         } catch (IOException e) {

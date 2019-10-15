@@ -17,10 +17,6 @@ public class BitmaskModifier extends GenericModifier<Boolean> {
         this.mask = mask;
     }
 
-    public void clear(IModifiableEntity target) {
-        target.clear(super.index);
-    }
-
     @Override
     public Boolean getValue(IModifiableEntity target) {
         return (getOrDef(target) & mask) > 0;

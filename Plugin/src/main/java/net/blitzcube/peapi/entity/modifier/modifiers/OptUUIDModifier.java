@@ -27,9 +27,7 @@ public class OptUUIDModifier extends OptModifier<UUID> {
         if (val == null) return null;
         if (!(val instanceof Optional))
             throw new IllegalStateException("Read inappropriate type from modifiable entity!");
-        Optional<UUID> bp = (Optional<UUID>) val;
-        if (!bp.isPresent()) return Optional.empty();
-        return bp;
+        return (Optional<UUID>) val;
     }
 
     @Override

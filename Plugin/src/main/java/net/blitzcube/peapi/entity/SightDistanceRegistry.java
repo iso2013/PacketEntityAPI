@@ -27,7 +27,7 @@ public class SightDistanceRegistry {
         loadSettings(null, defSec, defSec);
 
         for (Map.Entry<String, EnumMap<EntityType, Integer>> e : distances.entrySet()) {
-            maximums.put(e.getKey(), maximums.values().stream().max(Integer::compare).orElse(0));
+            maximums.put(e.getKey(), e.getValue().values().stream().max(Integer::compare).orElse(0));
         }
     }
 
@@ -36,7 +36,7 @@ public class SightDistanceRegistry {
         EnumMap<EntityType, Integer> map = distances.get(key);
         for (EntityType t : EntityType.values()) {
             Class<? extends Entity> clazz = t.getEntityClass();
-            if(clazz == null) continue;
+            if (clazz == null) continue;
 
             if (Player.class.isAssignableFrom(clazz)) {
                 map.put(t, getWithDefaults(sec, defSec, "entity-tracking-range.players", 48));
@@ -78,7 +78,7 @@ public class SightDistanceRegistry {
     }
 
     public static Stream<Entity> getNearby(Player p, double error) {
-        if(p == null) return Stream.empty();
+        if (p == null) return Stream.empty();
         Map<EntityType, Integer> worldDistances;
         double max;
         String world = p.getWorld().getName();
@@ -132,11 +132,11 @@ public class SightDistanceRegistry {
         Location l;
         EntityType t;
         if (object.isFakeEntity()) {
-            l = Objects.requireNonNull(object.getFakeEntity().get()).getLocation();
-            t = Objects.requireNonNull(object.getFakeEntity().get()).getType();
+            l = Objects.requireNonNull(object.getFakeEntity()).getLocation();
+            t = Objects.requireNonNull(object.getFakeEntity()).getType();
         } else {
-            l = Objects.requireNonNull(object.getEntity().get()).getLocation();
-            t = Objects.requireNonNull(object.getEntity().get()).getType();
+            l = Objects.requireNonNull(object.getEntity()).getLocation();
+            t = Objects.requireNonNull(object.getEntity()).getType();
         }
         double val = defaultGet(l.getWorld().getName(), t);
         val *= err;

@@ -31,4 +31,9 @@ public class ChatModifier extends GenericModifier<BaseComponent[]> {
             );
         } else super.unsetValue(target);
     }
+
+    @Override
+    public Class<?> getFieldType() {
+        return BaseComponent[].class;
+    }
 }

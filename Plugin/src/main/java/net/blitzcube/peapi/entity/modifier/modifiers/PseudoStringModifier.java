@@ -4,30 +4,28 @@ import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 
-import java.util.Optional;
-
 /**
- * Created by iso2013 on 8/20/2018.
+ * Created by iso2013 on 10/12/19.
  */
 public class PseudoStringModifier extends GenericModifier<String> {
-    private final OptChatModifier internal;
+    private final ChatModifier internal;
 
-    public PseudoStringModifier(OptChatModifier internal) {
-        super(String.class, internal.index, internal.label, fromComponentOptional(internal.def));
+    public PseudoStringModifier(ChatModifier internal) {
+        super(String.class, internal.index, internal.label, fromComponent(internal.def));
         this.internal = internal;
     }
 
-    private static String fromComponentOptional(Optional<BaseComponent[]> components) {
-        return components.map(TextComponent::toLegacyText).orElse(null);
+    private static String fromComponent(BaseComponent[] components) {
+        return components != null ? TextComponent.toLegacyText(components) : null;
     }
 
     @Override
     public String getValue(IModifiableEntity target) {
-        return fromComponentOptional(internal.getValue(target));
+        return fromComponent(internal.getValue(target));
     }
 
     @Override
     public void setValue(IModifiableEntity target, String newValue) {
-        internal.setValue(target, Optional.of(TextComponent.fromLegacyText(newValue)));
+        internal.setValue(target, TextComponent.fromLegacyText(newValue));
     }
 }

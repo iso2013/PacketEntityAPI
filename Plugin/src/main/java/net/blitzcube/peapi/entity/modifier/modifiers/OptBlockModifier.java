@@ -10,6 +10,7 @@ import java.util.Optional;
 /**
  * Created by iso2013 on 4/20/2018.
  */
+@SuppressWarnings("deprecation")
 public class OptBlockModifier extends OptModifier<MaterialData> {
     private final WrappedDataWatcher.Serializer serializer =
             WrappedDataWatcher.Registry.getBlockDataSerializer(true);
@@ -26,8 +27,8 @@ public class OptBlockModifier extends OptModifier<MaterialData> {
         if (!(val instanceof Optional))
             throw new IllegalStateException("Read inappropriate type from modifiable entity!");
         Optional<WrappedBlockData> bp = (Optional<WrappedBlockData>) val;
-        if (!bp.isPresent()) return Optional.empty();
-        return Optional.of(new MaterialData(bp.get().getType(), (byte) bp.get().getData()));
+        return bp.map(wrappedBlockData -> new MaterialData(wrappedBlockData.getType(),
+                (byte) wrappedBlockData.getData()));
     }
 
     @Override

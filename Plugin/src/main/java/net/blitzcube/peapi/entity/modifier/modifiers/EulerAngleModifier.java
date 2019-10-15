@@ -23,6 +23,11 @@ public class EulerAngleModifier extends GenericModifier<EulerAngle> {
     }
 
     @Override
+    public Class<?> getFieldType() {
+        return EulerAngle.class;
+    }
+
+    @Override
     public void setValue(IModifiableEntity target, EulerAngle newValue) {
         if (newValue != null) {
             target.write(

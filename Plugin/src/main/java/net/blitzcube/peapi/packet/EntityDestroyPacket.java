@@ -51,6 +51,7 @@ public class EntityDestroyPacket extends EntityPacket implements IEntityDestroyP
 
     @Override
     public void addToGroup(IEntityIdentifier e) {
+        if (e == null) return;
         targets.add(e);
         changed = true;
     }

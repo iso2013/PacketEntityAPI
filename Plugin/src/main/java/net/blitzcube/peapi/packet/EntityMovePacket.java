@@ -58,11 +58,7 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
                     EntityIdentifier.produce(entityID, p),
                     c,
                     null, null,
-                    new Vector(
-                            ((double) c.getIntegers().read(1)) / 4096.0,
-                            ((double) c.getIntegers().read(2)) / 4096.0,
-                            ((double) c.getIntegers().read(3)) / 4096.0
-                    ),
+                    readVector(c),
                     c.getBooleans().read(0),
                     false
             );
@@ -71,11 +67,7 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
                     EntityIdentifier.produce(entityID, p),
                     c,
                     c.getBytes().read(1), c.getBytes().read(0),
-                    new Vector(
-                            ((double) c.getIntegers().read(1)) / 4096.0,
-                            ((double) c.getIntegers().read(2)) / 4096.0,
-                            ((double) c.getIntegers().read(3)) / 4096.0
-                    ),
+                    readVector(c),
                     c.getBooleans().read(0),
                     false
             );
@@ -90,6 +82,22 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
             );
         }
         return null;
+    }
+
+    private static Vector readVector(PacketContainer c) {
+        if (c.getShorts().size() >= 3) {
+            return new Vector(
+                    ((double) c.getShorts().read(0)) / 4096.0,
+                    ((double) c.getShorts().read(1)) / 4096.0,
+                    ((double) c.getShorts().read(2)) / 4096.0
+            );
+        } else {
+            return new Vector(
+                    ((double) c.getIntegers().read(1)) / 4096.0,
+                    ((double) c.getIntegers().read(2)) / 4096.0,
+                    ((double) c.getIntegers().read(3)) / 4096.0
+            );
+        }
     }
 
     private static Vector vectorFromAngles(double pitch, double yaw) {

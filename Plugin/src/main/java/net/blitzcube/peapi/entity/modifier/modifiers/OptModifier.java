@@ -16,4 +16,9 @@ public class OptModifier<T> extends GenericModifier<Optional<T>> {
     public Class getOptionalType() {
         return clazz;
     }
+
+    @Override
+    public Class<?> getFieldType() {
+        return Optional.class;
+    }
 }

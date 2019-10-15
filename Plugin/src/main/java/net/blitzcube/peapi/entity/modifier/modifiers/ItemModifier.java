@@ -9,6 +9,8 @@ import org.bukkit.inventory.ItemStack;
  * Created by iso2013 on 4/18/2018.
  */
 public class ItemModifier extends GenericModifier<ItemStack> {
+    private final WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.getItemStackSerializer(false);
+
     public ItemModifier(int index, String label, ItemStack def) {
         super(null, index, label, def);
     }
@@ -23,7 +25,12 @@ public class ItemModifier extends GenericModifier<ItemStack> {
         target.write(
                 super.index,
                 MinecraftReflection.getMinecraftItemStack(newValue),
-                WrappedDataWatcher.Registry.getItemStackSerializer(false)
+                serializer
         );
+    }
+
+    @Override
+    public Class<?> getFieldType() {
+        return ItemStack.class;
     }
 }

@@ -34,4 +34,9 @@ public class PositionModifier extends GenericModifier<Vector> {
             );
         } else super.unsetValue(target);
     }
+
+    @Override
+    public Class<?> getFieldType() {
+        return Vector.class;
+    }
 }

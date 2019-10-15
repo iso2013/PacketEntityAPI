@@ -1,57 +1,70 @@
 package net.blitzcube.peapi.entity.modifier.modifiers;
 
-import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
+import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
- * Created by iso2013 on 8/20/2018.
+ * Created by iso2013 on 4/18/2018.
  */
 public class ParticleModifier extends GenericModifier<Particle> {
-    private final WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.get(Integer.class);
+    private static Class<?> nmsParticleClazz;
+    private static Method toBukkitParticle;
+    private static Method toNMSParticle;
 
-    public ParticleModifier(int index, String label, int def) {
-        super(null, index, label, Particle.values()[def]);
+    static {
+        try {
+            String packageVer = Bukkit.getServer().getClass().getPackage().getName();
+            packageVer = packageVer.substring(packageVer.lastIndexOf('.') + 1);
+
+            Class<?> particleClazz = Class.forName("org.bukkit.craftbukkit." + packageVer + ".CraftParticle");
+            nmsParticleClazz = Class.forName("net.minecraft.server." + packageVer + ".ParticleParam");
+
+            toBukkitParticle = particleClazz.getDeclaredMethod(
+                    "toBukkit",
+                    Class.forName("net.minecraft.server." + packageVer + ".ParticleType")
+            );
+            toNMSParticle = particleClazz.getDeclaredMethod("toNMS", Particle.class);
+        } catch (ClassNotFoundException | NoSuchMethodException e) {
+            toBukkitParticle = null;
+            toNMSParticle = null;
+        }
     }
 
-    private Particle fromWrapped(EnumWrappers.Particle wrapped) {
-        if (wrapped == null) return null;
-        Particle t;
-        try {
-            t = Particle.valueOf(wrapped.name());
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Cannot decode invalid particle type " + wrapped.name() + "!");
-        }
-        return t;
+    public ParticleModifier(int index, String label, Particle def) {
+        super(null, index, label, def);
     }
 
     @Override
     public Particle getValue(IModifiableEntity target) {
-        return fromWrapped((EnumWrappers.Particle) target.read(super.index));
-    }
-
-    @Override
-    public void setValue(IModifiableEntity target, Particle newValue) {
-        if (newValue != null) {
-            EnumWrappers.Particle wrapped = wrap(newValue);
-            if (wrapped == null) {
-                throw new IllegalArgumentException("Cannot encode invalid particle type " + newValue.name() + "!");
-            }
-            target.write(super.index, wrapped.getId(), serializer);
-        } else super.unsetValue(target);
-    }
-
-    private EnumWrappers.Particle wrap(Particle toWrap) {
         try {
-            return EnumWrappers.Particle.valueOf(toWrap.name());
-        } catch (Exception e) {
-            return null;
+            return (Particle) toBukkitParticle.invoke(target.read(super.index));
+        } catch (IllegalAccessException | InvocationTargetException | NullPointerException e) {
+            e.printStackTrace();
+            throw new IllegalStateException("Cannot use particle modifier on this version!");
         }
     }
 
     @Override
-    public Class<Particle> getFieldType() {
+    public void setValue(IModifiableEntity target, Particle newValue) {
+        try {
+            target.write(
+                    super.index,
+                    toNMSParticle.invoke(newValue),
+                    WrappedDataWatcher.Registry.get(nmsParticleClazz)
+            );
+        } catch (IllegalAccessException | InvocationTargetException | NullPointerException e) {
+            e.printStackTrace();
+            throw new IllegalStateException("Cannot use particle modifier on this version!");
+        }
+    }
+
+    @Override
+    public Class<?> getFieldType() {
         return Particle.class;
     }
 }

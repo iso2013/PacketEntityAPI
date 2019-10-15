@@ -14,10 +14,9 @@ import java.util.Optional;
 public class OptChatModifier extends OptModifier<BaseComponent[]> {
     private final WrappedDataWatcher.Serializer serializer =
             WrappedDataWatcher.Registry.getChatComponentSerializer(true);
-    private final PseudoStringModifier pseudoStringModifier = new PseudoStringModifier(this);
 
     public OptChatModifier(int index, String label, Optional<BaseComponent[]> def) {
-        super(null, index, label, def);
+        super(BaseComponent[].class, index, label, def);
     }
 
     @Override
@@ -47,14 +46,5 @@ public class OptChatModifier extends OptModifier<BaseComponent[]> {
                 target.write(super.index, Optional.empty(), serializer);
             }
         } else super.unsetValue(target);
-    }
-
-    @Override
-    public Class<BaseComponent[]> getFieldType() {
-        return BaseComponent[].class;
-    }
-
-    public PseudoStringModifier asPseudoStringModifier() {
-        return pseudoStringModifier;
     }
 }

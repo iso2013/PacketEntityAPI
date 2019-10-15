@@ -129,7 +129,6 @@ public class SightDistanceRegistry {
     }
 
     public static Stream<Player> getViewers(IEntityIdentifier object, double err) {
-        object.moreSpecific();
         Location l;
         EntityType t;
         if (object.isFakeEntity()) {

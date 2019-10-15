@@ -129,7 +129,7 @@ public class EntitySpawnPacket extends EntityPacket implements IEntitySpawnPacke
                     c.getIntegers().read(3).floatValue() * (360.0F / 256.0F)
             );
         }
-        IEntityIdentifier identifier = new EntityIdentifier(entityID, uuid, p);
+        IEntityIdentifier identifier = EntityIdentifier.produce(entityID, uuid, p);
         if (PacketType.Play.Server.NAMED_ENTITY_SPAWN.equals(t)) {
             return new EntitySpawnPacket(identifier, c, EntityType.PLAYER, location, new Vector(0, 0,
                     0), 0.0f, c.getWatchableCollectionModifier().read(0));

@@ -25,7 +25,7 @@ public class EntityStatusPacket extends EntityPacket implements IEntityStatusPac
     }
 
     public static EntityPacket unwrap(int entityID, PacketContainer c, Player p) {
-        return new EntityStatusPacket(new EntityIdentifier(entityID, p), c, c.getBytes().read(0));
+        return new EntityStatusPacket(EntityIdentifier.produce(entityID, p), c, c.getBytes().read(0));
     }
 
     @Override

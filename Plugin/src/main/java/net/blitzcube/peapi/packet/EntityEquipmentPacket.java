@@ -31,7 +31,7 @@ public class EntityEquipmentPacket extends EntityPacket implements IEntityEquipm
 
     public static EntityPacket unwrap(int entityID, PacketContainer c, Player p) {
         return new EntityEquipmentPacket(
-                new EntityIdentifier(entityID, p),
+                EntityIdentifier.produce(entityID, p),
                 c,
                 fromItemSlot(c.getItemSlots().read(0)),
                 c.getItemModifier().read(0)

@@ -29,7 +29,7 @@ public class EntityPotionAddPacket extends EntityPacket implements IEntityPotion
     public static EntityPacket unwrap(int entityID, PacketContainer c, Player p) {
         byte flags = c.getBytes().read(2);
         return new EntityPotionAddPacket(
-                new EntityIdentifier(entityID, p),
+                EntityIdentifier.produce(entityID, p),
                 c,
                 new PotionEffect(
                         PotionEffectType.getById(c.getBytes().read(0)),

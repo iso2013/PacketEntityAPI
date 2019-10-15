@@ -25,7 +25,7 @@ public class EntityClickPacket extends EntityPacket implements IEntityClickPacke
 
     static EntityPacket unwrap(int entityID, PacketContainer c, Player p) {
         return new EntityClickPacket(
-                new EntityIdentifier(entityID, p),
+                EntityIdentifier.produce(entityID, p),
                 c,
                 ClickType.getByProtocolLib(c.getEntityUseActions().read(0))
         );

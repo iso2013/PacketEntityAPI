@@ -6,6 +6,7 @@ import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.packet.*;
 import org.bukkit.Art;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
@@ -37,9 +38,8 @@ public class EntityPacketFactory implements IEntityPacketFactory {
     @Override
     public IEntityDataPacket createDataPacket(IEntityIdentifier entity) {
         EntityDataPacket p = new EntityDataPacket(entity);
-        IFakeEntity f;
-        if (entity.isFakeEntity() && (f = entity.getFakeEntity().get()) != null) {
-            p.setMetadata(f.getModifiableEntity().getWatchableObjects());
+        if (entity.isFakeEntity()) {
+            p.setMetadata(entity.getFakeEntity().getModifiableEntity().getWatchableObjects());
         }
         return p;
     }
@@ -92,8 +92,7 @@ public class EntityPacketFactory implements IEntityPacketFactory {
     @Override
     public IEntitySpawnPacket createEntitySpawnPacket(IEntityIdentifier i) {
         if (i.isFakeEntity()) {
-            IFakeEntity f;
-            if ((f = i.getFakeEntity().get()) == null) return null;
+            IFakeEntity f = i.getFakeEntity();
             if (PacketEntityAPI.OBJECTS.containsKey(f.getType())) {
                 throw new IllegalArgumentException("Tried to spawn an object with an entity packet!");
             } else {
@@ -105,9 +104,7 @@ public class EntityPacketFactory implements IEntityPacketFactory {
                 return p;
             }
         } else {
-            if (i.getEntity() == null) i.moreSpecific();
-            Entity e;
-            if (i.getEntity() == null || (e = i.getEntity().get()) == null) return null;
+            Entity e = i.getEntity();
             if (PacketEntityAPI.OBJECTS.containsKey(e.getType())) {
                 throw new IllegalArgumentException("Tried to spawn an object with an entity packet!");
             } else {
@@ -123,23 +120,17 @@ public class EntityPacketFactory implements IEntityPacketFactory {
     @Override
     public IEntityPacket[] createObjectSpawnPacket(IEntityIdentifier identifier) {
         boolean fake = false;
-        IFakeEntity f = null;
-        Entity e = null;
-        EntityType t;
-        if (identifier.isFakeEntity()) {
-            fake = true;
-            if ((f = identifier.getFakeEntity().get()) == null) return null;
-            t = f.getType();
-        } else {
-            if (identifier.getEntity() == null) identifier.moreSpecific();
-            if (identifier.getEntity() == null || (e = identifier.getEntity().get()) == null) return null;
-            t = e.getType();
-        }
+        IFakeEntity f = identifier.getFakeEntity();
+        Entity e = identifier.getEntity();
+        EntityType t = identifier.isFakeEntity() ? f.getType() : e.getType();
+
         if (!PacketEntityAPI.OBJECTS.containsKey(t))
             throw new IllegalStateException("Tried to spawn an entity with an object packet!");
         ObjectSpawnPacket p = new ObjectSpawnPacket(identifier, t);
+
         p.setEntityType(t);
         p.setLocation(fake ? f.getLocation() : e.getLocation());
+
         if (t.equals(EntityType.PAINTING)) {
             if (fake && !f.hasField("title")) throw new IllegalStateException("A title has not been specified!");
             p.setTitle(nameFromArt(fake ? (Art) f.getField("title") : ((Painting) e).getArt()));
@@ -174,9 +165,17 @@ public class EntityPacketFactory implements IEntityPacketFactory {
 
     @SuppressWarnings("deprecation")
     private int getData(boolean fake, IFakeEntity f, Entity e, EntityType t) {
+        if (t.name().equals("TIPPED_ARROW")) {
+            if (fake) {
+                return f.hasField("shooter") ? (int) f.getField("shooter") : 0;
+            } else {
+                ProjectileSource s = ((Projectile) e).getShooter();
+                if (!(s instanceof Entity)) return 0;
+                return ((Entity) s).getEntityId();
+            }
+        }
         switch (t) {
             case ARROW:
-            case TIPPED_ARROW:
             case SPECTRAL_ARROW:
             case FIREBALL:
             case SMALL_FIREBALL:

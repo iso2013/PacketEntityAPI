@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -33,7 +34,7 @@ public class EntityDestroyPacket extends EntityPacket implements IEntityDestroyP
 
     public static EntityPacket unwrap(PacketContainer c, Player p) {
         return new EntityDestroyPacket(c, Arrays.stream(c.getIntegerArrays().read(0))
-                .mapToObj(value -> new EntityIdentifier(value, p)).collect(Collectors.toList())
+                .mapToObj(value -> EntityIdentifier.produce(value, p)).filter(Objects::nonNull).collect(Collectors.toList())
         );
     }
 

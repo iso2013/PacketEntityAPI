@@ -27,7 +27,7 @@ public class EntityPotionRemovePacket extends EntityPacket implements IEntityPot
 
     public static EntityPacket unwrap(int entityID, PacketContainer c, Player p) {
         return new EntityPotionRemovePacket(
-                new EntityIdentifier(entityID, p),
+                EntityIdentifier.produce(entityID, p),
                 c,
                 c.getEffectTypes().read(0)
         );

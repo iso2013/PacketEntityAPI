@@ -23,6 +23,7 @@ import net.blitzcube.peapi.entity.EntityIdentifier;
 import net.blitzcube.peapi.entity.SightDistanceRegistry;
 import net.blitzcube.peapi.entity.fake.FakeEntity;
 import net.blitzcube.peapi.entity.fake.FakeEntityFactory;
+import net.blitzcube.peapi.entity.hitbox.Hitbox;
 import net.blitzcube.peapi.entity.modifier.EntityModifierRegistry;
 import net.blitzcube.peapi.entity.modifier.ModifiableEntity;
 import net.blitzcube.peapi.event.engine.PacketEventDispatcher;
@@ -81,6 +82,9 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
         DatabaseLoader loader = new DatabaseLoader(this);
         OBJECTS.putAll(loader.loadObjects());
         this.modifierRegistry = new EntityModifierRegistry(loader.loadModifiers());
+        Hitbox.initHitboxes(loader.loadHitboxes());
+
+        loader.printReport();
 
         this.manager = ProtocolLibrary.getProtocolManager();
         this.fakeEntityFactory = new FakeEntityFactory(this);

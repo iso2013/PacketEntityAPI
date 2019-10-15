@@ -4,7 +4,7 @@ import net.blitzcube.peapi.api.entity.hitbox.IHitbox;
 import org.bukkit.entity.*;
 import org.bukkit.util.Vector;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 /**
@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class Hitbox implements IHitbox {
     //https://youtu.be/QWzYaZDK6Is?t=122
-    private static final Map<EntityType, Hitbox> boxes = new HashMap<>();
+    private static final Map<EntityType, Hitbox> boxes = new EnumMap<>(EntityType.class);
 
     static {
         boxes.put(EntityType.DROPPED_ITEM, new Hitbox(0.25));
@@ -97,6 +97,10 @@ public class Hitbox implements IHitbox {
         boxes.put(EntityType.ENDER_CRYSTAL, new Hitbox(2.0));
     }
 
+    public static void initHitboxes(Map<EntityType, Hitbox> newBoxes){
+        boxes.putAll(newBoxes);
+    }
+
     private Vector min;
     private Vector max;
 
@@ -106,10 +110,10 @@ public class Hitbox implements IHitbox {
     }
 
     private Hitbox(double side) {
-        this(new Vector(-side / 2, 0.0, -side / 2), new Vector(side / 2, side, side / 2));
+        this(side, side);
     }
 
-    private Hitbox(double side, double height) {
+    public Hitbox(double side, double height) {
         this(new Vector(-side / 2, 0.0, -side / 2), new Vector(side / 2, height, side / 2));
     }
 

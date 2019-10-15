@@ -133,7 +133,7 @@ public class EntityPacketFactory implements IEntityPacketFactory {
 
         if (t.equals(EntityType.PAINTING)) {
             if (fake && !f.hasField("title")) throw new IllegalStateException("A title has not been specified!");
-            p.setTitle(nameFromArt(fake ? (Art) f.getField("title") : ((Painting) e).getArt()));
+            p.setArt((fake ? (Art) f.getField("art") : ((Painting) e).getArt()));
             if (fake && !f.hasField("direction")) throw new IllegalStateException("A direction has not been " +
                     "specified!");
             p.setDirection(fake ? (BlockFace) f.getField("direction") : ((Painting) e).getFacing());
@@ -189,17 +189,18 @@ public class EntityPacketFactory implements IEntityPacketFactory {
                     return ((Entity) s).getEntityId();
                 }
             case FALLING_BLOCK:
-                //FIXME
-                //int type = fake ? (int) f.getField("id") : ((FallingBlock) e).getBlockId();
-                //int data = fake ? (int) f.getField("data") : ((FallingBlock) e).getBlockData();
-                //return type | (data << 12);
-                return 0;
+                BlockData bd = ((FallingBlock) e).getBlockData();
+                int type = fake ? (int) f.getField("id") : bd.getMaterial().getId();
+                //FIXME: How is this done in 1.14?
+                int data = 0;
+                //int data = fake ? (int) f.getField("data") : bd.;
+                return type | (data << 12);
             case DROPPED_ITEM:
                 return 1;
             case LLAMA_SPIT:
                 return 0;
             case ITEM_FRAME:
-                switch (fake ? (BlockFace) f.getField("direction") : ((ItemFrame) e).getFacing()) {
+                switch (fake ? (BlockFace) f.getField("direction") : e.getFacing()) {
                     case WEST:
                         return 1;
                     case NORTH:

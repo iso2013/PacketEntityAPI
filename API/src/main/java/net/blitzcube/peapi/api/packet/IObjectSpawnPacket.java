@@ -1,5 +1,6 @@
 package net.blitzcube.peapi.api.packet;
 
+import org.bukkit.Art;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
@@ -87,17 +88,17 @@ public interface IObjectSpawnPacket extends IEntityPacket {
     void setOrbCount(Integer count);
 
     /**
-     * Get the title of the painting being spawned by this packet, or null if it is not spawning a painting
+     * Get the art of the painting being spawned by this packet, or null if it is not spawning a painting
      *
-     * @return the title
+     * @return the art piece
      */
-    String getTitle();
+    Art getArt();
 
     /**
-     * Set the title of the painting being spawned by this packet, or null if it is not spawning a painting
-     * @param title the new title
+     * Set the art of the painting being spawned by this packet, or null if it is not spawning a painting
+     * @param art the new art piece
      */
-    void setTitle(String title);
+    void setArt(Art art);
 
     /**
      * Get the direction that the item frame or painting is facing, or null if it is not an item frame or painting.

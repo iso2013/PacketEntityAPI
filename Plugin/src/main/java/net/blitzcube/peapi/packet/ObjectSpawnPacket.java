@@ -8,6 +8,7 @@ import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import net.blitzcube.peapi.api.packet.IObjectSpawnPacket;
 import net.blitzcube.peapi.entity.EntityIdentifier;
+import org.bukkit.Art;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
@@ -25,7 +26,7 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
     private Location location;
     private Vector velocity;
     private Integer orbCount;
-    private String title;
+    private Art art;
     private BlockFace direction;
     private int data;
 
@@ -49,11 +50,11 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
     }
 
     private ObjectSpawnPacket(IEntityIdentifier identifier, PacketContainer packet, EntityType type, Location location,
-                              String title, BlockFace direction, UUID uuid) {
+                              Art art, BlockFace direction, UUID uuid) {
         super(identifier, packet, false);
         this.type = type;
         this.location = location;
-        this.title = title;
+        this.art = art;
         this.direction = direction;
 
         super.rawPacket.getUUIDs().write(0, uuid);
@@ -116,8 +117,8 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
         if (t == null) return null;
         switch (t) {
             case PAINTING:
-                return new ObjectSpawnPacket(i, c, t, location, c
-                        .getStrings().read(0), directionToBlockFace(c.getDirections().read(0)), uuid);
+                return new ObjectSpawnPacket(i, c, t, location, Art.values()[c
+                        .getIntegers().read(1)], directionToBlockFace(c.getDirections().read(0)), uuid);
             case EXPERIENCE_ORB:
                 return new ObjectSpawnPacket(i, c, t, location, c.getIntegers
                         ().read(1));
@@ -275,20 +276,20 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
     }
 
     @Override
-    public String getTitle() {
+    public Art getArt() {
         Preconditions.checkArgument(type == EntityType.PAINTING,
                 type.name() + " is not a painting!");
-        return title;
+        return art;
     }
 
     @Override
-    public void setTitle(String title) {
+    public void setArt(Art art) {
         Preconditions.checkArgument(type == EntityType.PAINTING,
                 type.name() + " is not a painting!");
-        Preconditions.checkArgument(title.length() > 13,
-                "That title is too long! Maximum 13 characters.");
-        this.title = title;
-        super.rawPacket.getStrings().write(0, title);
+        Preconditions.checkArgument(art != null,
+                "Cannot set a painting to no art!");
+        this.art = art;
+        super.rawPacket.getIntegers().write(1, art.ordinal());
     }
 
     @Override
@@ -313,7 +314,7 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
                 assert location != null && orbCount > 0;
                 break;
             case PAINTING:
-                assert title != null && !title.isEmpty() && direction != null;
+                assert art != null && direction != null;
             case LIGHTNING:
             default:
                 assert location != null;

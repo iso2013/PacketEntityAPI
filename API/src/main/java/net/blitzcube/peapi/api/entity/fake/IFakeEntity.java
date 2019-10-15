@@ -124,7 +124,7 @@ public interface IFakeEntity {
     /**
      * Sets a parameter that is used in the spawning of this object. For example:
      * <br>
-     * "title" - The {@link org.bukkit.Art} that should be shown on a painting.
+     * "art" - The {@link org.bukkit.Art} that should be shown on a painting.
      * <br>
      * "direction" - A {@link org.bukkit.block.BlockFace} that provides the direction of a painting or item frame.
      * <br>

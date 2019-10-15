@@ -2,3 +2,4 @@ name: PacketEntityAPI
 version: ${project.version}
 main: net.blitzcube.peapi.PacketEntityAPI
 authors: [iso2013]
+api-version: "1.13"

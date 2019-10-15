@@ -18,6 +18,7 @@ import net.blitzcube.peapi.api.listener.IListener;
 import net.blitzcube.peapi.api.packet.IEntityGroupPacket;
 import net.blitzcube.peapi.api.packet.IEntityPacket;
 import net.blitzcube.peapi.api.packet.IEntityPacketFactory;
+import net.blitzcube.peapi.database.DatabaseLoader;
 import net.blitzcube.peapi.entity.EntityIdentifier;
 import net.blitzcube.peapi.entity.SightDistanceRegistry;
 import net.blitzcube.peapi.entity.fake.FakeEntity;
@@ -44,43 +45,12 @@ import java.util.stream.Stream;
  * Created by iso2013 on 2/13/2018.
  */
 public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
-    public static final Map<EntityType, Integer> OBJECTS = new EnumMap<>(EntityType.class);
-
-    static {
-        OBJECTS.put(EntityType.BOAT, 1);
-        OBJECTS.put(EntityType.DROPPED_ITEM, 2);
-        OBJECTS.put(EntityType.AREA_EFFECT_CLOUD, 3);
-        OBJECTS.put(EntityType.MINECART, 10);
-        OBJECTS.put(EntityType.PRIMED_TNT, 50);
-        OBJECTS.put(EntityType.ENDER_CRYSTAL, 51);
-        OBJECTS.put(EntityType.TIPPED_ARROW, 60);
-        OBJECTS.put(EntityType.SNOWBALL, 61);
-        OBJECTS.put(EntityType.EGG, 62);
-        OBJECTS.put(EntityType.FIREBALL, 63);
-        OBJECTS.put(EntityType.SMALL_FIREBALL, 64);
-        OBJECTS.put(EntityType.ENDER_PEARL, 65);
-        OBJECTS.put(EntityType.WITHER_SKULL, 66);
-        OBJECTS.put(EntityType.SHULKER_BULLET, 67);
-        OBJECTS.put(EntityType.LLAMA_SPIT, 68);
-        OBJECTS.put(EntityType.FALLING_BLOCK, 70);
-        OBJECTS.put(EntityType.ITEM_FRAME, 71);
-        OBJECTS.put(EntityType.ENDER_SIGNAL, 72);
-        OBJECTS.put(EntityType.SPLASH_POTION, 73);
-        OBJECTS.put(EntityType.THROWN_EXP_BOTTLE, 75);
-        OBJECTS.put(EntityType.FIREWORK, 76);
-        OBJECTS.put(EntityType.LEASH_HITCH, 77);
-        OBJECTS.put(EntityType.ARMOR_STAND, 78);
-        OBJECTS.put(EntityType.FISHING_HOOK, 90);
-        OBJECTS.put(EntityType.SPECTRAL_ARROW, 91);
-        OBJECTS.put(EntityType.DRAGON_FIREBALL, 93);
-        OBJECTS.put(EntityType.EXPERIENCE_ORB, -1);
-        OBJECTS.put(EntityType.PAINTING, -1);
-        OBJECTS.put(EntityType.LIGHTNING, -1);
-    }
+    public static Map<EntityType, Integer> OBJECTS = new EnumMap<>(EntityType.class);
 
     private static IPacketEntityAPI instance;
 
     private static TaskChainFactory chainFactory;
+
     /*
      * Begin actual API implementation:
      */
@@ -92,7 +62,10 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
 
     @Override
     public void onEnable() {
-        this.modifierRegistry = new EntityModifierRegistry();
+        DatabaseLoader loader = new DatabaseLoader(this);
+        OBJECTS.putAll(loader.loadObjects());
+        this.modifierRegistry = new EntityModifierRegistry(loader.loadModifiers());
+
         this.manager = ProtocolLibrary.getProtocolManager();
         this.fakeEntityFactory = new FakeEntityFactory(this);
         this.packetFactory = new EntityPacketFactory();

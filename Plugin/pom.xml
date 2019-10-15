@@ -6,7 +6,7 @@
     <parent>
         <artifactId>PacketEntityAPI</artifactId>
         <groupId>net.blitzcube.peapi</groupId>
-        <version>0.7.2-SNAPSHOT</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>Plugin</artifactId>
@@ -59,12 +59,12 @@
         <dependency>
             <groupId>net.blitzcube.peapi</groupId>
             <artifactId>API</artifactId>
-            <version>0.7.2-SNAPSHOT</version>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.13-R0.1-SNAPSHOT</version>
+            <version>1.14.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

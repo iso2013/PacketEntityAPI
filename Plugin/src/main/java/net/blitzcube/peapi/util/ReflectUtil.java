@@ -2,6 +2,7 @@ package net.blitzcube.peapi.util;
 
 import org.bukkit.Bukkit;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -9,7 +10,7 @@ import java.lang.reflect.Method;
  * Created by iso2013 on 10/15/19.
  */
 public class ReflectUtil {
-    public static final String VERSION;
+    private static final String VERSION;
 
     static {
         String packageVer = Bukkit.getServer().getClass().getPackage().getName();
@@ -68,6 +69,18 @@ public class ReflectUtil {
             Method m = clazz.getDeclaredMethod(name, params);
             if(!m.isAccessible()) m.setAccessible(true);
             return m;
+        } catch (NoSuchMethodException e) {
+            return null;
+        }
+    }
+
+    public static Constructor getConstructor(Class<?> clazz, Class<?>... classes) {
+        if(clazz == null) return null;
+
+        try {
+            Constructor c = clazz.getDeclaredConstructor(classes);
+            if(!c.isAccessible()) c.setAccessible(true);
+            return c;
         } catch (NoSuchMethodException e) {
             return null;
         }

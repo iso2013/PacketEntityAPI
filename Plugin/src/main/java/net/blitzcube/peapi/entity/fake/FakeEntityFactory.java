@@ -6,6 +6,7 @@ import net.blitzcube.peapi.api.entity.fake.IFakeEntityFactory;
 import net.blitzcube.peapi.api.entity.hitbox.IHitbox;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifier;
 import net.blitzcube.peapi.entity.hitbox.Hitbox;
+import net.blitzcube.peapi.util.ReflectUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -22,39 +23,29 @@ import java.util.stream.Collectors;
  * Created by iso2013 on 4/21/2018.
  */
 public class FakeEntityFactory implements IFakeEntityFactory {
+    private static Field entityId = ReflectUtil.getField(ReflectUtil.getNMSClass("Entity"), "entityCount");
+
     private final PacketEntityAPI parent;
     private final Map<Integer, FakeEntity> fakeEntities;
 
-    private Field entityID;
     private int fallbackId = -1;
 
 
     public FakeEntityFactory(PacketEntityAPI parent) {
         this.parent = parent;
         this.fakeEntities = new HashMap<>();
-
-        String version = Bukkit.getServer().getClass().getPackage().getName();
-        version = version.substring(version.lastIndexOf('.') + 1);
-
-        try {
-            entityID = Class.forName("net.minecraft.server." + version + ".Entity")
-                    .getDeclaredField("entityCount");
-            if (!entityID.isAccessible()) entityID.setAccessible(true);
-        } catch (ClassNotFoundException | NoSuchFieldException e) {
-            entityID = null;
-        }
     }
 
     private int getNextID() {
-        if (entityID == null) return fallbackId--;
+        if (entityId == null) return fallbackId--;
         try {
-            int id = entityID.getInt(null);
-            entityID.setInt(null, id + 1);
+            int id = entityId.getInt(null);
+            entityId.setInt(null, id + 1);
             return id;
         } catch (IllegalAccessException e) {
             Bukkit.getLogger().severe("PacketEntityAPI switching to negative-based IDs - unable to access " +
                     "entity ID field.");
-            entityID = null;
+            entityId = null;
             return fallbackId--;
         }
     }

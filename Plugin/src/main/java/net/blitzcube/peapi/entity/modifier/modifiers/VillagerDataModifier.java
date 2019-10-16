@@ -3,7 +3,7 @@ package net.blitzcube.peapi.entity.modifier.modifiers;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
 import net.blitzcube.peapi.api.entity.wrappers.VillagerData;
-import org.bukkit.Bukkit;
+import net.blitzcube.peapi.util.ReflectUtil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Villager;
 
@@ -31,30 +31,29 @@ public class VillagerDataModifier extends GenericModifier<VillagerData> {
 
     static {
         try {
-            String packageVer = Bukkit.getServer().getClass().getPackage().getName();
-            packageVer = packageVer.substring(packageVer.lastIndexOf('.') + 1);
+            mcvd = ReflectUtil.getNMSClass("VillagerData");
+            mcvdCtor = ReflectUtil.getConstructor(
+                    mcvd, ReflectUtil.getNMSClass("VillagerType"), ReflectUtil.getNMSClass("VillagerProfession")
+            );
+            Class<?> iRegClazz = ReflectUtil.getNMSClass("IRegistry");
+            villagerType = ReflectUtil.getField(iRegClazz, "VILLAGER_TYPE").get(null);
+            villagerProf = ReflectUtil.getField(iRegClazz, "VILLAGER_PROFESSION").get(null);
 
-            mcvd = Class.forName("net.minecraft.server." + packageVer + ".VillagerData");
-            Class<?> mcVtClazz = Class.forName("net.minecraft.server." + packageVer + ".VillagerType");
-            Class<?> mcVpClazz = Class.forName("net.minecraft.server." + packageVer + ".VillagerProfession");
-            Class<?> iRegClazz = Class.forName("net.minecraft.server." + packageVer + ".IRegistry");
-            Class<?> rbClazz = Class.forName("net.minecraft.server." + packageVer + ".RegistryBlocks");
-            Class<?> mcKClazz = Class.forName("net.minecraft.server." + packageVer + ".MinecraftKey");
-            Class<?> cnkClazz = Class.forName("org.bukkit.craftbukkit." + packageVer + ".util.CraftNamespacedKey");
+            mcGetType = ReflectUtil.getMethod(mcvd, "getType");
+            mcGetProf = ReflectUtil.getMethod(mcvd, "getProfession");
+            mcGetLevel = ReflectUtil.getMethod(mcvd, "getLevel");
 
-            mcvdCtor = mcvd.getDeclaredConstructor(mcVtClazz, mcVpClazz, int.class);
-
-            villagerType = iRegClazz.getDeclaredField("VILLAGER_TYPE").get(null);
-            villagerProf = iRegClazz.getDeclaredField("VILLAGER_PROFESSION").get(null);
-
-            mcGetType = mcvd.getDeclaredMethod("getType");
-            mcGetProf = mcvd.getDeclaredMethod("getProfession");
-            mcGetLevel = mcvd.getDeclaredMethod("getLevel");
-            rbGetKey = rbClazz.getDeclaredMethod("getKey", Object.class);
-            rbGet = rbClazz.getDeclaredMethod("get", mcKClazz);
-            mkGetKey = mcKClazz.getDeclaredMethod("getKey");
-            cnkToMinecraft = cnkClazz.getDeclaredMethod("toMinecraft", NamespacedKey.class);
-        } catch (ClassNotFoundException | NoSuchMethodException | NoSuchFieldException | IllegalAccessException e) {
+            Class<?> rbClazz = ReflectUtil.getNMSClass("RegistryBlocks");
+            Class<?> mcKClazz = ReflectUtil.getNMSClass("MinecraftKey");
+            rbGetKey = ReflectUtil.getMethod(rbClazz, "getKey", Object.class);
+            rbGet = ReflectUtil.getMethod(rbClazz, "get", mcKClazz);
+            mkGetKey = ReflectUtil.getMethod(mcKClazz, "getKey");
+            cnkToMinecraft = ReflectUtil.getMethod(
+                    ReflectUtil.getCBClass("util.CraftNamespacedKey"),
+                    "toMinecraft",
+                    NamespacedKey.class
+            );
+        } catch (IllegalAccessException e) {
             mcvdCtor = null;
         }
     }

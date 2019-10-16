@@ -218,7 +218,7 @@ Minecart		10	CUSTOM_BLOCK			Integer					0
 Minecart		11	BLOCK_HEIGHT			Integer					6
 Minecart		12	SHOW_CUSTOM_BLOCK		Boolean					false
 PoweredMinecart	13	POWERED					Boolean					false
-CommandMinecart	13	COMMAND					String					""
+CommandMinecart	13	COMMAND					String
 CommandMinecart	14	LAST_OUTPUT				Chat        			{"text":""}
 TNTPrimed		7	FUSE_TIME				Integer					80
 

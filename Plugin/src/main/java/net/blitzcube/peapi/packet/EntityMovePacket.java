@@ -46,7 +46,7 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
 
         if (pt == PacketType.Play.Server.ENTITY_TELEPORT) {
             return new EntityMovePacket(
-                    EntityIdentifier.produce(entityID, p),
+                    EntityIdentifier.produce(entityID, p, false),
                     c,
                     c.getBytes().read(1), c.getBytes().read(0),
                     new Vector(c.getDoubles().read(0), c.getDoubles().read(1), c.getDoubles().read(2)),
@@ -55,7 +55,7 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
             );
         } else if (pt == PacketType.Play.Server.REL_ENTITY_MOVE) {
             return new EntityMovePacket(
-                    EntityIdentifier.produce(entityID, p),
+                    EntityIdentifier.produce(entityID, p, false),
                     c,
                     null, null,
                     readVector(c),
@@ -64,7 +64,7 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
             );
         } else if (pt == PacketType.Play.Server.REL_ENTITY_MOVE_LOOK) {
             return new EntityMovePacket(
-                    EntityIdentifier.produce(entityID, p),
+                    EntityIdentifier.produce(entityID, p, false),
                     c,
                     c.getBytes().read(1), c.getBytes().read(0),
                     readVector(c),
@@ -73,7 +73,7 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
             );
         } else if (pt == PacketType.Play.Server.ENTITY_LOOK) {
             return new EntityMovePacket(
-                    EntityIdentifier.produce(entityID, p),
+                    EntityIdentifier.produce(entityID, p, false),
                     c,
                     c.getBytes().read(1), c.getBytes().read(0),
                     null,

@@ -25,7 +25,7 @@ public class EntityAnimationPacket extends EntityPacket implements IEntityAnimat
 
     static EntityPacket unwrap(int entityID, PacketContainer c, Player p) {
         return new EntityAnimationPacket(
-                EntityIdentifier.produce(entityID, p),
+                EntityIdentifier.produce(entityID, p, false),
                 c,
                 AnimationType.values()[c.getIntegers().read(1)]
         );

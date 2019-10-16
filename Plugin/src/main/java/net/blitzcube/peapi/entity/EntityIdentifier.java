@@ -4,8 +4,8 @@ import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.entity.fake.FakeEntity;
+import net.blitzcube.peapi.util.ReflectUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -20,24 +20,48 @@ import java.util.UUID;
  * Created by iso2013 on 2/24/2018.
  */
 public class EntityIdentifier implements IEntityIdentifier {
-    private static Class<?> cbWorld;
-    private static Method getHandle;
-    private static Field entityMap;
-    private static Method getBukkit;
+    // All versions
+    private static final Class<?> cbWorld;
+    private static final Method getHandle;
+    private static final Method getBukkit;
+
+    // 1.14
+    private static final Field entityMap;
+
+    // 1.13 and below
+    private static final Field tracker;
+    private static final Field trackedEntities;
+    private static final Method lookup;
+    private static final Field entryData;
+    private static final Field target;
 
     static {
-        try {
-            String packageVer = Bukkit.getServer().getClass().getPackage().getName();
-            packageVer = packageVer.substring(packageVer.lastIndexOf('.') + 1);
+        cbWorld = ReflectUtil.getCBClass("CraftWorld");
+        getHandle = ReflectUtil.getMethod(cbWorld, "getHandle");
+        getBukkit = ReflectUtil.getMethod(ReflectUtil.getNMSClass("Entity"), "getBukkitEntity");
 
-            cbWorld = Class.forName("org.bukkit.craftbukkit." + packageVer + ".CraftWorld");
-            getHandle = cbWorld.getDeclaredMethod("getHandle");
-            Class<?> wsClazz = Class.forName("net.minecraft.server." + packageVer + ".WorldServer");
-            entityMap = wsClazz.getDeclaredField("entitiesById");
-            Class<?> enClazz = Class.forName("net.minecraft.server." + packageVer + ".Entity");
-            getBukkit = enClazz.getDeclaredMethod("getBukkitEntity");
-        } catch (ClassNotFoundException | NoSuchMethodException | NoSuchFieldException e) {
-            e.printStackTrace();
+        Class<?> wsClazz = ReflectUtil.getNMSClass("WorldServer");
+
+        entityMap = ReflectUtil.getField(wsClazz, "entitiesById");
+
+        if (entityMap == null) {
+            // We are running 1.13 or below
+            Class<?> intMapClazz = ReflectUtil.getNMSClass("IntHashMap");
+
+            tracker = ReflectUtil.getField(wsClazz, "tracker");
+            trackedEntities = ReflectUtil.getField(ReflectUtil.getNMSClass("EntityTracker"), "trackedEntities");
+            lookup = ReflectUtil.getMethod(intMapClazz, "c", int.class);
+            entryData = ReflectUtil.getField(
+                    ReflectUtil.getNMSClass("IntHashMap$IntHashMapEntry"),
+                    Object.class
+            );
+            target = ReflectUtil.getField(ReflectUtil.getNMSClass("EntityTrackerEntry"), "tracker");
+        } else {
+            tracker = null;
+            trackedEntities = null;
+            entryData = null;
+            target = null;
+            lookup = null;
         }
     }
 
@@ -74,7 +98,7 @@ public class EntityIdentifier implements IEntityIdentifier {
         this.fakeEntity = fakeEntity;
     }
 
-    public static EntityIdentifier produce(int entityID, UUID uuid) {
+    public static EntityIdentifier produce(int entityID, UUID uuid, Player near) {
         IFakeEntity fakeEntity = PacketEntityAPI.getFakeEntity(entityID);
         Entity realEntity = Bukkit.getEntity(uuid);
 
@@ -84,12 +108,12 @@ public class EntityIdentifier implements IEntityIdentifier {
             return new EntityIdentifier(entityID, uuid, fakeEntity);
         }
 
-        return null;
+        return produce(entityID, near, false);
     }
 
-    public static EntityIdentifier produce(int entityID, Player near) {
+    public static EntityIdentifier produce(int entityID, Player near, boolean isDestroy) {
         IFakeEntity fakeEntity = PacketEntityAPI.getFakeEntity(entityID);
-        Entity realEntity = getEntityByID(near.getWorld(), entityID);
+        Entity realEntity = getEntityByID(near, entityID, isDestroy);
 
         if (realEntity != null) {
             return new EntityIdentifier(entityID, realEntity.getUniqueId(), realEntity);
@@ -101,13 +125,30 @@ public class EntityIdentifier implements IEntityIdentifier {
     }
 
     @SuppressWarnings("unchecked")
-    private static Entity getEntityByID(World world, int entityID) {
+    private static Entity getEntityByID(Player near, int entityID, boolean isDestroy) {
         try {
-            Object o = ((Map<Integer, Object>) entityMap.get(getHandle.invoke(cbWorld.cast(world)))).get(entityID);
+            Object worldServer = getHandle.invoke(cbWorld.cast(near.getWorld()));
 
-            if (o == null) return null;
+            if (entityMap != null) {
+                Object en = ((Map<Integer, Object>) entityMap.get(worldServer)).get(entityID);
+                if (en != null) return (Entity) getBukkit.invoke(en);
+                if (near.getEntityId() == entityID) {
+                    return near;
+                } else return null;
+            } else {
+                Object lookupResult = lookup.invoke(trackedEntities.get(tracker.get(worldServer)), entityID);
+                if (lookupResult != null) {
+                    Object en = target.get(entryData.get(lookupResult));
+                    if (en != null) return (Entity) getBukkit.invoke(en);
+                }
+            }
 
-            return (Entity) getBukkit.invoke(o);
+            if (isDestroy) {
+                return SightDistanceRegistry.getNearby(near, 1.03)
+                        .filter(entity -> entity.getEntityId() == entityID).findAny().orElse(null);
+            } else if (near.getEntityId() == entityID) {
+                return near;
+            } else return null;
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             return null;

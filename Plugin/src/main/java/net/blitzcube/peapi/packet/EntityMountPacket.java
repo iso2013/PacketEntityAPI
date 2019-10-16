@@ -33,9 +33,9 @@ public class EntityMountPacket extends EntityPacket implements IEntityMountPacke
     }
 
     public static EntityPacket unwrap(int entityID, PacketContainer c, Player p) {
-        return new EntityMountPacket(EntityIdentifier.produce(entityID, p), c,
+        return new EntityMountPacket(EntityIdentifier.produce(entityID, p, false), c,
                 Arrays.stream(c.getIntegerArrays().read(0))
-                        .mapToObj(value -> EntityIdentifier.produce(value, p)).collect(Collectors.toList())
+                        .mapToObj(value -> EntityIdentifier.produce(value, p, false)).collect(Collectors.toList())
         );
     }
 

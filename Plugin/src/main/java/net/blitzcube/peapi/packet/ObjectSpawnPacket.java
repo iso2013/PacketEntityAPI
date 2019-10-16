@@ -76,7 +76,7 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
     }
 
     public static ObjectSpawnPacket unwrap(int entityID, PacketContainer c, Player p) {
-        return unwrap(EntityIdentifier.produce(entityID, p), c, p.getWorld());
+        return unwrap(EntityIdentifier.produce(entityID, p, false), c, p.getWorld());
     }
 
     private static ObjectSpawnPacket unwrap(IEntityIdentifier i, PacketContainer c, World w) {

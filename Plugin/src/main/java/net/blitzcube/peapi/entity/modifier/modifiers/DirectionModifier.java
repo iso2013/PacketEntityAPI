@@ -3,16 +3,37 @@ package net.blitzcube.peapi.entity.modifier.modifiers;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
+import org.bukkit.Bukkit;
 import org.bukkit.block.BlockFace;
 
 /**
  * Created by iso2013 on 4/20/2018.
  */
 public class DirectionModifier extends GenericModifier<BlockFace> {
-    private final WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.getDirectionSerializer();
+    private final static WrappedDataWatcher.Serializer serializer;
 
-    public DirectionModifier(int index, String label, EnumWrappers.Direction def) {
-        super(null, index, label, fromWrapped(def));
+    static {
+        WrappedDataWatcher.Serializer found = null;
+        try {
+            found = WrappedDataWatcher.Registry.get(EnumWrappers.getDirectionClass());
+        } catch (IllegalArgumentException e){
+            String packageVer = Bukkit.getServer().getClass().getPackage().getName();
+            packageVer = packageVer.substring(packageVer.lastIndexOf('.') + 1);
+
+            try {
+                found = WrappedDataWatcher.Registry.get(
+                        Class.forName("net.minecraft.server." + packageVer + ".EnumDirection")
+                );
+            } catch (ClassNotFoundException ex) {
+                System.out.println("Failed to initialize direction modifier.");
+                ex.printStackTrace();
+            }
+        }
+        serializer = found;
+    }
+
+    public DirectionModifier(int index, String label, BlockFace def) {
+        super(null, index, label, def);
     }
 
     private static BlockFace fromWrapped(EnumWrappers.Direction wrapped) {

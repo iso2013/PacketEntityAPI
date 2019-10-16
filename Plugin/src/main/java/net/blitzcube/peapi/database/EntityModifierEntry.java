@@ -8,6 +8,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Pose;
 import org.bukkit.inventory.ItemStack;
@@ -52,7 +53,7 @@ public class EntityModifierEntry<T> {
 
         int index = Integer.valueOf(data[1]);
 
-        GenericModifier modifier = getModifier(data[3], index, data[2], data[4], logger);
+        GenericModifier modifier = getModifier(data[3], index, data[2], data.length > 4 ? data[4] : "", logger);
         if (modifier == null) return null;
         return new EntityModifierEntry(entityClass, data[2], modifier, modifier.getFieldType(), index);
     }
@@ -118,8 +119,7 @@ public class EntityModifierEntry<T> {
             case "VillagerData":
                 return new VillagerDataModifier(index, label, new VillagerData());
             case "Direction":
-                break;
-            //return new DirectionModifier(index, label, EnumWrappers.Direction.DOWN);
+                return new DirectionModifier(index, label, BlockFace.valueOf(def.toUpperCase().trim()));
             case "ByteMask":
                 return new ByteBitmaskModifier(index, (byte) 15, label, (byte) 0);
             case "OptBlockData":

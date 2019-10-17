@@ -4,10 +4,10 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.google.common.base.Preconditions;
-import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import net.blitzcube.peapi.api.packet.IObjectSpawnPacket;
 import net.blitzcube.peapi.entity.EntityIdentifier;
+import net.blitzcube.peapi.util.EntityTypeUtil;
 import org.bukkit.Art;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -47,6 +47,8 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
         this.data = data;
 
         super.rawPacket.getUUIDs().write(0, uuid);
+
+        System.out.print(identifier.getEntityID() + " is o " + type.name());
     }
 
     private ObjectSpawnPacket(IEntityIdentifier identifier, PacketContainer packet, EntityType type, Location location,
@@ -91,13 +93,13 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
             case UNKNOWN:
                 yaw = c.getIntegers().read(5).floatValue() * (360.0F / 256.0F);
                 pitch = c.getIntegers().read(4).floatValue() * (360.0F / 256.0F);
-                t = PacketEntityAPI.lookupObject(c.getIntegers().read(6));
+                t = EntityTypeUtil.read(c, 0, 6, true);
                 velocity = new Vector(
                         c.getIntegers().read(1),
                         c.getIntegers().read(2),
                         c.getIntegers().read(3)
                 );
-                data = c.getIntegers().read(7);
+                data = c.getIntegers().read(EntityTypeUtil.hasEntityType(c) ? 6 : 7);
             case PAINTING:
                 uuid = c.getUUIDs().read(0);
                 if (EntityType.PAINTING.equals(t)) {
@@ -198,10 +200,10 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
         Preconditions.checkArgument(type != EntityType.LIGHTNING && type != EntityType.PAINTING &&
                         type != EntityType.EXPERIENCE_ORB,
                 "You cannot override the type of a " + type.name() + " packet!");
-        Preconditions.checkArgument(PacketEntityAPI.OBJECTS.containsKey(type),
+        Preconditions.checkArgument(EntityTypeUtil.isObject(type),
                 "You cannot spawn an entity with an object packet!");
         this.type = type;
-        super.rawPacket.getIntegers().write(6, PacketEntityAPI.OBJECTS.get(type));
+        EntityTypeUtil.write(type, super.rawPacket, 0, 6, true);
     }
 
     @Override

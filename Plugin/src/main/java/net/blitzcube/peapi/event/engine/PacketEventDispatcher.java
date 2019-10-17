@@ -5,6 +5,7 @@ import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.event.IEntityPacketEvent;
 import net.blitzcube.peapi.api.listener.IListener;
 import net.blitzcube.peapi.packet.EntitySpawnPacket;
+import net.blitzcube.peapi.util.EntityTypeUtil;
 import net.blitzcube.peapi.util.SortedList;
 import org.bukkit.entity.EntityType;
 
@@ -39,7 +40,7 @@ public class PacketEventDispatcher {
             listenerLookup.putIfAbsent(en, new SortedList<>(LISTENER_COMPARATOR));
             listenerLookup.get(en).add(l);
             if (o && e) continue;
-            if (PacketEntityAPI.OBJECTS.containsKey(en)) {
+            if (EntityTypeUtil.isObject(en)) {
                 o = true;
             } else {
                 e = true;
@@ -92,7 +93,7 @@ public class PacketEventDispatcher {
         }
         boolean e = false, o = false;
         for (EntityType en : l.getTargets()) {
-            if (PacketEntityAPI.OBJECTS.containsKey(en)) {
+            if (EntityTypeUtil.isObject(en)) {
                 o = true;
             } else {
                 e = true;

@@ -28,6 +28,7 @@ import net.blitzcube.peapi.entity.modifier.EntityModifierRegistry;
 import net.blitzcube.peapi.entity.modifier.ModifiableEntity;
 import net.blitzcube.peapi.event.engine.PacketEventDispatcher;
 import net.blitzcube.peapi.packet.EntityPacketFactory;
+import net.blitzcube.peapi.util.EntityTypeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -37,7 +38,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -46,8 +46,6 @@ import java.util.stream.Stream;
  * Created by iso2013 on 2/13/2018.
  */
 public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
-    public static final Map<EntityType, Integer> OBJECTS = new EnumMap<>(EntityType.class);
-
     private static IPacketEntityAPI instance;
 
     private static TaskChainFactory chainFactory;
@@ -69,18 +67,12 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
         return instance.getFakeByID(entityID);
     }
 
-    public static EntityType lookupObject(int read) {
-        for (Map.Entry<EntityType, Integer> e : OBJECTS.entrySet()) {
-            if (e.getValue() == null) continue;
-            if (e.getValue() == read) return e.getKey();
-        }
-        return null;
-    }
-
     @Override
     public void onEnable() {
         DatabaseLoader loader = new DatabaseLoader(this);
-        OBJECTS.putAll(loader.loadObjects());
+        loader.processHeader();
+
+        EntityTypeUtil.initialize(loader.loadEntities(), loader.loadObjects());
         this.modifierRegistry = new EntityModifierRegistry(loader.loadModifiers());
         Hitbox.initHitboxes(loader.loadHitboxes());
 

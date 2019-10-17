@@ -1,9 +1,9 @@
 package net.blitzcube.peapi.packet;
 
-import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.packet.*;
+import net.blitzcube.peapi.util.EntityTypeUtil;
 import org.bukkit.Art;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -93,7 +93,7 @@ public class EntityPacketFactory implements IEntityPacketFactory {
     public IEntitySpawnPacket createEntitySpawnPacket(IEntityIdentifier i) {
         if (i.isFakeEntity()) {
             IFakeEntity f = i.getFakeEntity();
-            if (PacketEntityAPI.OBJECTS.containsKey(f.getType())) {
+            if (EntityTypeUtil.isObject(f.getType())) {
                 throw new IllegalArgumentException("Tried to spawn an object with an entity packet!");
             } else {
                 EntitySpawnPacket p = new EntitySpawnPacket(i);
@@ -105,7 +105,7 @@ public class EntityPacketFactory implements IEntityPacketFactory {
             }
         } else {
             Entity e = i.getEntity();
-            if (PacketEntityAPI.OBJECTS.containsKey(e.getType())) {
+            if (EntityTypeUtil.isObject(e.getType())) {
                 throw new IllegalArgumentException("Tried to spawn an object with an entity packet!");
             } else {
                 EntitySpawnPacket p = new EntitySpawnPacket(i);
@@ -119,12 +119,12 @@ public class EntityPacketFactory implements IEntityPacketFactory {
 
     @Override
     public IEntityPacket[] createObjectSpawnPacket(IEntityIdentifier identifier) {
-        boolean fake = false;
         IFakeEntity f = identifier.getFakeEntity();
+        boolean fake = f != null;
         Entity e = identifier.getEntity();
-        EntityType t = identifier.isFakeEntity() ? f.getType() : e.getType();
+        EntityType t = fake ? f.getType() : e.getType();
 
-        if (!PacketEntityAPI.OBJECTS.containsKey(t))
+        if (!EntityTypeUtil.isObject(t))
             throw new IllegalStateException("Tried to spawn an entity with an object packet!");
         ObjectSpawnPacket p = new ObjectSpawnPacket(identifier, t);
 
@@ -136,13 +136,13 @@ public class EntityPacketFactory implements IEntityPacketFactory {
             p.setArt((fake ? (Art) f.getField("art") : ((Painting) e).getArt()));
             if (fake && !f.hasField("direction")) throw new IllegalStateException("A direction has not been " +
                     "specified!");
-            p.setDirection(fake ? (BlockFace) f.getField("direction") : ((Painting) e).getFacing());
+            p.setDirection(fake ? (BlockFace) f.getField("direction") : e.getFacing());
         } else if (t.equals(EntityType.LIGHTNING) || t.equals(EntityType.EXPERIENCE_ORB)) {
             if (!fake) throw new IllegalStateException("Do not use the #createObjectSpawnPacket for lightning or " +
                     "experience orb entities!");
             if (t.equals(EntityType.EXPERIENCE_ORB)) {
                 if (!f.hasField("orbCount")) throw new IllegalStateException("Cannot create an experience orb " +
-                        "summon packet without an orbcount specified!");
+                        "summon packet without an orbCount specified!");
                 p.setOrbCount((Integer) f.getField("orbCount"));
             }
         } else {
@@ -196,8 +196,10 @@ public class EntityPacketFactory implements IEntityPacketFactory {
                 //int data = fake ? (int) f.getField("data") : bd.;
                 return type | (data << 12);
             case DROPPED_ITEM:
+            case MINECART_CHEST:
                 return 1;
             case LLAMA_SPIT:
+            case MINECART:
                 return 0;
             case ITEM_FRAME:
                 switch (fake ? (BlockFace) f.getField("direction") : e.getFacing()) {
@@ -210,10 +212,6 @@ public class EntityPacketFactory implements IEntityPacketFactory {
                     default:
                         return 0;
                 }
-            case MINECART:
-                return 0;
-            case MINECART_CHEST:
-                return 1;
             case MINECART_FURNACE:
                 return 2;
             case MINECART_TNT:
@@ -230,64 +228,6 @@ public class EntityPacketFactory implements IEntityPacketFactory {
         } else {
             return 1;
         }
-    }
-
-    private String nameFromArt(Art art) {
-        switch (art) {
-            case KEBAB:
-                return "Kebab";
-            case AZTEC:
-                return "Aztec";
-            case ALBAN:
-                return "Alban";
-            case AZTEC2:
-                return "Aztec2";
-            case BOMB:
-                return "Bomb";
-            case PLANT:
-                return "Plant";
-            case WASTELAND:
-                return "Wasteland";
-            case POOL:
-                return "Pool";
-            case COURBET:
-                return "Courbet";
-            case SEA:
-                return "Sea";
-            case SUNSET:
-                return "Sunset";
-            case CREEBET:
-                return "Creebet";
-            case WANDERER:
-                return "Wanderer";
-            case GRAHAM:
-                return "Graham";
-            case MATCH:
-                return "Match";
-            case BUST:
-                return "Bust";
-            case STAGE:
-                return "Stage";
-            case VOID:
-                return "Void";
-            case SKULL_AND_ROSES:
-                return "SkullAndRoses";
-            case WITHER:
-                return "Wither";
-            case FIGHTERS:
-                return "Fighters";
-            case POINTER:
-                return "Pointer";
-            case PIGSCENE:
-                return "Pigscene";
-            case BURNING_SKULL:
-                return "BurningSkull";
-            case SKELETON:
-                return "Skeleton";
-            case DONKEY_KONG:
-                return "DonkeyKong";
-        }
-        return null;
     }
 
     @Override

@@ -108,7 +108,12 @@ public class EntityIdentifier implements IEntityIdentifier {
             return new EntityIdentifier(entityID, uuid, fakeEntity);
         }
 
-        return produce(entityID, near, false);
+        realEntity = getEntityByID(near, entityID, false);
+        if (realEntity != null) {
+            return new EntityIdentifier(entityID, uuid, realEntity);
+        }
+
+        return new EntityIdentifier(entityID, uuid, (Entity) null);
     }
 
     public static EntityIdentifier produce(int entityID, Player near, boolean isDestroy) {
@@ -121,7 +126,7 @@ public class EntityIdentifier implements IEntityIdentifier {
             return new EntityIdentifier(entityID, fakeEntity.getUUID(), fakeEntity);
         }
 
-        return null;
+        return new EntityIdentifier(entityID, null, (Entity) null);
     }
 
     @SuppressWarnings("unchecked")
@@ -134,7 +139,7 @@ public class EntityIdentifier implements IEntityIdentifier {
                 if (en != null) return (Entity) getBukkit.invoke(en);
                 if (near.getEntityId() == entityID) {
                     return near;
-                } else return null;
+                }
             } else {
                 Object lookupResult = lookup.invoke(trackedEntities.get(tracker.get(worldServer)), entityID);
                 if (lookupResult != null) {
@@ -144,7 +149,7 @@ public class EntityIdentifier implements IEntityIdentifier {
             }
 
             if (isDestroy) {
-                return SightDistanceRegistry.getNearby(near, 1.03)
+                return SightDistanceRegistry.getNearby(near, 1.15)
                         .filter(entity -> entity.getEntityId() == entityID).findAny().orElse(null);
             } else if (near.getEntityId() == entityID) {
                 return near;

@@ -2,7 +2,7 @@ package net.blitzcube.peapi.entity;
 
 import net.blitzcube.peapi.PacketEntityAPI;
 import net.blitzcube.peapi.api.entity.IEntityIdentifier;
-import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
+import net.blitzcube.peapi.api.entity.IRealEntityIdentifier;
 import net.blitzcube.peapi.entity.fake.FakeEntity;
 import net.blitzcube.peapi.util.ReflectUtil;
 import org.bukkit.Bukkit;
@@ -13,7 +13,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -65,72 +64,40 @@ public class EntityIdentifier implements IEntityIdentifier {
         }
     }
 
-    private final int entityID;
-    private final UUID uuid;
-    private final Entity entity;
-    private final IFakeEntity fakeEntity;
+    public static IEntityIdentifier produce(int entityID, UUID uuid, Player near) {
+        FakeEntity fakeEntity = PacketEntityAPI.getFakeEntity(entityID);
 
-    public EntityIdentifier(Entity entity) {
-        this.entityID = entity.getEntityId();
-        this.uuid = entity.getUniqueId();
-        this.entity = entity;
-        this.fakeEntity = null;
-    }
+        if(fakeEntity != null) return fakeEntity;
 
-    public EntityIdentifier(FakeEntity fakeEntity) {
-        this.entityID = fakeEntity.getEntityID();
-        this.uuid = fakeEntity.getUUID();
-        this.entity = null;
-        this.fakeEntity = fakeEntity;
-    }
-
-    private EntityIdentifier(int entityID, UUID uuid, Entity realEntity) {
-        this.entityID = entityID;
-        this.uuid = uuid;
-        this.entity = realEntity;
-        this.fakeEntity = null;
-    }
-
-    private EntityIdentifier(int entityID, UUID uuid, IFakeEntity fakeEntity) {
-        this.entityID = entityID;
-        this.uuid = uuid;
-        this.entity = null;
-        this.fakeEntity = fakeEntity;
-    }
-
-    public static EntityIdentifier produce(int entityID, UUID uuid, Player near) {
-        IFakeEntity fakeEntity = PacketEntityAPI.getFakeEntity(entityID);
         Entity realEntity = Bukkit.getEntity(uuid);
-
         if (realEntity != null) {
-            return new EntityIdentifier(entityID, uuid, realEntity);
-        } else if (fakeEntity != null) {
-            return new EntityIdentifier(entityID, uuid, fakeEntity);
+            return new RealEntityIdentifier(realEntity);
         }
 
-        realEntity = getEntityByID(near, entityID, false);
+        realEntity = getEntityByID(near, entityID);
         if (realEntity != null) {
-            return new EntityIdentifier(entityID, uuid, realEntity);
+            return new RealEntityIdentifier(realEntity);
         }
 
-        return new EntityIdentifier(entityID, uuid, (Entity) null);
+        return new EntityIdentifier(entityID, uuid);
     }
 
-    public static EntityIdentifier produce(int entityID, Player near, boolean isDestroy) {
-        IFakeEntity fakeEntity = PacketEntityAPI.getFakeEntity(entityID);
-        Entity realEntity = getEntityByID(near, entityID, isDestroy);
+    public static IEntityIdentifier produce(int entityID, Player near) {
+        FakeEntity fakeEntity = PacketEntityAPI.getFakeEntity(entityID);
+
+        if(fakeEntity != null) return fakeEntity;
+
+        Entity realEntity = getEntityByID(near, entityID);
 
         if (realEntity != null) {
-            return new EntityIdentifier(entityID, realEntity.getUniqueId(), realEntity);
-        } else if (fakeEntity != null) {
-            return new EntityIdentifier(entityID, fakeEntity.getUUID(), fakeEntity);
+            return new RealEntityIdentifier(realEntity);
         }
 
-        return new EntityIdentifier(entityID, null, (Entity) null);
+        return new EntityIdentifier(entityID, null);
     }
 
     @SuppressWarnings("unchecked")
-    private static Entity getEntityByID(Player near, int entityID, boolean isDestroy) {
+    private static Entity getEntityByID(Player near, int entityID) {
         try {
             Object worldServer = getHandle.invoke(cbWorld.cast(near.getWorld()));
 
@@ -148,16 +115,21 @@ public class EntityIdentifier implements IEntityIdentifier {
                 }
             }
 
-            if (isDestroy) {
-                return SightDistanceRegistry.getNearby(near, 1.15)
-                        .filter(entity -> entity.getEntityId() == entityID).findAny().orElse(null);
-            } else if (near.getEntityId() == entityID) {
+            if (near.getEntityId() == entityID) {
                 return near;
             } else return null;
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private final int entityID;
+    private final UUID uuid;
+
+    protected EntityIdentifier(int entityID, UUID uuid) {
+        this.entityID = entityID;
+        this.uuid = uuid;
     }
 
     @Override
@@ -170,40 +142,17 @@ public class EntityIdentifier implements IEntityIdentifier {
         return uuid;
     }
 
-    @Override
-    public Entity getEntity() {
-        return entity;
-    }
+    public static class RealEntityIdentifier extends EntityIdentifier implements IRealEntityIdentifier {
+        private final Entity entity;
 
-    @Override
-    public IFakeEntity getFakeEntity() {
-        return fakeEntity;
-    }
+        public RealEntityIdentifier(Entity entity) {
+            super(entity.getEntityId(), entity.getUniqueId());
+            this.entity = entity;
+        }
 
-    @Override
-    public boolean isFakeEntity() {
-        return fakeEntity != null;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        EntityIdentifier that = (EntityIdentifier) o;
-
-        if (entityID != that.entityID) return false;
-        if (!uuid.equals(that.uuid)) return false;
-        if (!Objects.equals(entity, that.entity)) return false;
-        return Objects.equals(fakeEntity, that.fakeEntity);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = entityID;
-        result = 31 * result + uuid.hashCode();
-        result = 31 * result + (entity != null ? entity.hashCode() : 0);
-        result = 31 * result + (fakeEntity != null ? fakeEntity.hashCode() : 0);
-        return result;
+        @Override
+        public Entity getEntity() {
+            return entity;
+        }
     }
 }

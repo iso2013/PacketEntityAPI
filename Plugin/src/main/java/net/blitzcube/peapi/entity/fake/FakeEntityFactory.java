@@ -99,7 +99,7 @@ public class FakeEntityFactory implements IFakeEntityFactory {
     }
 
     @Override
-    public IFakeEntity getFakeByID(int entityID) {
+    public FakeEntity getFakeByID(int entityID) {
         return fakeEntities.get(entityID);
     }
 

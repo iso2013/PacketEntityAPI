@@ -17,7 +17,7 @@ import java.util.function.BiFunction;
  * @version 0.1
  * @since 2018-04-23
  */
-public interface IFakeEntity {
+public interface IFakeEntity extends IEntityIdentifier, IModifiableEntity {
     /**
      * Gets the entity ID that was assigned to this fake entity.
      *
@@ -72,27 +72,6 @@ public interface IFakeEntity {
      * @param value the new hitbox to use for this entity
      */
     void setHitbox(IHitbox value);
-
-    /**
-     * Gets the identifier of this entity. Use this identifier when spawning packets through a
-     * {@link net.blitzcube.peapi.api.packet.IEntityPacketFactory}. An instance of this factory should be obtained from
-     * the {@link net.blitzcube.peapi.api.IPacketEntityAPI} root instance.
-     *
-     * @return the identifier that corresponds to this entity
-     */
-    IEntityIdentifier getIdentifier();
-
-    /**
-     * Gets the modifiable entity that is tied to this entity. Use this in coordination with {@link IEntityModifier}s to
-     * change entity metadata - such as name, invisibility, size, color, etc. Modifier instances should be obtained from
-     * the {@link net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry}, which is obtained from the
-     * {@link net.blitzcube.peapi.api.IPacketEntityAPI} root instance. <b>Note: these modifiers should be CACHED.</b>
-     * <br>
-     * Modifiers can also be obtained from {@link #getModifiers()}.
-     *
-     * @return the modifiable entity reference that is tied to this entity
-     */
-    IModifiableEntity getModifiableEntity();
 
     /**
      * Gets all of the modifiers that can be applied to this fake entity, given the entity type. These

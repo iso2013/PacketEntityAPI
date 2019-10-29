@@ -10,7 +10,6 @@ import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.google.common.base.Preconditions;
 import net.blitzcube.peapi.api.IPacketEntityAPI;
 import net.blitzcube.peapi.api.entity.IEntityIdentifier;
-import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntityFactory;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifierRegistry;
 import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
@@ -46,7 +45,7 @@ import java.util.stream.Stream;
  * Created by iso2013 on 2/13/2018.
  */
 public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
-    private static IPacketEntityAPI instance;
+    private static PacketEntityAPI instance;
 
     private static TaskChainFactory chainFactory;
 
@@ -63,7 +62,7 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
         return chainFactory;
     }
 
-    public static IFakeEntity getFakeEntity(int entityID) {
+    public static FakeEntity getFakeEntity(int entityID) {
         return instance.getFakeByID(entityID);
     }
 
@@ -124,7 +123,7 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
 
     @Override
     public IEntityIdentifier wrap(Entity e) {
-        return new EntityIdentifier(e);
+        return new EntityIdentifier.RealEntityIdentifier(e);
     }
 
     @Override
@@ -138,7 +137,7 @@ public class PacketEntityAPI extends JavaPlugin implements IPacketEntityAPI {
     }
 
     @Override
-    public IFakeEntity getFakeByID(int entityID) {
+    public FakeEntity getFakeByID(int entityID) {
         return fakeEntityFactory.getFakeByID(entityID);
     }
 

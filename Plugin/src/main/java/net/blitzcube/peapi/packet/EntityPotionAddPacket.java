@@ -33,7 +33,7 @@ public class EntityPotionAddPacket extends EntityPacket implements IEntityPotion
         if (type == null) return null;
 
         return new EntityPotionAddPacket(
-                EntityIdentifier.produce(entityID, p, false),
+                EntityIdentifier.produce(entityID, p),
                 c,
                 new PotionEffect(
                         type,

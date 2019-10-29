@@ -1,13 +1,19 @@
 package net.blitzcube.peapi.entity;
 
 import net.blitzcube.peapi.api.entity.IEntityIdentifier;
+import net.blitzcube.peapi.api.entity.IRealEntityIdentifier;
+import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.entity.fake.FakeEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 /**
@@ -19,6 +25,7 @@ public class SightDistanceRegistry {
 
     static {
         ConfigurationSection settings = Bukkit.spigot().getConfig().getConfigurationSection("world-settings");
+        if(settings == null) throw new IllegalStateException("Malformed server configuration!");
         ConfigurationSection defSec = settings.getConfigurationSection("default");
         for (String s : settings.getKeys(false)) {
             if (s.equals("default")) continue;
@@ -70,30 +77,11 @@ public class SightDistanceRegistry {
     }
 
     public static boolean isVisible(Location l, Player p, double error, EntityType type) {
-        if (!l.getWorld().getUID().equals(p.getWorld().getUID())) return false;
+        if (!p.getWorld().equals(l.getWorld())) return false;
         double max = defaultGet(l.getWorld().getName(), type);
         max *= error;
         return Math.abs(l.getX() - p.getLocation().getX()) < max
                 && Math.abs(l.getZ() - p.getLocation().getZ()) < max;
-    }
-
-    public static Stream<Entity> getNearby(Player p, double error) {
-        if (p == null) return Stream.empty();
-        Map<EntityType, Integer> worldDistances;
-        double max;
-        String world = p.getWorld().getName();
-        if (distances.containsKey(world)) {
-            worldDistances = distances.get(world);
-            max = maximums.get(world);
-        } else {
-            worldDistances = distances.get(null);
-            max = maximums.get(null);
-        }
-        max *= error;
-        return p.getNearbyEntities(max, 256, max).stream()
-                .filter(entity ->
-                        isNear(worldDistances.get(entity.getType()), p.getLocation(), entity.getLocation())
-                );
     }
 
     public static Stream<IEntityIdentifier> getNearby(Player p, double error, Collection<FakeEntity> fakes) {
@@ -113,14 +101,13 @@ public class SightDistanceRegistry {
                         entity -> isNear(worldDistances.get(entity.getType()), p.getLocation(), entity.getLocation()
                         )
                 )
-                        .map(EntityIdentifier::new);
+                        .map(EntityIdentifier.RealEntityIdentifier::new);
         if (fakes == null) {
             return real;
         } else {
             return Stream.concat(real, fakes.stream()
                     .filter(fakeEntity -> isNear(worldDistances.get(fakeEntity.getType()), p.getLocation(),
-                            fakeEntity.getLocation()))
-                    .map(EntityIdentifier::new));
+                            fakeEntity.getLocation())));
         }
     }
 
@@ -129,16 +116,18 @@ public class SightDistanceRegistry {
     }
 
     public static Stream<Player> getViewers(IEntityIdentifier object, double err) {
+        if(object == null) throw new NullPointerException("Cannot get the viewers of a null entity!");
         Location l;
         EntityType t;
-        if (object.isFakeEntity()) {
-            l = Objects.requireNonNull(object.getFakeEntity()).getLocation();
-            t = Objects.requireNonNull(object.getFakeEntity()).getType();
-        } else {
-            l = Objects.requireNonNull(object.getEntity()).getLocation();
-            t = Objects.requireNonNull(object.getEntity()).getType();
-        }
-        double val = defaultGet(l.getWorld().getName(), t);
+        if (object instanceof IFakeEntity) {
+            l = ((IFakeEntity) object).getLocation();
+            t = ((IFakeEntity) object).getType();
+        } else if (object instanceof IRealEntityIdentifier){
+            l = ((IRealEntityIdentifier) object).getEntity().getLocation();
+            t = ((IRealEntityIdentifier) object).getEntity().getType();
+        } else throw new IllegalArgumentException("Cannot get the viewers of an unknown entity!");
+        World w = l.getWorld();
+        double val = defaultGet(w != null ? w.getName() : "default", t);
         val *= err;
         double finalVal = val;
         return l.getWorld().getPlayers().stream().filter(p -> isNear(finalVal, p.getLocation(), l));

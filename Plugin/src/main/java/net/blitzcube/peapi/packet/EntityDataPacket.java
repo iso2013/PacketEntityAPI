@@ -30,7 +30,7 @@ public class EntityDataPacket extends EntityPacket implements IEntityDataPacket 
 
     public static EntityPacket unwrap(int entityID, PacketContainer c, Player p) {
         return new EntityDataPacket(
-                EntityIdentifier.produce(entityID, p, false),
+                EntityIdentifier.produce(entityID, p),
                 c,
                 c.getWatchableCollectionModifier().read(0)
         );

@@ -1,8 +1,10 @@
 package net.blitzcube.peapi.packet;
 
 import net.blitzcube.peapi.api.entity.IEntityIdentifier;
+import net.blitzcube.peapi.api.entity.IRealEntityIdentifier;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.packet.*;
+import net.blitzcube.peapi.entity.EntityIdentifier;
 import net.blitzcube.peapi.util.EntityTypeUtil;
 import org.bukkit.Art;
 import org.bukkit.block.BlockFace;
@@ -38,8 +40,8 @@ public class EntityPacketFactory implements IEntityPacketFactory {
     @Override
     public IEntityDataPacket createDataPacket(IEntityIdentifier entity) {
         EntityDataPacket p = new EntityDataPacket(entity);
-        if (entity.isFakeEntity()) {
-            p.setMetadata(entity.getFakeEntity().getModifiableEntity().getWatchableObjects());
+        if (entity instanceof IFakeEntity) {
+            p.setMetadata(((IFakeEntity) entity).getWatchableObjects());
         }
         return p;
     }
@@ -91,8 +93,8 @@ public class EntityPacketFactory implements IEntityPacketFactory {
 
     @Override
     public IEntitySpawnPacket createEntitySpawnPacket(IEntityIdentifier i) {
-        if (i.isFakeEntity()) {
-            IFakeEntity f = i.getFakeEntity();
+        if (i instanceof IFakeEntity) {
+            IFakeEntity f = (IFakeEntity) i;
             if (EntityTypeUtil.isObject(f.getType())) {
                 throw new IllegalArgumentException("Tried to spawn an object with an entity packet!");
             } else {
@@ -100,11 +102,11 @@ public class EntityPacketFactory implements IEntityPacketFactory {
                 p.setEntityType(f.getType());
                 p.setLocation(f.getLocation());
                 p.setVelocity(new Vector(0, 0, 0));
-                p.setMetadata(f.getModifiableEntity().getWatchableObjects());
+                p.setMetadata(f.getWatchableObjects());
                 return p;
             }
-        } else {
-            Entity e = i.getEntity();
+        } else if (i instanceof IRealEntityIdentifier) {
+            Entity e = ((EntityIdentifier.RealEntityIdentifier) i).getEntity();
             if (EntityTypeUtil.isObject(e.getType())) {
                 throw new IllegalArgumentException("Tried to spawn an object with an entity packet!");
             } else {
@@ -114,14 +116,18 @@ public class EntityPacketFactory implements IEntityPacketFactory {
                 p.setVelocity(e.getVelocity());
                 return p;
             }
+        } else {
+            throw new IllegalArgumentException("Cannot spawn an unknown entity!");
         }
     }
 
     @Override
     public IEntityPacket[] createObjectSpawnPacket(IEntityIdentifier identifier) {
-        IFakeEntity f = identifier.getFakeEntity();
-        boolean fake = f != null;
-        Entity e = identifier.getEntity();
+        boolean fake = identifier instanceof IFakeEntity;
+        IFakeEntity f = fake ? (IFakeEntity) identifier : null;
+        Entity e = identifier instanceof IRealEntityIdentifier ? ((IRealEntityIdentifier) identifier).getEntity() :
+                null;
+        if (!fake && e == null) return null;
         EntityType t = fake ? f.getType() : e.getType();
 
         if (!EntityTypeUtil.isObject(t))
@@ -156,7 +162,7 @@ public class EntityPacketFactory implements IEntityPacketFactory {
         }
         if (fake) {
             EntityDataPacket d = new EntityDataPacket(identifier);
-            d.setMetadata(f.getModifiableEntity().getWatchableObjects());
+            d.setMetadata(f.getWatchableObjects());
             return new IEntityPacket[]{p, d};
         } else {
             return new IEntityPacket[]{p};

@@ -115,7 +115,7 @@ public class GenericListener implements PacketListener {
             if (lookingAt == null) return;
             packetEvent.setCancelled(true);
 
-            w = new EntityClickPacket(lookingAt.getIdentifier());
+            w = new EntityClickPacket(lookingAt);
             ((EntityClickPacket) w).setClickType(IEntityClickPacket.ClickType.ATTACK);
         }
         IEntityPacketEvent e = new EntityPacketEvent(manager, w, IEntityPacketEvent.EntityPacketType.CLICK, target);

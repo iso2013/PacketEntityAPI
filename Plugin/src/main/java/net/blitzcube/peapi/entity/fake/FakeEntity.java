@@ -1,11 +1,8 @@
 package net.blitzcube.peapi.entity.fake;
 
-import net.blitzcube.peapi.api.entity.IEntityIdentifier;
 import net.blitzcube.peapi.api.entity.fake.IFakeEntity;
 import net.blitzcube.peapi.api.entity.hitbox.IHitbox;
 import net.blitzcube.peapi.api.entity.modifier.IEntityModifier;
-import net.blitzcube.peapi.api.entity.modifier.IModifiableEntity;
-import net.blitzcube.peapi.entity.EntityIdentifier;
 import net.blitzcube.peapi.entity.hitbox.Hitbox;
 import net.blitzcube.peapi.entity.modifier.ModifiableEntity;
 import org.bukkit.Location;
@@ -21,12 +18,10 @@ import java.util.function.BiFunction;
 /**
  * Created by iso2013 on 4/21/2018.
  */
-public class FakeEntity implements IFakeEntity {
+public class FakeEntity extends ModifiableEntity.ListBased implements IFakeEntity {
     private final int id;
     private final UUID uuid;
     private final EntityType type;
-    private final EntityIdentifier identifier;
-    private final IModifiableEntity modifiableEntity;
     private final Map<String, IEntityModifier> modifiers;
     private final Map<String, Object> fields;
     private Location location;
@@ -34,15 +29,14 @@ public class FakeEntity implements IFakeEntity {
     private BiFunction<Player, IFakeEntity, Boolean> checkIntersect;
 
     FakeEntity(int id, UUID uuid, EntityType type, Map<String, IEntityModifier> modifiers) {
+        super(new ArrayList<>());
         this.id = id;
         this.uuid = uuid;
         this.type = type;
-        this.identifier = new EntityIdentifier(this);
         this.modifiers = modifiers;
         this.fields = new HashMap<>();
         this.hitbox = Hitbox.getByType(type);
-        this.modifiableEntity = new ModifiableEntity.ListBased(new ArrayList<>());
-        for (IEntityModifier m : modifiers.values()) m.unsetValue(modifiableEntity, true);
+        for (IEntityModifier m : modifiers.values()) m.unsetValue(this, true);
         this.checkIntersect = (p, e) -> e.getHitbox().intersects(
                 p.getEyeLocation().toVector(),
                 p.getEyeLocation().getDirection(),
@@ -83,16 +77,6 @@ public class FakeEntity implements IFakeEntity {
     @Override
     public void setHitbox(IHitbox hitbox) {
         this.hitbox = hitbox;
-    }
-
-    @Override
-    public IEntityIdentifier getIdentifier() {
-        return identifier;
-    }
-
-    @Override
-    public IModifiableEntity getModifiableEntity() {
-        return modifiableEntity;
     }
 
     @Override

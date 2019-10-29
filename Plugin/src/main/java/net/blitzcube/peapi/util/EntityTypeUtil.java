@@ -51,7 +51,7 @@ public class EntityTypeUtil {
         getByKey = ReflectUtil.getMethod(registryBlocks, "get", mcKeyClazz);
 
         cnkGetKey = ReflectUtil.getMethod(
-                ReflectUtil.getCBClass("CraftNamespacedKey"),
+                ReflectUtil.getCBClass("util.CraftNamespacedKey"),
                 "toMinecraft",
                 NamespacedKey.class
         );
@@ -97,7 +97,7 @@ public class EntityTypeUtil {
                 if (ENTITIES.isEmpty()) {
                     c.getIntegers().write(
                             intIndex,
-                            (int) getID.invoke(entityTypeRegistry, cnkGetKey.invoke(null, type.getKey()))
+                            (int) getID.invoke(entityTypeRegistry, toNMS(type))
                     );
                 } else {
                     int id = -1;
@@ -107,7 +107,7 @@ public class EntityTypeUtil {
                 }
             } else {
                 //noinspection unchecked
-                modifier.write(etIndex, getByKey.invoke(entityTypeRegistry, toNMS(type)));
+                modifier.write(etIndex, toNMS(type));
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();

@@ -47,8 +47,6 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
         this.data = data;
 
         super.rawPacket.getUUIDs().write(0, uuid);
-
-        System.out.print(identifier.getEntityID() + " is o " + type.name());
     }
 
     private ObjectSpawnPacket(IEntityIdentifier identifier, PacketContainer packet, EntityType type, Location location,
@@ -242,7 +240,7 @@ public class ObjectSpawnPacket extends EntityPacket implements IObjectSpawnPacke
                         type != EntityType.EXPERIENCE_ORB,
                 "You cannot set data for a " + type.name() + "!");
         this.data = data;
-        super.rawPacket.getIntegers().write(7, data);
+        super.rawPacket.getIntegers().write(EntityTypeUtil.hasEntityType(super.rawPacket) ? 6 : 7, data);
     }
 
     @Override

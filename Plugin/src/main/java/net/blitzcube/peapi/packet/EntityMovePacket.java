@@ -100,6 +100,18 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
         }
     }
 
+    private static void writeVector(PacketContainer c, Vector vector) {
+        if (c.getShorts().size() >= 3) {
+            c.getShorts().write(0, (short) (vector.getX() * 4096.0));
+            c.getShorts().write(1, (short) (vector.getY() * 4096.0));
+            c.getShorts().write(2, (short) (vector.getZ() * 4096.0));
+        } else {
+            c.getIntegers().write(1, (int) (vector.getX() * 4096.0));
+            c.getIntegers().write(2, (int) (vector.getY() * 4096.0));
+            c.getIntegers().write(3, (int) (vector.getZ() * 4096.0));
+        }
+    }
+
     private static Vector vectorFromAngles(double pitch, double yaw) {
         Vector dir = new Vector();
         pitch = Math.toRadians(pitch);
@@ -147,18 +159,14 @@ public class EntityMovePacket extends EntityPacket implements IEntityMovePacket 
         switch (type) {
             case REL_MOVE:
             case LOOK_AND_REL_MOVE:
-                super.rawPacket.getIntegers().write(1, (int) (position.getX() * 4096));
-                super.rawPacket.getIntegers().write(2, (int) (position.getY() * 4096));
-                super.rawPacket.getIntegers().write(3, (int) (position.getZ() * 4096));
+                writeVector(super.rawPacket, position);
                 break;
             case LOOK:
                 if (teleport) {
                     setType(MoveType.TELEPORT);
                 } else {
                     setType(MoveType.LOOK_AND_REL_MOVE);
-                    super.rawPacket.getIntegers().write(1, (int) (position.getX() * 4096));
-                    super.rawPacket.getIntegers().write(2, (int) (position.getY() * 4096));
-                    super.rawPacket.getIntegers().write(3, (int) (position.getZ() * 4096));
+                    writeVector(super.rawPacket, position);
                     break;
                 }
             case TELEPORT:

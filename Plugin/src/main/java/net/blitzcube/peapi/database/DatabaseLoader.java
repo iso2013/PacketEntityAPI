@@ -36,7 +36,6 @@ public class DatabaseLoader {
         this.logger = parent.getLogger();
 
         logger.info("-------- PEAPI database information --------");
-        logger.info("--------------------------------------------");
 
         InputStream is;
         try {

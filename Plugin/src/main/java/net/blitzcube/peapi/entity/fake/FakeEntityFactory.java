@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -39,9 +40,14 @@ public class FakeEntityFactory implements IFakeEntityFactory {
     private int getNextID() {
         if (entityId == null) return fallbackId--;
         try {
-            int id = entityId.getInt(null);
-            entityId.setInt(null, id + 1);
-            return id;
+            Object o = entityId.get(null);
+            if(o instanceof Integer) {
+                int id = (int) o;
+                entityId.setInt(null, id + 1);
+                return id;
+            } else if(o instanceof AtomicInteger) {
+                return ((AtomicInteger) o).incrementAndGet();
+            } throw new IllegalAccessException("Was not an int or an atomic int.");
         } catch (IllegalAccessException e) {
             Bukkit.getLogger().severe("PacketEntityAPI switching to negative-based IDs - unable to access " +
                     "entity ID field.");

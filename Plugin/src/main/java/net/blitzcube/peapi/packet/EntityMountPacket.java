@@ -52,6 +52,8 @@ public class EntityMountPacket extends EntityPacket implements IEntityMountPacke
 
     @Override
     public void addToGroup(IEntityIdentifier e) {
+        if (getIdentifier().getEntityID() == e.getEntityID())
+            throw new IllegalArgumentException("Cannot make an entity ride itself!");
         targets.add(e);
         changed = true;
     }

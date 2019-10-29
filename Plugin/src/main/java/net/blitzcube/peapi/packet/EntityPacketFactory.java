@@ -203,14 +203,18 @@ public class EntityPacketFactory implements IEntityPacketFactory {
                 return 0;
             case ITEM_FRAME:
                 switch (fake ? (BlockFace) f.getField("direction") : e.getFacing()) {
-                    case WEST:
+                    case DOWN:
+                        return 0;
+                    case UP:
                         return 1;
                     case NORTH:
                         return 2;
-                    case EAST:
+                    case SOUTH:
                         return 3;
-                    default:
-                        return 0;
+                    case WEST:
+                        return 4;
+                    case EAST:
+                        return 5;
                 }
             case MINECART_FURNACE:
                 return 2;

@@ -67,7 +67,6 @@ public class EntityMountPacketImpl extends EntityPacketImpl implements EntityMou
 
     @Override
     public PacketContainer getRawPacket() {
-        assert targets.size() > 0;
         return super.getRawPacket();
     }
 

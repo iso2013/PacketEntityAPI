@@ -6,6 +6,7 @@ import net.iso2013.peapi.api.entity.fake.FakeEntity;
 import net.iso2013.peapi.api.packet.*;
 import net.iso2013.peapi.entity.EntityIdentifierImpl;
 import net.iso2013.peapi.util.EntityTypeUtil;
+import net.iso2013.peapi.util.ReflectUtil;
 import org.bukkit.Art;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -18,10 +19,25 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
  * Created by iso2013 on 4/23/2018.
  */
 public class EntityPacketFactoryImpl implements EntityPacketFactory {
+    private static final Class<?> cbBlockData;
+    private static final Method getCombinedID;
+    private static final Method getState;
+
+    static {
+        cbBlockData = ReflectUtil.getCBClass("CraftBlockData");
+        Class<?> nmsBD = ReflectUtil.getNMSClass("Block");
+        getCombinedID = ReflectUtil.getMethod(nmsBD, "getCombinedId");
+        getState = ReflectUtil.getMethod(cbBlockData, "getState");
+    }
+
+
     @Override
     public EntityAnimationPacket createAnimationPacket(EntityIdentifier entity, EntityAnimationPacket
             .AnimationType type) {
@@ -195,12 +211,15 @@ public class EntityPacketFactoryImpl implements EntityPacketFactory {
                     return ((Entity) s).getEntityId();
                 }
             case FALLING_BLOCK:
-                BlockData bd = ((FallingBlock) e).getBlockData();
-                int type = fake ? (int) f.getField("id") : bd.getMaterial().getId();
-                //FIXME: How is this done in 1.14?
-                int data = 0;
-                //int data = fake ? (int) f.getField("data") : bd.;
-                return type | (data << 12);
+                BlockData bd = fake ? (BlockData) f.getField("blockdata") : ((FallingBlock) e).getBlockData();
+                if (getState != null) {
+                    try {
+                        return (int) getCombinedID.invoke(null, getState.invoke(cbBlockData.cast(bd)));
+                    } catch (IllegalAccessException | InvocationTargetException ignored) {
+                    }
+                }
+
+                return bd.getMaterial().getId();
             case DROPPED_ITEM:
             case MINECART_CHEST:
                 return 1;

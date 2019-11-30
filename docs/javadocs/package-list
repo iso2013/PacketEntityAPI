@@ -1,8 +1,9 @@
-net.blitzcube.peapi.api
-net.blitzcube.peapi.api.entity
-net.blitzcube.peapi.api.entity.fake
-net.blitzcube.peapi.api.entity.hitbox
-net.blitzcube.peapi.api.entity.modifier
-net.blitzcube.peapi.api.event
-net.blitzcube.peapi.api.listener
-net.blitzcube.peapi.api.packet
+net.iso2013.peapi.api
+net.iso2013.peapi.api.entity
+net.iso2013.peapi.api.entity.fake
+net.iso2013.peapi.api.entity.hitbox
+net.iso2013.peapi.api.entity.modifier
+net.iso2013.peapi.api.entity.wrappers
+net.iso2013.peapi.api.event
+net.iso2013.peapi.api.listener
+net.iso2013.peapi.api.packet

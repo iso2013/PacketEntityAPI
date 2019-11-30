@@ -15,20 +15,20 @@ You may report issues [here](https://github.com/iso2013/PacketEntityAPI/issues).
 * Steps to reproduce
 * Expected behaviour
 * Actual outcome
-* Minecraft version - **Only 1.13+ is officially supported**
+* Minecraft version
+* Structure file (note that __only official files for 1.13 and above are supported__)
 
 ## Source Code
 Source code is available [here](https://github.com/iso2013/PacketEntityAPI)!
 
-## Support Me :D
-My development activity (if this gets low poke me on Spigot IRC or shoot me a PM):
+## Support the Project
 
-<figure><embed src="https://wakatime.com/share/@f07b25b2-0703-4bae-8b4e-fda2b6b212c4/25350fd7-f98b-4b59-be9a-4d552d8847a9.svg"></figure>
+I will be taking a two year hiatus from Minecraft development, so I've written up a guide on how to update this project. See the wiki for more information. (This should, hopefully also work the other way! If someone wants to add legacy support, I'd be alright with that, as long as it does not interfere with functionality on the latest version!)
 
-Want to donate to continue PacketEntityAPI's development? I accept donations here:
+If you appreciate the work I've put into this project, please consider donating:
 
 <center>
-    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=blitzcubeowner%40gmail%2ecom&lc=US&item_name=iso2013&item_number=MultiLineAPI&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">
-        <img src="paypal.png"/>
+    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=blitzcubeowner%40gmail%2ecom&lc=US&item_name=iso2013&item_number=PacketEntityAPI&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">
+        <img src="docs/paypal.png"/>
     </a>
 </center>

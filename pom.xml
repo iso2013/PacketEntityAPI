@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.iso2013.peapi</groupId>
-    <artifactId>PacketEntityAPI</artifactId>
+    <artifactId>PacketEntityAPI-Parent</artifactId>
     <packaging>pom</packaging>
     <version>1.2.1-SNAPSHOT</version>
     <modules>
-        <module>API</module>
-        <module>Plugin</module>
+        <module>PacketEntityAPI</module>
+        <module>PacketEntityAPI-Plugin</module>
     </modules>
 
     <repositories>
@@ -22,8 +22,26 @@
             <id>aikar</id>
             <url>https://repo.aikar.co/content/groups/aikar/</url>
         </repository>
+        <repository>
+            <id>frostalf</id>
+            <url>https://repo.frostalf.net</url>
+        </repository>
+        <repository>
+            <id>sonatype</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+        </repository>
     </repositories>
-
+    
+    <distributionManagement>
+        <repository>
+            <id>FrostRepo</id>
+            <url>sftp://repo.frostalf.net/var/www/repo</url>
+            <uniqueVersion>false</uniqueVersion>
+            <name>FrostRepo</name>
+            <layout>default</layout>
+        </repository>
+    </distributionManagement>
+    
     <dependencies>
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
@@ -39,6 +57,7 @@
     </dependencies>
 
     <build>
+        <defaultGoal>clean install</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -49,6 +68,29 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.0.0-M1</version>
+                <configuration>
+                    <repositoryId>FrostRepo</repositoryId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>deploy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>3.3.4</version>
+            </extension>
+        </extensions>
     </build>
 </project>

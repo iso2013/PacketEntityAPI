@@ -7,7 +7,7 @@
     <groupId>net.iso2013.peapi</groupId>
     <artifactId>PacketEntityAPI-Parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>1.2.2-SNAPSHOT</version>
     <modules>
         <module>PacketEntityAPI</module>
         <module>PacketEntityAPI-Plugin</module>
@@ -25,6 +25,10 @@
         <repository>
             <id>frostalf</id>
             <url>https://repo.frostalf.net</url>
+        </repository>
+        <repository>
+            <id>dmulloy2-repo</id>
+            <url>https://repo.dmulloy2.net/nexus/repository/public/</url>
         </repository>
         <repository>
             <id>sonatype</id>
@@ -46,7 +50,7 @@
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>4.5.1-SNAPSHOT</version>
+            <version>4.5.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -57,7 +61,7 @@
     </dependencies>
 
     <build>
-        <defaultGoal>clean install</defaultGoal>
+        <defaultGoal>clean package install</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

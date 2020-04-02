@@ -78,25 +78,25 @@ public interface EntityPacketFactory {
     EntityMountPacket createMountPacket(EntityIdentifier vehicle, EntityIdentifier... passengers);
 
     /**
-     * Creates an entity spawn packet that will spawn an entity for a client.
+     * Creates an array of packets that will spawn an entity and send the data (if applicable) for a client.
      * <br>
      * <b>Do not use this method to spawn objects - use {@link #createObjectSpawnPacket(EntityIdentifier)} instead.</b>
      * This one will just throw an error.
      *
      * @param identifier the entity to be created
-     * @return the constructed packet
+     * @return the constructed packets
      */
-    EntitySpawnPacket createEntitySpawnPacket(EntityIdentifier identifier);
+    EntityPacket[] createEntitySpawnPacket(EntityIdentifier identifier);
 
     /**
-     * Creates an object spawn packet that will spawn an object for a client.
+     * Creates an array of packets that will spawn an object and send the data (if applicable) for a client.
      * <br>
      * <b>Do not use this method to spawn entities - use {@link #createEntitySpawnPacket(EntityIdentifier)} instead
      * .</b>
      * This one will just throw an error.
      *
      * @param identifier the object to be created
-     * @return the constructed packet
+     * @return the constructed packets
      */
     EntityPacket[] createObjectSpawnPacket(EntityIdentifier identifier);
 

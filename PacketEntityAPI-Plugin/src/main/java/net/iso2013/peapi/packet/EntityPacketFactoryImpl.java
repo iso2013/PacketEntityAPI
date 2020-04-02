@@ -1,5 +1,6 @@
 package net.iso2013.peapi.packet;
 
+import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import net.iso2013.peapi.api.entity.EntityIdentifier;
 import net.iso2013.peapi.api.entity.RealEntityIdentifier;
 import net.iso2013.peapi.api.entity.fake.FakeEntity;
@@ -21,6 +22,7 @@ import org.bukkit.util.Vector;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * Created by iso2013 on 4/23/2018.
@@ -108,7 +110,7 @@ public class EntityPacketFactoryImpl implements EntityPacketFactory {
     }
 
     @Override
-    public EntitySpawnPacket createEntitySpawnPacket(EntityIdentifier i) {
+    public EntityPacket[] createEntitySpawnPacket(EntityIdentifier i) {
         if (i instanceof FakeEntity) {
             FakeEntity f = (FakeEntity) i;
             if (EntityTypeUtil.isObject(f.getType())) {
@@ -118,8 +120,17 @@ public class EntityPacketFactoryImpl implements EntityPacketFactory {
                 p.setEntityType(f.getType());
                 p.setLocation(f.getLocation());
                 p.setVelocity(new Vector(0, 0, 0));
-                p.setMetadata(f.getWatchableObjects());
-                return p;
+                try {
+                    p.setMetadata(f.getWatchableObjects());
+                    return new EntitySpawnPacket[]{p};
+                } catch (IllegalStateException e) {
+                    List<WrappedWatchableObject> data = f.getWatchableObjects();
+                    if (!data.isEmpty()) {
+                        EntityDataPacketImpl d = new EntityDataPacketImpl(i);
+                        d.setMetadata(f.getWatchableObjects());
+                        return new EntityPacket[]{p, d};
+                    } else return new EntityPacket[]{p};
+                }
             }
         } else if (i instanceof RealEntityIdentifier) {
             Entity e = ((EntityIdentifierImpl.RealEntityIdentifier) i).getEntity();
@@ -130,7 +141,7 @@ public class EntityPacketFactoryImpl implements EntityPacketFactory {
                 p.setEntityType(e.getType());
                 p.setLocation(e.getLocation());
                 p.setVelocity(e.getVelocity());
-                return p;
+                return new EntityPacket[]{p};
             }
         } else {
             throw new IllegalArgumentException("Cannot spawn an unknown entity!");

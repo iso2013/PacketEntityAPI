@@ -73,15 +73,17 @@ public interface EntitySpawnPacket extends EntityPacket {
      * Gets a list containing all of the metadata stored in this packet
      *
      * @return the list of wrapped watchable objects
+     * @throws IllegalStateException if the spawn packet is unable to store metadata
      */
-    List<WrappedWatchableObject> getMetadata();
+    List<WrappedWatchableObject> getMetadata() throws IllegalStateException;
 
     /**
      * Sets the metadata contained by this packet to the data contained in the list given
      *
      * @param data the new list of data to send
+     * @throws IllegalStateException if the spawn packet is unable to store metadata
      */
-    void setMetadata(List<WrappedWatchableObject> data);
+    void setMetadata(List<WrappedWatchableObject> data) throws IllegalStateException;
 
     /**
      * Rewrites the currently stored metadata to the packet. This is useful if you pull the list instance using

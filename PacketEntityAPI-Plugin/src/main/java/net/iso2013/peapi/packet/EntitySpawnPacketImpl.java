@@ -73,8 +73,12 @@ public class EntitySpawnPacketImpl extends EntityPacketImpl implements EntitySpa
         }
         EntityIdentifier identifier = EntityIdentifierImpl.produce(entityID, uuid, p);
         if (PacketType.Play.Server.NAMED_ENTITY_SPAWN.equals(t)) {
+            List<WrappedWatchableObject> data = null;
+            if (c.getWatchableCollectionModifier().size() > 0) {
+                data = c.getWatchableCollectionModifier().read(0);
+            }
             return new EntitySpawnPacketImpl(identifier, c, EntityType.PLAYER, location, new Vector(0, 0,
-                    0), 0.0f, c.getWatchableCollectionModifier().read(0));
+                    0), 0.0f, data);
         } else if (PacketType.Play.Server.SPAWN_ENTITY_LIVING.equals(t)) {
             EntityType type = EntityTypeUtil.read(c, -1, 1, false);
             //EntityType type = typeFromID(c.getIntegers().read(1));
@@ -84,8 +88,13 @@ public class EntitySpawnPacketImpl extends EntityPacketImpl implements EntitySpa
                     c.getBytes().read(1),
                     c.getBytes().read(2)
             );
-            return new EntitySpawnPacketImpl(identifier, c, type, location, velocity, headPitch,
-                    c.getWatchableCollectionModifier().read(0));
+
+            List<WrappedWatchableObject> data = null;
+            if (c.getWatchableCollectionModifier().size() > 0) {
+                data = c.getWatchableCollectionModifier().read(0);
+            }
+
+            return new EntitySpawnPacketImpl(identifier, c, type, location, velocity, headPitch, data);
         }
         return null;
     }
@@ -151,25 +160,33 @@ public class EntitySpawnPacketImpl extends EntityPacketImpl implements EntitySpa
     }
 
     @Override
-    public List<WrappedWatchableObject> getMetadata() {
+    public List<WrappedWatchableObject> getMetadata() throws IllegalStateException {
+        if (metadata == null)
+            throw new IllegalStateException("Spawn packet cannot contain data");
         return metadata;
     }
 
     @Override
-    public void setMetadata(List<WrappedWatchableObject> metadata) {
-        this.metadata = metadata;
-        super.rawPacket.getWatchableCollectionModifier().write(0, metadata);
+    public void setMetadata(List<WrappedWatchableObject> metadata) throws IllegalStateException {
+        if (super.rawPacket.getWatchableCollectionModifier().size() > 0) {
+            this.metadata = metadata;
+            super.rawPacket.getWatchableCollectionModifier().write(0, metadata);
+        } else {
+            throw new IllegalStateException("Spawn packet cannot contain data");
+        }
     }
 
     @Override
     public void rewriteMetadata() {
-        super.rawPacket.getWatchableCollectionModifier().write(0, metadata);
+        if (super.rawPacket.getWatchableCollectionModifier().size() > 0)
+            super.rawPacket.getWatchableCollectionModifier().write(0, metadata);
     }
 
     @Override
     public PacketContainer getRawPacket() {
         assert type != null && location != null;
-        super.rawPacket.getDataWatcherModifier().write(0, new WrappedDataWatcher(metadata));
+        if (super.rawPacket.getDataWatcherModifier().size() > 0)
+            super.rawPacket.getDataWatcherModifier().write(0, new WrappedDataWatcher(metadata));
         return super.getRawPacket();
     }
 

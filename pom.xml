@@ -7,7 +7,7 @@
     <groupId>net.iso2013.peapi</groupId>
     <artifactId>PacketEntityAPI-Parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.4.0-SNAPSHOT</version>
     <modules>
         <module>PacketEntityAPI</module>
         <module>PacketEntityAPI-Plugin</module>
@@ -61,7 +61,7 @@
     </dependencies>
 
     <build>
-        <defaultGoal>clean package install</defaultGoal>
+        <defaultGoal>package install</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

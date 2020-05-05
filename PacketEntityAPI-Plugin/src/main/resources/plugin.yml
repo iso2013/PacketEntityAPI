@@ -1,5 +1,6 @@
 name: PacketEntityAPI
 version: ${project.version}
 main: net.iso2013.peapi.PacketEntityAPIPlugin
-authors: [iso2013]
-api-version: "1.13"
+depend: [ProtocolLib]
+authors: [iso2013, frostalf]
+api-version: "1.15"

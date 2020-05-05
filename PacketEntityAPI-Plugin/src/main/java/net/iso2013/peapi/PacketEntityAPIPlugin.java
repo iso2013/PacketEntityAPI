@@ -85,6 +85,7 @@ public class PacketEntityAPIPlugin extends JavaPlugin implements PacketEntityAPI
         chainFactory = BukkitTaskChainFactory.create(this);
 
         if (instance == null) instance = this;
+        saveDefaultConfig();
     }
 
     @Override

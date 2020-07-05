@@ -6,7 +6,7 @@
     <parent>
         <groupId>net.iso2013.peapi</groupId>
         <artifactId>PacketEntityAPI-Parent</artifactId>
-        <version>1.4.0-SNAPSHOT</version>
+        <version>1.5.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>PacketEntityAPI-Plugin</artifactId>
@@ -71,12 +71,6 @@
             <groupId>net.iso2013.peapi</groupId>
             <artifactId>PacketEntityAPI</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.15.2-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>

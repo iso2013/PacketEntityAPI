@@ -1,0 +1,349 @@
+---- HEADER ----
+Author: iso2013
+Version: 0.1
+
+---- OBJECT IDS ----
+BOAT
+DROPPED_ITEM
+AREA_EFFECT_CLOUD
+MINECART
+PRIMED_TNT
+ENDER_CRYSTAL
+ARROW
+SNOWBALL
+EGG
+FIREBALL
+SMALL_FIREBALL
+ENDER_PEARL
+WITHER_SKULL
+SHULKER_BULLET
+LLAMA_SPIT
+FALLING_BLOCK
+ITEM_FRAME
+ENDER_SIGNAL
+SPLASH_POTION
+THROWN_EXP_BOTTLE
+FIREWORK
+LEASH_HITCH
+ARMOR_STAND
+EVOKER_FANGS
+FISHING_HOOK
+SPECTRAL_ARROW
+DRAGON_FIREBALL
+TRIDENT
+
+---- METADATA KEYS ----
+Entity      	0	ON_FIRE					Mask1					0
+Entity      	0	CROUCHED				Mask2					0
+Entity	        0	UNUSED_1				Mask4					0
+Entity	        0	SPRINTING				Mask8					0
+Entity      	0	SWIMMING				Mask10					0
+Entity      	0	INVISIBLE				Mask20					0
+Entity      	0	GLOWING					Mask40					0
+Entity      	0	FLYING					Mask80					0
+Entity      	1	AIR					Integer					300
+Entity      	2	CUSTOM_NAME				OptChat                                 Absent
+Entity      	3	CUSTOM_NAME_VISIBLE                     Boolean					false
+Entity      	4	SILENT					Boolean					false
+Entity      	5	NO_GRAVITY				Boolean					false
+Entity          6       POSE					Pose 					STANDING
+Entity          7       ITEM                                    ItemStack                               null
+EnderSignal     7       ITEM                                    ItemStack                               null
+Fireball        7       ITEM                                    ItemStack                               null
+ThrownPotion   	7	POTION_THROWN                           ItemStack                               null
+FallingBlock	7	SPAWN_POSITION                          Location                                (0.0,0.0,0.0)
+AreaEffectCloud	7	RADIUS					Float					0.5
+AreaEffectCloud	8	COLOR					Color					0
+AreaEffectCloud	9	SHOW_POINT				Boolean					false
+AreaEffectCloud	10	PARTICLE				Particle				SPELL
+FishHook	7	HOOKED_ID				Integer					0
+Arrow	        7	IS_CRITICAL				Mask1					0
+Arrow	        7	NO_CLIP					Mask2					0
+Arrow	        8	PIERCING_LEVEL                          Byte                                    0
+Arrow		9	PARTICLE_COLOR                          Color					-1
+SpectralArrow   7       IS_CRITICAL                             MASK1                                   0
+SpectralArrow   7       IS_NOCLIP                               MASK2                                   0
+SpectralArrow   7       PIERCING_LEVEL                          Byte                                    0
+TippedArrow	10	COLOR					Color					-1
+Trident	        10	LOYALTY_LEVEL                           Integer					0
+Trident         11      ENCHANTMENT_GLINT                       Boolean                                 false
+Boat	        7	TIME_SINCE_LAST_HIT                     Integer					0
+Boat	        8	FORWARD_DIRECTION                       Integer					1
+Boat	        9	DAMAGE_TAKEN                            Float					0.0
+Boat	        10	TYPE					Integer					0
+Boat	        11	LEFT_PADDLE_TURNING                     Boolean					false
+Boat	        12	RIGHT_PADDLE_TURNING                    Boolean					false
+Boat	        13	SPLASH_TIMER                            Integer					0
+EnderCrystal	7	BEAM_TARGET				OptLocation                             Absent
+EnderCrystal	8	SHOW_BOTTOM				Boolean					true
+WitherSkull 	7	INVULNERABLE                            Boolean					false
+Firework	7	FIREWORK_LAUNCHED                       ItemStack				null
+Firework	8	LAUNCHED_BY				Integer                                 0
+Firework	9       SHOT_AT_ANGLE                           Boolean					false
+ItemFrame	7	ITEM					ItemStack				null
+ItemFrame	8	ROTATION				Integer					0
+Item	        7	ITEM					ItemStack				null
+LivingEntity	7	HAND_ACTIVE				Mask1					0
+LivingEntity	7	ACTIVE_HAND				Mask2					0
+LivingEntity	7	IN_RIPTIDE_SPIN_ATTACK                  Mask4					0
+LivingEntity	8	HEALTH					Float					1.0
+LivingEntity	9	POTION_COLOR                            Color					0
+LivingEntity	10	POTION_AMBIENT                          Boolean					false
+LivingEntity	11	NUMBER_OF_ARROWS                        Integer					0
+LivingEntity    12      HEALTH_BY_ABSORPTION                    Integer                                 0
+LivingEntity    13      UNKNOWN__MAYBE_BED_LOC                  OptLocation                             (0.0,0.0,0.0)
+LivingEntity	14	NO_AI					Mask1					0
+LivingEntity	14	LEFT_HANDED				Mask2					0
+Player	        14	ADDITIONAL_HEARTS                       Float					0.0
+Player	        15	SCORE					Integer					0
+Player      	16	CAPE_ENABLED                            Mask1					0
+Player	        16	JACKET_ENABLED                          Mask2					0
+Player	        16	LEFT_SLEEVE_ENABLED                     Mask4					0
+Player	        16	RIGHT_SLEEVE_ENABLED                    Mask8					0
+Player	        16	LEFT_PANTS_LEG_ENABLED                  Mask10					0
+Player	        16	RIGHT_PANTS_LEG_ENABLED                 Mask20					0
+Player	        16	HAT_ENABLED				Mask40					0
+Player	        16	UNUSED					Mask80					0
+Player	        17	MAIN_HAND				Byte					1
+Player	        18	LEFT_SHOULDER_PARROT                    NBTTag                                  {}
+Player	        19	RIGHT_SHOULDER_PARROT                   NBTTag                                  {}
+ArmorStand  	14	IS_SMALL				Mask1					0
+ArmorStand  	14	HAS_ARMS				Mask4					0
+ArmorStand	14	NO_BASEPLATE                            Mask8					0
+ArmorStand  	14	SET_MARKER				Mask10					0
+ArmorStand  	15	HEAD_ROTATION                           EulerAngle				(0.0,0.0,0.0)
+ArmorStand  	16	BODY_ROTATION                           EulerAngle				(0.0,0.0,0.0)
+ArmorStand	17	LEFT_ARM_ROTATION                       EulerAngle				(-10.0,0.0,-10.0)
+ArmorStand	18	RIGHT_ARM_ROTATION                      EulerAngle				(-15.0,0.0,10.0)
+ArmorStand	19	LEFT_LEG_ROTATION                       EulerAngle				(-1.0,0.0,-1.0)
+ArmorStand	20	RIGHT_LEG_ROTATION                      EulerAngle				(1.0,0.0,1.0)
+Bat	        15	IS_HANGING				Mask1					0
+Dolphin     	15	TREASURE_POSITION                       Location				(0.0,0.0,0.0)
+Dolphin	        16	CAN_FIND_TREASURE                       Boolean					false
+Dolphin	        17	HAS_FISH				Boolean					false
+Fish	        15	FROM_BUCKET				Boolean					false
+PufferFish	16	PUFF_STATE				Integer					0
+TropicalFish	16	VARIANT					Integer					0
+Ageable	        15	BABY					Boolean					false
+Ageable         16	HEAD_SHAKE_TIMER                        Integer					0
+AbstractHorse	16	UNUSED					Mask1					0
+AbstractHorse	16	TAMED					Mask2					0
+AbstractHorse	16	SADDLED					Mask4					0
+AbstractHorse	16	HAS_BRED				Mask8					0
+AbstractHorse	16	EATING					Mask10					0
+AbstractHorse	16	REARING					Mask20					0
+AbstractHorse	16	MOUTH_OPEN				Mask40					0
+AbstractHorse	16	UNUSED_2				Mask80					0
+AbstractHorse	17	OWNER					OptUUID                                 Absent
+Horse	        18	VARIANT					Integer					0
+ChestedHorse	18	HAS_CHEST				Boolean					false
+Llama	        19	STRENGTH				Integer					0
+Llama	        20	CARPET_COLOR                            Integer					-1
+Llama	        21	VARIANT					Integer					0
+Bee             16      UNUSED                                  Mask1                                   0
+Bee             16      ANGRY                                   Mask2                                   0
+Bee             16      HAS_STUNG                               Mask4                                   0
+Bee             16      HAS_NECTAR                              Mask8                                   0
+Bee             17      ANGER_TIME                              Integer                                 0
+MushroomCow     16	VARIANT					String					red
+Fox		16	VARIANT					Integer					0
+Fox		17	SITTING					Mask1					0
+Fox		17	UNUSED					Mask2					0
+Fox		17	CROUCHING				Mask4					0
+Fox		17	UNKNOWN_1				Mask8					0
+Fox		17	UNKNOWN_2				Mask10					0
+Fox		17	SLEEPING				Mask20					0
+Fox		17	UNKNOWN_3				Mask40					0
+Fox		17	UNKNOWN_4				Mask80					0
+Fox		18      FIRST_UUID				OptUUID                                 Absent
+Fox		19	SECOND_UUID				OptUUID                                 Absent
+Villager	17	VILLAGER_DATA                           VillagerData                            0
+Ocelot      	16	TRUSTING				Boolean					false
+Panda		16	BREED_TIMER				Integer					0
+Panda		17      SNEEZE_TIMER                            Integer					0
+Panda		18	EAT_TIMER				Integer					0
+Panda		19      MAIN_GENE				Byte					0
+Panda		20	HIDDEN_GENE				Byte					0
+Panda		21      UNUSED					Mask1					0
+Panda		21	SNEEZING				Mask2					0
+Panda		21	EATING					Mask4					0
+Panda		21	UNKNOWN_1				Mask8					0
+Panda		21	UNKNOWN_2				Mask10					0
+Pig	        16	SADDLED					Boolean					false
+Pig	        17	BOOST_TIME				Integer					0
+Rabbit          16	TYPE					Integer					0
+Turtle	        16	HOME_POSITION                           Location                                (0.0,0.0,0.0)
+Turtle	        17	HAS_EGG					Boolean					false
+Turtle	        18	LAYING_EGG				Boolean					false
+Turtle	        19	TRAVEL_POSITION                         Location                                (0.0,0.0,0.0)
+Turtle	        20	GOING_HOME				Boolean					false
+Turtle	        21	TRAVELING				Boolean					false
+PolarBear	16	STANDING_UP				Boolean					false
+Sheep	        16	DYE_COLOR				ByteMask				0
+Sheep	        16	SHEARED					Mask10					0
+Tameable	16	SITTING					Mask1					0
+Tameable	16	ANGRY					Mask2					0
+Tameable	16	TAMED					Mask4					0
+Tameable	17	OWNER					OptUUID                                 Absent
+Cat		18	TYPE					Integer					1
+Cat		19	UNKNOWN_1				Boolean					false
+Cat		20	UNKNOWN_2				Boolean					false
+Cat		21	COLLAR_COLOR                            Integer					14
+Wolf	        18	BEGGING					Boolean					false
+Wolf	        19	COLLAR_COLOR                            Integer					14
+Parrot	        18	VARIANT					Integer					0
+IronGolem	15	PLAYER_CREATED                          Mask1					0
+Snowman     	15	HAS_PUMPKIN_HAT                         Mask10					16
+Snowman	        15	HAS_NO_PUMPKIN_HAT                      Mask0					16
+Shulker	        15	FACING_DIRECTION                        Direction				DOWN
+Shulker	        16	ATTACHMENT_POSITION                     OptLocation                             Absent
+Shulker	        17	SHIELD_HEIGHT                           Byte					0
+Shulker	        18	DYE_COLOR				Byte					10
+Blaze	        15	BLAZE_BURNING                           Mask1					0
+Creeper	        15	STATE					Integer					-1
+Creeper	        16	CHARGED					Boolean					false
+Creeper	        17	IGNITED					Boolean					false
+Guardian	15	RETRACTING_SPIKES                       Boolean					false
+Guardian	16	TARGET_ID				Integer					0
+Raider		15	CELEBRATING				Boolean					false
+Pillager	16	USING_CROSSBOW                          Boolean					false
+Spellcaster	16	SPELL					Byte					0
+Vex		15	ATTACKING				Mask1					0
+Spider		15	CLIMBING				Mask1					0
+Witch		16	DRINKING_POTION                         Boolean					false
+Wither		15	CENTER_HEAD_TARGET                      Integer					0
+Wither		16	LEFT_HEAD_TARGET                        Integer					0
+Wither		17	RIGHT_HEAD_TARGET                       Integer					0
+Wither		18	INVULNERABLE_TIME                       Integer					0
+Zombie		15	BABY					Boolean					false
+Zombie		16	UNUSED					Integer					0
+Zombie		17	DROWNING				Boolean					false
+ZombieVillager	18	CONVERTING				Boolean					false
+ZombieVillager	19	VILLAGER_DATA                           VillagerData                            0
+Enderman	15	CARRIED_BLOCK                           OptBlockData                            Absent
+Enderman	16	SCREAMING				Boolean					false
+Enderman        17      STARED_AT                               Boolean                                 false
+EnderDragon	15	DRAGON_PHASE                            Integer					10
+Ghast		15	ATTACKING				Boolean					false
+Phantom		15	SIZE					Integer					0
+Slime		15	SIZE					Integer					1
+Minecart	7	SHAKING_POWER                           Integer					0
+Minecart	8	SHAKING_DIRECTION                       Integer					1
+Minecart	9	SHAKING_MULTIPLIER                      Float					0.0
+Minecart	10	CUSTOM_BLOCK                            Integer					0
+Minecart	11	BLOCK_HEIGHT                            Integer					6
+Minecart	12	SHOW_CUSTOM_BLOCK                       Boolean					false
+PoweredMinecart	13	POWERED					Boolean					false
+CommandMinecart	13	COMMAND					String
+CommandMinecart	14	LAST_OUTPUT				Chat                                    {"text":""}
+TNTPrimed	7	FUSE_TIME				Integer					80
+PIGLIN          15      UNKNOWN                                 Boolean                                 false
+PIGLIN          16      UNKNOWN                                 Boolean                                 false
+PIGLIN          17      UNKNOWN                                 Boolean                                 false
+PIGLIN          18      UNKNOWN                                 Boolean                                 false
+PIGLIN          19      UNKNOWN                                 Boolean                                 false
+
+---- ENTITY DIMENSIONS ----
+AREA_EFFECT_CLOUD	    6.0			0.5
+ARMOR_STAND                 0.5			1.975
+ARROW                       0.5			0.5
+BAT                         0.5			0.9
+BEE                         0.6                 0.7
+BLAZE                       0.6			1.8
+BOAT                        1.375		0.5625
+CAT                         0.6			0.7
+CAVE_SPIDER                 0.7			0.5
+CHICKEN                     0.4			0.7
+COD			    0.5			0.3
+COW			    0.9			1.4
+CREEPER			    0.6			1.7
+DOLPHIN			    0.9			0.6
+DONKEY			    1.3964844           1.5
+DRAGON_FIREBALL		    1.0			1.0
+DROPPED_ITEM		    0.25		0.25
+DROWNED			    0.6			1.95
+EGG			    0.25		0.25
+ELDER_GUARDIAN		    1.9975		1.9975
+ENDERMAN		    0.6			2.9
+ENDERMITE		    0.4			0.3
+ENDER_CRYSTAL		    2.0			2.0
+ENDER_DRAGON		    16.0		8.0
+ENDER_PEARL		    0.25		0.25
+ENDER_SIGNAL		    0.25		0.25
+EVOKER			    0.6			1.95
+EVOKER_FANGS		    0.5			0.8
+EXPERIENCE_ORB		    0.5			0.5
+FALLING_BLOCK		    0.98		0.98
+FIREBALL		    1.0			1.0
+FIREWORK		    0.25		0.25
+FISHING_HOOK		    0.25		0.25
+FOX			    0.6			0.7
+GHAST			    4.0			4.0
+GIANT			    3.6			12.0
+GUARDIAN		    0.85		0.85
+HORSE			    1.3964844           1.6
+HUSK			    0.6			1.95
+ILLUSIONER		    0.6			1.95
+IRON_GOLEM		    1.4			2.7
+ITEM_FRAME		    0.5			0.5
+LEASH_HITCH		    0.5			0.5
+LIGHTNING		    0.0			0.0
+LLAMA			    0.9			1.87
+LLAMA_SPIT		    0.25		0.25
+MAGMA_CUBE		    2.04		2.04
+MINECART		    0.98		0.7
+MINECART_CHEST		    0.98		0.7
+MINECART_COMMAND	    0.98		0.7
+MINECART_FURNACE	    0.98		0.7
+MINECART_HOPPER		    0.98		0.7
+MINECART_MOB_SPAWNER        0.98		0.7
+MINECART_TNT                0.98		0.7
+MULE			    1.3964844           1.6
+MUSHROOM_COW                0.9			1.4
+OCELOT                      0.6			0.7
+PAINTING		    0.5			0.5
+PANDA			    1.3			1.25
+PARROT			    0.5			0.9
+PHANTOM			    0.9			0.5
+PIG			    0.9			0.9
+PIG_ZOMBIE                  0.6			1.95
+PILLAGER		    0.6			1.95
+PLAYER                      0.6			1.8
+POLAR_BEAR		    1.4			1.4
+PRIMED_TNT		    0.98		0.98
+PUFFERFISH		    0.7			0.7
+RABBIT			    0.4			0.5
+RAVAGER			    1.95		2.2
+SALMON			    0.7			0.4
+SHEEP			    0.9			1.3
+SHULKER			    1.0			1.0
+SHULKER_BULLET		    0.3125		0.3125
+SILVERFISH		    0.4			0.3
+SKELETON		    0.6			1.99
+SKELETON_HORSE		    1.3964844           1.6
+SLIME			    2.04		2.04
+SMALL_FIREBALL		    0.3125		0.3125
+SNOWBALL		    0.25		0.25
+SNOWMAN			    0.7			1.9
+SPECTRAL_ARROW		    0.5			0.5
+SPIDER			    1.4			0.9
+SPLASH_POTION		    0.25		0.25
+SQUID			    0.8			0.8
+STRAY			    0.6			1.99
+THROWN_EXP_BOTTLE	    0.25		0.25
+TRADER_LLAMA		    0.9			1.87
+TRIDENT			    0.5			0.5
+TROPICAL_FISH		    0.5			0.4
+TURTLE			    1.2			0.4
+VEX			    0.4			0.8
+VILLAGER		    0.6			1.95
+VINDICATOR		    0.6			1.95
+WANDERING_TRADER	    0.6			1.95
+WITCH			    0.6			1.95
+WITHER			    0.9			3.5
+WITHER_SKELETON		    0.7			2.4
+WITHER_SKULL		    0.3125		0.3125
+WOLF			    0.6			0.85
+ZOMBIE			    0.6			1.95
+ZOMBIE_HORSE		    1.3964844           1.6
+ZOMBIE_VILLAGER		    0.6			1.95

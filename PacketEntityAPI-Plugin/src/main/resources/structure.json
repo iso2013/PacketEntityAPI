@@ -81,7 +81,7 @@
           "name": "TIPPED_ARROW",
           "keys": [
             {
-              "index": 8,
+              "index": 9,
               "type": "Color",
               "label": "COLOR",
               "def": -1
@@ -92,12 +92,23 @@
           "name": "TRIDENT",
           "keys": [
             {
-              "index": 8,
+              "index": 9,
               "type": "Integer",
               "label": "LOYALTY_LEVEL",
               "def": 0
             }
           ]
+        },
+        {
+            "name": "SPECTRAL_ARROW",
+            "keys": [
+              {
+                  "index": 8,
+                  "type": "Byte",
+                  "label": "PIERCING_LEVEL",
+                  "def": 0  
+              }
+          ]              
         }
       ],
       "keys": [
@@ -106,6 +117,10 @@
             {
               "mask": 1,
               "label": "CRITICAL"
+            },
+            {
+                "mask": 2,
+                "label": "NO_CLIP"
             }
           ],
           "index": 6,
@@ -287,15 +302,15 @@
                   "label": "RIGHT_SLEEVE_ENABLED"
                 },
                 {
-                  "mask": 16,
+                  "mask": 10,
                   "label": "LEFT_PANTS_ENABLED"
                 },
                 {
-                  "mask": 32,
+                  "mask": 20,
                   "label": "RIGHT_PANTS_ENABLED"
                 },
                 {
-                  "mask": 64,
+                  "mask": 40,
                   "label": "HAT_ENABLED"
                 }
               ],
@@ -341,7 +356,7 @@
                   "label": "NO_BASEPLATE"
                 },
                 {
-                  "mask": 16,
+                  "mask": 10,
                   "label": "MARKER"
                 }
               ],
@@ -505,15 +520,15 @@
                                   "label": "HAS_BRED"
                                 },
                                 {
-                                  "mask": 16,
+                                  "mask": 10,
                                   "label": "EATING"
                                 },
                                 {
-                                  "mask": 32,
+                                  "mask": 20,
                                   "label": "REARING"
                                 },
                                 {
-                                  "mask": 64,
+                                  "mask": 40,
                                   "label": "MOUTH_OPEN"
                                 }
                               ],
@@ -754,7 +769,7 @@
                         {
                           "keys": [
                             {
-                              "mask": 16,
+                              "mask": 10,
                               "label": "HAS_PUMPKIN"
                             },
                             {
@@ -1375,19 +1390,19 @@
           "label": "SPRINTING"
         },
         {
-          "mask": 16,
+          "mask": 10,
           "label": "SWIMMING"
         },
         {
-          "mask": 32,
+          "mask": 20,
           "label": "INVISIBLE"
         },
         {
-          "mask": 64,
+          "mask": 40,
           "label": "GLOWING"
         },
         {
-          "mask": 128,
+          "mask": 80,
           "label": "GLIDING"
         }
       ],

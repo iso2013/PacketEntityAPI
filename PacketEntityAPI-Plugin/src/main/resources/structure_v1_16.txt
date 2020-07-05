@@ -63,7 +63,7 @@ Arrow	        8	PIERCING_LEVEL                          Byte                    
 Arrow		9	PARTICLE_COLOR                          Color					-1
 SpectralArrow   7       IS_CRITICAL                             MASK1                                   0
 SpectralArrow   7       IS_NOCLIP                               MASK2                                   0
-SpectralArrow   7       PIERCING_LEVEL                          Byte                                    0
+SpectralArrow   8       PIERCING_LEVEL                          Byte                                    0
 TippedArrow	10	COLOR					Color					-1
 Trident	        10	LOYALTY_LEVEL                           Integer					0
 Trident         11      ENCHANTMENT_GLINT                       Boolean                                 false

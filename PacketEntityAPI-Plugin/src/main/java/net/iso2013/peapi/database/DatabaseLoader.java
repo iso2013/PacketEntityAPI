@@ -49,8 +49,8 @@ public class DatabaseLoader {
             is = this.getClass().getResourceAsStream("/structure_" + s + ".txt");
             if (is == null) {
                 logger.severe("WARNING: Failed to find a suitable structure file for version " + s + ". Defaulting to" +
-                        " v1_15.");
-                is = this.getClass().getResourceAsStream("/structure_v1_15.txt");
+                        " v1_16.");
+                is = this.getClass().getResourceAsStream("/structure_v1_16.txt");
             } else {
                 logger.info("Using structure data for version " + s + "_X.");
             }

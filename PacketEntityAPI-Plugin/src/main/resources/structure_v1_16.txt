@@ -1,6 +1,6 @@
 ---- HEADER ----
 Author: iso2013
-Version: 0.1
+Version: 0.2
 
 ---- OBJECT IDS ----
 BOAT
@@ -306,7 +306,8 @@ PANDA			    1.3			1.25
 PARROT			    0.5			0.9
 PHANTOM			    0.9			0.5
 PIG			    0.9			0.9
-PIG_ZOMBIE                  0.6			1.95
+PIGLIN                      0.6			1.95
+PIGLIN_BRUTE                0.6                 1.95
 PILLAGER		    0.6			1.95
 PLAYER                      0.6			1.8
 POLAR_BEAR		    1.4			1.4

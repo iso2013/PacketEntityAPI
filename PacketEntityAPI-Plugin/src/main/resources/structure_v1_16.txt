@@ -308,6 +308,7 @@ PHANTOM			    0.9			0.5
 PIG			    0.9			0.9
 PIGLIN                      0.6			1.95
 PIGLIN_BRUTE                0.6                 1.95
+PIG_ZOMBIE                  0.6			1.95
 PILLAGER		    0.6			1.95
 PLAYER                      0.6			1.8
 POLAR_BEAR		    1.4			1.4

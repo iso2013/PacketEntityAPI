@@ -72,13 +72,13 @@ public class GenericListener implements PacketListener {
         EntityPacketEvent e = new EntityPacketEventImpl(manager, w, eT, target);
         dispatcher.dispatch(e, null);
         if (w instanceof EntityGroupPacket) {
-            if (w instanceof EntityDestroyPacket && ((EntityDestroyPacket) w).getGroup().size() == 0) {
+            if (w instanceof EntityDestroyPacket && ((EntityDestroyPacket) w).getGroup().isEmpty()) {
                 packetEvent.setCancelled(true);
                 return;
             }
             ((EntityGroupPacket) e.getPacket()).apply();
         } else if (w instanceof EntityDataPacket) {
-            if (((EntityDataPacket) w).getMetadata().size() == 0) {
+            if (((EntityDataPacket) w).getMetadata().isEmpty()) {
                 packetEvent.setCancelled(true);
                 return;
             }

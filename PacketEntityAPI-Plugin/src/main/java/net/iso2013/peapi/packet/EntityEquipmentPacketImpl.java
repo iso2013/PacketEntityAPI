@@ -22,8 +22,7 @@ public class EntityEquipmentPacketImpl extends EntityPacketImpl implements Entit
         super(identifier, new PacketContainer(TYPE), true);
     }
 
-    private EntityEquipmentPacketImpl(EntityIdentifier identifier, PacketContainer rawPacket, EquipmentSlot slot,
-                                      ItemStack item) {
+    private EntityEquipmentPacketImpl(EntityIdentifier identifier, PacketContainer rawPacket, EquipmentSlot slot, ItemStack item) {
         super(identifier, rawPacket, false);
         this.slot = slot;
         this.item = item;
